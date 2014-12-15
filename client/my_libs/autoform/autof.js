@@ -88,6 +88,7 @@ createField = function createField(myname, fieldSource) {
         fieldSource.name = myname
         fieldSource.controlType = {}
             // importamos las configuracion de commmon.bock_content[blocName]
+        c.common.block_content = c.common.block_content || {}
         var fc = _.extend({}, c.common.block_content[fieldSource.blockName] || {})
         _.extend(fc, fieldSource)
         _.extend(fieldSource, fc)
@@ -138,7 +139,6 @@ createField = function createField(myname, fieldSource) {
         if (fieldSource.help) {
             row.addClass("hint--top").attr('data-hint', fieldSource.help)
         }
-        dbg(fieldSource.enum)
         switch (fieldSource.controlType) {
             case 'input':
                 fieldSource.control = createInput(myname, fieldSource)
@@ -315,7 +315,6 @@ createSelect = function createSelect(name, fieldSource) {
     fieldSource.arrOptionGroups = []
     var groupLabel = 'init'
     var selectedItems = []
-        // dbg("fieldSource.enum", o2S(fieldSource.enum))
     _.each(fieldSource.enum, function(row, index) {
         var v = row.value
         var l = row.label
@@ -337,9 +336,8 @@ createSelect = function createSelect(name, fieldSource) {
     })
     fieldSource.arrOptionGroups = _.unique(fieldSource.arrOptionGroups)
     fieldSource.arrOptionGroups.forEach(function(key) {
-            $("option[group='" + key + "']", theSelect).wrapAll('<optgroup label="' + key + '" slug="' + _.slugify(key) + '">')
-        })
-        // dbg('selectedItems', selectedItems)
+        $("option[group='" + key + "']", theSelect).wrapAll('<optgroup label="' + key + '" slug="' + _.slugify(key) + '">')
+    })
     fieldSource.value = fieldSource.value || selectedItems
     return theSelect
 }
@@ -568,7 +566,6 @@ setFieldValue = function setFieldValue(name, value) {
         }
         switch (field.attr('type')) {
             case 'radio':
-                dbg('poniendo chenked ' + theName, value)
                 $('.autof [name=' + theName + '][value=' + value + ']').prop('checked', 'checked')
                 break;
             default:
@@ -766,7 +763,6 @@ arrEnum2ObjArrEnum = function arrEnum2ObjArrEnum(arr) {
             theObject.push(nObj)
         }
     })
-    dbg("theObject", o2S(theObject))
     return theObject
 }
 parseRootQueries = function parseRootQueries(obj) {

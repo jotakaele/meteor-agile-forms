@@ -1,8 +1,9 @@
 //Instanciamos en server y client Autof
-Autof = new Meteor.Collection('autof', {})
+
+Autof = new Meteor.Collection('_af', {})
 if (Meteor.isServer) {
     //Publicamos autof, de mood que esta disponible para todos
-    Meteor.publish('autof', function() {
+    Meteor.publish('_af', function() {
             return Autof.find({
                 state: 'active'
             })
@@ -61,7 +62,7 @@ function getAutoColArray() {
     //Nos subscribimos a Autof, para poder usarlo en todas partes
     //FIXME Esto debería ser de solo lectura si el user no es admin @security
 if (Meteor.isClient) {
-    Meteor.subscribe('autof', function() {
+    Meteor.subscribe('_af', function() {
         dbg('AUTOF YA DISPONIBLE')
         loadAutoCollection()
         Session.set('AutofLoad', 1)
