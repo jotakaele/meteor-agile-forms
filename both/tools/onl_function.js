@@ -28,17 +28,19 @@ onl.textCollapse = function(texto, characters) {
         return tx
     }
     /*Renderiza un elemento en funcion de su tipo (form, list) */
-renderType = function renderType(objectSource, divDestName) {
-    if (objectSource.form) {
-        nx = objectSource
-        autof = new AUTOF(divDestName, {
-            def: sanitizeObjectNameKeys(objectSource)
-        })
+    /*renderType = function renderType(objectSource, divDestName) {
+        if (objectSource.form) {
+            nx = objectSource
+            autof = new AUTOF(divDestName, {
+                def: sanitizeObjectNameKeys(objectSource)
+            })
+        }
+
+        if (objectSource.list) {
+            nx = objectSource
+            autol = new AUTOL(divDestName, {
+                def: sanitizeObjectNameKeys(objectSource)
+            })
+        }
     }
-    if (objectSource.list) {
-        nx = objectSource
-        autol = new AUTOL(divDestName, {
-            def: sanitizeObjectNameKeys(objectSource)
-        })
-    }
-}
+    */

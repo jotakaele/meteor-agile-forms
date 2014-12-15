@@ -1,4 +1,4 @@
-AUTOF = function(element, options) {
+AF = function(element, options) {
         // todo cambiar el nombre a la libreria por af
         console.clear()
         clonableRows = {}
@@ -786,3 +786,9 @@ setInitialRadioValues = function setInitialRadioValues() {
     //todo hacer funcion que devuelva el pattern apropiado para DNI, DOI o pasaporte.Quizas seria una buena idea hacer una colección de patterns ubicados en el mismo sitio. La colección tambien podría incluir mascaras de entrada.
     //Habilitar la posibilidad de poner una configuracion especifica por bloques, según el nombre del bloque.
     //fixme No funciona poner value en common
+renderForm = function renderForm(objectSource, divDestName) {
+    nx = objectSource
+    autof = new AF(divDestName, {
+        def: sanitizeObjectNameKeys(objectSource)
+    })
+}

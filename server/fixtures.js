@@ -32,46 +32,6 @@ var defaultAutoF = {
         }
     }
 }
-var defaultAutoL = {
-    "list": {
-        "sources": {
-            "main": {
-                "collection": "personas",
-                "sort": "sexo desc",
-                "filter": {
-                    "nombre": {
-                        "_$in": ["Jose", "Julian", "Juan"]
-                    }
-                },
-                "columns": {
-                    "nombre_completo": "[nombre] + ' ' + [primer_apellido] + ' ' + [segundo_apellido]",
-                    "sexo": null,
-                    "text": "makeId(4)"
-                }
-            },
-            "personas_colores": {
-                "type": "oneToMany",
-                "filter": null,
-                "columns": {
-                    "color": "[tono]+[color]"
-                },
-                "main_id": "personas_id"
-            },
-            "personas_direccion": {
-                "type": "oneToOne",
-                "filter": null,
-                "columns": {
-                    "municipio": null,
-                    "makeid": "makeId(5)"
-                },
-                "main_id": "personas_id"
-            }
-        },
-        "options": {
-            "title": "Una tabla!! eval(Meteor.release)"
-        }
-    }
-}
 var nombres = ["Juan", "Pedro", "Luis", "Carmen", "Raul", "Pili", "Zulema", "Aitana", "Javi", "Victor", "Jose", "Julian", "Elisa", "Almudena", "Sagrario", "Jesus", "Carolina"]
 var apellidos = ["Garcia", "Lopez", "Perez", "Gonzalez", "Sanchez", "Martinez", "Rodriguez", "Fernandez", "Gomez", "Martin", "Garcia garcia", "Hernandez", "Ruiz", "Diaz", "Alvarez", "Jimenez", "Lopez lopez", "Moreno", "Perez perez", "Munoz", "Alonso", "Gutierrez", "Romero", "Sanz", "Torres", "Suarez", "Ramirez", "Vazquez", "Navarro", "Lopez garcia", "Dominguez", "Ramos", "Garcia lopez", "Garcia perez", "Castro", "Gil", "Flores", "Morales"]
 var aficiones = ["Aviones Spotting", "Aerografía", "Aeromodelismo", "Amateur de Astronomía", "Radioaficionados", "Animales / Mascotas / Perros", "Artes", "Astrología", "Astronomía", "Backgammon (juego de mesa)", "Bádminton", "Béisbol", "Baloncesto", "Playa / Tomar el sol", "Caminar por la playa", "Chaquira", "Beatboxing", "Tocar campanas", "Danza del vientre", "Andar en bicicleta", "Observación de aves", "Futbol", "Baloncesto", "Judo", "Lectura"]
@@ -84,27 +44,5 @@ if (Autof.find().count() === 0) {
         name: "Personas",
         content: defaultAutoF,
         state: "active"
-    });
-    dbg("Insertando datos de prueba de listados");
-    Autof.insert({
-        type: "list",
-        name: "Listado de Personas",
-        content: defaultAutoL,
-        state: "active"
-    });
-    dbg("Insertando datos de prueba de personas");
-    Personas = new Mongo.Collection('personas', {})
-    var cantidad = 100
-    for (c = 1; c <= cantidad; c++) {
-        Personas.insert({
-            nombre: randEl(nombres),
-            primer_apellido: randEl(apellidos),
-            segundo_apellido: randEl(apellidos),
-            sexo: randEl(sexo),
-            edad: _.random(18, 80),
-            provincia_nacimiento: randEl(provincias),
-            aficiones: _.uniq([randEl(aficiones), randEl(aficiones), randEl(aficiones), randEl(aficiones)]),
-            comentarios: ""
-        })
-    }
+    })
 }

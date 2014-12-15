@@ -35,7 +35,7 @@ carga = function carga(options) {
     }
     cargarItemInicial(obj.name, function(res) {
         $('#ritem').html('')
-        $("#nombre").val(res.name)
+        $("#nombre").text(res.name)
         $("#nombre").attr("itemid", res._id)
         $("#nombre").attr("theType", contentType(res.content))
         $(".doc[name]").removeClass('active')
@@ -46,7 +46,7 @@ carga = function carga(options) {
         editor.setValue(jsyaml.dump(sanitizeObjectNameKeys(res.content)))
         colorificaYaml()
         editor.gotoLine(1)
-        renderType(res.content, 'ritem')
+        renderForm(res.content, 'ritem')
     })
 }
 colorificaYaml = function colorificaYaml() {
@@ -109,13 +109,14 @@ Template.autoEdit.helpers({
         })
     },
     initialItem: function() {
+        dbg('this.name', this.name)
         carga(this.name)
     }
 });
 //fixme Parece que no funciona correctamente al hacer update (muestra los antiguos) Revisar!!!
 Template.autoEdit.events({
         'click #eliminar': function eliminarItem() {
-            if (confirm("¿Eliminar este item? \n[" + $("#nombre").val() + "]")) {
+            if (confirm("¿Eliminar este item? \n[" + $("#nombre").text() + "]")) {
                 var okDelete = Autof.update({
                     _id: $("#nombre").attr('itemid')
                 }, {
@@ -126,14 +127,14 @@ Template.autoEdit.events({
                 })
             }
         },
-        'click #guardar': function guardarItem() {
-            if (confirm("¿Guardar la definición del item \n[" + $("#nombre").val() + "]")) {
+        'click #guardar i': function guardarItem() {
+            if (confirm("¿Guardar la definición del item \n[" + $("#nombre").text() + "]")) {
                 if ($("#nombre").attr('itemid')) {
                     var okUpdate = Autof.update({
                         _id: $("#nombre").attr('itemid')
                     }, {
                         $set: {
-                            name: $("#nombre").val(),
+                            name: $("#nombre").text(),
                             state: 'autobackup',
                             update_date: new Date(),
                         }
@@ -148,7 +149,7 @@ Template.autoEdit.events({
                         //   theContent.list.source.filter = JSON.stringify(theContent.list.source.filter)
                 }
                 var okInsert = Autof.insert({
-                    name: $("#nombre").val(),
+                    name: $("#nombre").text(),
                     content: desanitizeObjectNameKeys(theContent),
                     create_date: new Date(),
                     update: new Date(),
@@ -172,7 +173,7 @@ Template.autoEdit.events({
                 $("#ritem").html('')
                 tx = jsyaml.load(editor.getValue())
                 $('#ritem').fadeOut(200).fadeIn(300)
-                renderType(tx, 'ritem')
+                renderForm(tx, 'ritem')
             }
         },
         'click #crear': function crearDocumento(e) {
@@ -181,7 +182,7 @@ Template.autoEdit.events({
             }
             $("#ritem").html('')
             $("div#editor").removeClass("modificado")
-            $("#nombre").removeAttr("itemid").val("Nuevo item")
+            $("#nombre").removeAttr("itemid").text("Nuevo item")
             defaultForm = jsyaml.dump({
                 "form": {
                     "collection": "nombre_coleccion",
@@ -198,9 +199,6 @@ Template.autoEdit.events({
                             "title": "Mi nombre"
                         }
                     }
-                },
-                "list": {
-                    "definition": "Aqui la definicion de la lista"
                 }
             })
             editor = ace.edit("editor")
@@ -209,31 +207,18 @@ Template.autoEdit.events({
             setTimeout(function() {
                 editor.gotoLine(1)
                 colorificaYaml()
-                renderType({
+                renderForm({
                     def: jsyaml.load(defaultForm)
                 }, 'ritem')
             }, 10)
         },
-        'click #items_existentes li.button.filter': function filtarPorTipo(e) {
-            $("li.button.filter").removeClass('active')
-            $(e.target).addClass('active')
-            if ($(e.target).attr("type") == "all") {
-                $('li[name][type]').show()
-            } else {
-                $('li[name][type=' + $(e.target).attr("type") + ']').show()
-                $('li[name]:not([type=' + $(e.target).attr("type") + '])').hide()
-            }
-        },
-        'click .button.filter, click  #items_existentes a[id],keyup input#filtrar': function() {
-            //fixme apñara esto para que los no se pueda cambiar ni filtrar si se ha modificado el editos
-        },
         'click #items_existentes .doc[id]': function seleccionarDocumento(e) {
+            dbg('click')
             if (editor_cambiado) {
                 if (confirm("¿El item se ha modificado, pero no se ha guardado aún. \nSe perderán los cambios!! \n\n¿Continuar?") == false) {
                     return false;
                 }
             }
-            //dbg('intentando cargar', $(e.target).attr('name'))
             $('.doc').removeClass('active')
             $(e.target).addClass('active')
             carga({
@@ -243,10 +228,7 @@ Template.autoEdit.events({
         },
         'keyup input#filtrar': function filtarLista(e) {
             tx = $(e.target).val()
-            var theType = $(".button.filter.active").attr("type")
-            workOn = theType == "all" ? $("#items_existentes li[name]") : ("#items_existentes li[name][type=" + theType + "]")
-            dbg('workOn', workOn)
-            $(workOn).each(function() {
+            $("#items_existentes li[name]").each(function() {
                 if ($(this).text().toUpperCase().indexOf(tx.toUpperCase()) == -1) {
                     $(this).hide(100)
                 } else {
