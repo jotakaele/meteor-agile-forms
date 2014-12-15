@@ -1,0 +1,736 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"sample",
+				"sampleYML"
+			],
+			[
+				"for",
+				"formEdit"
+			],
+			[
+				"auto",
+				"autofo"
+			],
+			[
+				"A",
+				"AUTOF"
+			],
+			[
+				"bg",
+				"bgc	background-color"
+			],
+			[
+				"a",
+				"autof"
+			],
+			[
+				"form",
+				"form_content"
+			],
+			[
+				"ym",
+				"yml2json"
+			],
+			[
+				"yml",
+				"ymltxt"
+			],
+			[
+				"call",
+				"callback"
+			],
+			[
+				"bo",
+				"both"
+			],
+			[
+				"coll",
+				"collectionName"
+			],
+			[
+				"re",
+				"redimensionaImagenes"
+			],
+			[
+				"marg",
+				"margin"
+			],
+			[
+				"rig",
+				"right"
+			],
+			[
+				"al",
+				"alto_selfi"
+			],
+			[
+				"ba",
+				"background-position"
+			],
+			[
+				"padd",
+				"padding-top"
+			],
+			[
+				"le",
+				"lef	left"
+			],
+			[
+				"au",
+				"absolute"
+			],
+			[
+				"el",
+				"elId"
+			],
+			[
+				"op",
+				"op+	opacity: $1;\nfilter: alpha(opacity=$2);"
+			],
+			[
+				"tr",
+				"trsdu	transition-duration"
+			],
+			[
+				"ca",
+				"caja_selfi"
+			],
+			[
+				"inline",
+				"inline-block"
+			],
+			[
+				"s",
+				"solid"
+			],
+			[
+				"bor",
+				"borde_selfi"
+			],
+			[
+				"alt",
+				"alto_selfi"
+			],
+			[
+				"l",
+				"log"
+			],
+			[
+				"bi",
+				"background-image"
+			],
+			[
+				"trdu",
+				"trsdu	transition-duration: ${1:time};"
+			],
+			[
+				"ts",
+				"tsh	text-shadow: ${1:hoff} ${2:voff} ${3:blur} ${4:#000};"
+			],
+			[
+				"po",
+				"pointer"
+			],
+			[
+				"pos",
+				"position"
+			],
+			[
+				"ls",
+				"list-style"
+			],
+			[
+				"border-r",
+				"border-radius"
+			],
+			[
+				"pad",
+				"padding-right"
+			],
+			[
+				"colo",
+				"color_admin"
+			],
+			[
+				"dis",
+				"display"
+			],
+			[
+				"ri",
+				"right"
+			],
+			[
+				"he",
+				"height"
+			],
+			[
+				"bot",
+				"bottom"
+			],
+			[
+				"n",
+				"nav	Tag"
+			],
+			[
+				"id",
+				"_id"
+			],
+			[
+				"pa",
+				"params"
+			],
+			[
+				"str",
+				"strpos"
+			],
+			[
+				"sp",
+				"span	Tag"
+			],
+			[
+				"exi",
+				"array_key_exists"
+			],
+			[
+				"mode",
+				"modeR"
+			],
+			[
+				"fields",
+				"fields_names"
+			],
+			[
+				"get",
+				"getcwd"
+			],
+			[
+				"prop",
+				"Propietarios"
+			],
+			[
+				"clas",
+				"className"
+			],
+			[
+				"ent",
+				"entity_name"
+			],
+			[
+				"entity",
+				"entity_name"
+			],
+			[
+				"entit",
+				"entity_name"
+			],
+			[
+				"usuarios",
+				"usuarios"
+			],
+			[
+				"in",
+				"inverseJoinColumns"
+			],
+			[
+				"join",
+				"joinColumns"
+			],
+			[
+				"var",
+				"var_dump"
+			],
+			[
+				"sl",
+				"slug"
+			],
+			[
+				"C",
+				"Cupon"
+			],
+			[
+				"strr",
+				"strrev"
+			],
+			[
+				"lef",
+				"left"
+			],
+			[
+				"ho",
+				"hover"
+			],
+			[
+				"bra",
+				"border-radius"
+			],
+			[
+				"an",
+				"ancho_pagina"
+			],
+			[
+				"inl",
+				"inline-block"
+			],
+			[
+				"color",
+				"color_boton"
+			],
+			[
+				"font",
+				"font-size"
+			],
+			[
+				"wid",
+				"width"
+			],
+			[
+				"tra",
+				"transparent"
+			],
+			[
+				"co",
+				"color_fondo"
+			],
+			[
+				"f",
+				"fw	font-weight"
+			],
+			[
+				"b",
+				"bgi	background-image"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "/home/juan/proyectos/oeneele/client/backend/menu_backend.html",
+			"settings":
+			{
+				"buffer_size": 498,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 306.0,
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: Remove Package"
+			],
+			[
+				"Package Control: in",
+				"Package Control: Install Package"
+			],
+			[
+				"",
+				"Snippet: position:fixed"
+			],
+			[
+				"Package Cont",
+				"Package Control: Install Package"
+			],
+			[
+				"bac",
+				"Snippet: background-color"
+			],
+			[
+				"Package Control: ins",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 746.0
+	},
+	"console":
+	{
+		"height": 236.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) "
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/juan/proyectos/oeneele/client",
+		"/home/juan/proyectos/oeneele/client/backend",
+		"/home/juan/proyectos/oeneele/client/pruebas",
+		"/home/juan/proyectos/oeneele/client/scss",
+		"/home/juan/proyectos/oeneele/client/templates",
+		"/home/juan/proyectos/oeneele/public",
+		"/home/juan/proyectos/oeneele/server"
+	],
+	"file_history":
+	[
+		"/home/juan/proyectos/oeneele/client/backend/auto/auto_edit.html",
+		"/home/juan/proyectos/oeneele/client/scss/backend.scss",
+		"/home/juan/proyectos/oeneele/client/backend/auto/oeneele.sublime-project",
+		"/home/juan/.config/sublime-text-3/Packages/User/JavascriptBeautify.sublime-settings",
+		"/home/juan/proyectos/oeneele/packages.json",
+		"/home/juan/proyectos/oeneele/client/scss/_settings.scss",
+		"/home/juan/.config/sublime-text-3/Packages/User/SassBeautify.sublime-settings",
+		"/home/juan/.config/sublime-text-3/Packages/User/Default (Linux).sublime-keymap",
+		"/home/juan/Escritorio/chuleta meteor",
+		"/home/juan/proyectos/oeneele/client/my_libs/autof/main.js",
+		"/home/juan/.config/sublime-text-3/Packages/Default/Default (Linux).sublime-keymap",
+		"/home/juan/.config/sublime-text-3/Packages/Javascript Beautify/Default (Linux).sublime-keymap",
+		"/home/juan/.config/sublime-text-3/Packages/SassBeautify/SassBeautify.sublime-settings",
+		"/home/juan/proyectos/oeneele/client/scss/autof.scss",
+		"/home/juan/.config/sublime-text-3/Packages/Default/Preferences.sublime-settings",
+		"/home/juan/proyectos/oeneele/client/autof/autof.scss",
+		"/home/juan/cursos/MongoDB_dev/create_student_collection.js",
+		"/home/juan/proyectos/autof/client/templates/menu_backend.html",
+		"/home/juan/proyectos/autof/client/eventos.js",
+		"/home/juan/proyectos/autof/private/test.yml",
+		"/home/juan/proyectos/autof/public/test.yml",
+		"/home/juan/proyectos/autof/client/autof/test.yml",
+		"/home/juan/proyectos/autof/client/helpers.js",
+		"/home/juan/proyectos/autof/client/main.js",
+		"/home/juan/proyectos/autof/client/test.yml",
+		"/home/juan/proyectos/autof/client/scss/config.scss",
+		"/home/juan/proyectos/autof/client/scss/main.scss",
+		"/home/juan/proyectos/autof/lib/forms/socios.yml",
+		"/home/juan/proyectos/autof/lib/yaml/yaml.js",
+		"/home/juan/proyectos/autof/server/fixtures.js",
+		"/home/juan/proyectos/autof/client/index.html",
+		"/home/juan/proyectos/autof/lib/router.js",
+		"/home/juan/proyectos/autof/client/templates/menu.html",
+		"/home/juan/proyectos/autof/client/templates/form_edit.html",
+		"/home/juan/proyectos/autof/client/templates/portada.html",
+		"/home/juan/proyectos/autof/smart.json",
+		"/home/juan/proyectos/autof/server/autof.js",
+		"/home/juan/proyectos/autof/lib/yaml/yaml.min.js",
+		"/home/juan/proyectos/autof/packages/zf5/scss/foundation/_settings.scss",
+		"/home/juan/proyectos/autof/packages/zf5/scss/foundation-config.scss",
+		"/home/juan/proyectos/autof/packages/foundation5-sass/scss/foundation/_settings.scss",
+		"/home/juan/proyectos/autof/packages/foundation5-sass/scss/foundation/components/_buttons.scss",
+		"/home/juan/proyectos/autof/lib/main.js",
+		"/home/juan/proyectos/autof/packages.json",
+		"/home/juan/proyectos/autof/client/css/main.css",
+		"/home/juan/proyectos/autof/client/test.json",
+		"/home/juan/proyectos/autof/packages/yml/smart.json",
+		"/home/juan/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
+		"/home/juan/proyectos/autof/server/yml.js",
+		"/home/juan/proyectos/autof/lib/yml2.js",
+		"/home/juan/proyectos/autof/server/requires.js",
+		"/home/juan/proyectos/autof/client/_yaml.js",
+		"/home/juan/proyectos/autof/client/lib/js-yaml.js",
+		"/home/juan/proyectos/autof/test.js",
+		"/home/juan/proyectos/autof/collections/autof.js",
+		"/home/juan/proyectos/autof/client/json3.js",
+		"/home/juan/proyectos/autof/client/requires.js",
+		"/home/juan/proyectos/autof/packages/npm/.npm/package/node_modules/.node_version",
+		"/home/juan/proyectos/autof/packages/yml/package.js",
+		"/home/juan/proyectos/autof/client/templates/form_list.html",
+		"/home/juan/proyectos/autof/autof.css",
+		"/home/juan/proyectos/autof/autof.js",
+		"/home/juan/proyectos/collections/autof/lib/autof.js",
+		"/home/juan/proyectos/autof/autof.html",
+		"/home/juan/proyectos/enpositivo/server/server_save_file.js",
+		"/home/juan/proyectos/enpositivo/private/config-example.json",
+		"/home/juan/proyectos/enpositivo/client/includes/insertar.html_",
+		"/home/juan/proyectos/enpositivo/client/includes/caras.html",
+		"/home/juan/proyectos/enpositivo/client/scss/main.scss",
+		"/home/juan/proyectos/enpositivo/client/ayudantes.js",
+		"/home/juan/proyectos/enpositivo/client/eventos.js",
+		"/home/juan/proyectos/enpositivo/client/global.html",
+		"/home/juan/proyectos/enpositivo/client/index.html",
+		"/home/juan/proyectos/enpositivo/collections/items.js",
+		"/home/juan/proyectos/enpositivo/server/items.js",
+		"/home/juan/proyectos/enpositivo/collections/caras.js",
+		"/home/juan/proyectos/enpositivo/client/global.js",
+		"/home/juan/proyectos/enpositivo/client/includes/menu.js",
+		"/home/juan/proyectos/enpositivo/client/caras.js",
+		"/home/juan/proyectos/enpositivo/server/caras.js",
+		"/home/juan/proyectos/enpositivo/client/includes/insertar.js",
+		"/home/juan/proyectos/enpositivo/client/includes/menu.html",
+		"/home/juan/proyectos/enpositivo/client/main.js",
+		"/home/juan/proyectos/enpositivo/smart.json",
+		"/home/juan/proyectos/enpositivo/client/includes/items.js",
+		"/home/juan/proyectos/enpositivo/client/includes/items.html",
+		"/home/juan/proyectos/enpositivo/collections/books.js",
+		"/home/juan/proyectos/enpositivo/server/fixtures.js",
+		"/home/juan/proyectos/enpositivo/client/includes/insertarItem.html",
+		"/home/juan/proyectos/enpositivo/lib/commons.js",
+		"/home/juan/test/track.json?q=enrique+bunbury",
+		"/home/juan/proyectos/meteor-onl/client/index.html",
+		"/home/juan/proyectos/meteor-onl/client/index.js",
+		"/home/juan/proyectos/meteor-onl/client/scss/cabecera.scss",
+		"/home/juan/proyectos/meteor-onl/client/includes/menu_usuario/menu_usuario.html",
+		"/home/juan/proyectos/meteor-onl/client/includes/pie/pie.html",
+		"/home/juan/proyectos/meteor-onl/client/scss/pie.scss",
+		"/home/juan/proyectos/meteor-onl/client/includes/menu_usuario/menu_usuario.js",
+		"/home/juan/proyectos/meteor-onl/client/scss/menu_usuario.scss",
+		"/home/juan/proyectos/meteor-onl/server/fixtures.js",
+		"/home/juan/proyectos/meteor-onl/client/scss/main.scss",
+		"/home/juan/proyectos/meteor-onl/collections/menus.js",
+		"/home/juan/proyectos/meteor-onl/server/publications.js",
+		"/home/juan/proyectos/meteor-onl/packages/zurb-foundation/css/foundation.css",
+		"/home/juan/proyectos/meteor-onl/smart.json",
+		"/home/juan/proyectos/meteor-onl/.meteor/local/build/main.js",
+		"/home/juan/proyectos/meteor-onl/client/includes/pie/pie.js",
+		"/home/juan/proyectos/meteor-onl/client/includes/pie/herramientas_usuario.html",
+		"/home/juan/proyectos/meteor-onl/client/includes/pie/herramientas_administrador.html",
+		"/home/juan/proyectos/meteor-onl/packages/foundation5-sass/scss/foundation/_settings.scss",
+		"/home/juan/proyectos/meteor-onl/client/includes/cabecera/cabecera.html",
+		"/home/juan/proyectos/meteor-onl/packages/foundation5-sass/scss/foundation/components/_grid.scss",
+		"/home/juan/proyectos/meteor-onl/client/meteor-onl.js",
+		"/home/juan/proyectos/meteor-onl/client/includes/cabecera/cabecera.scss",
+		"/home/juan/proyectos/meteor/Microscope/server/publications.js",
+		"/home/juan/proyectos/meteor/Microscope/lib/router.js",
+		"/home/juan/proyectos/meteor/Microscope/client/views/comments/comment_submit.js",
+		"/home/juan/proyectos/meteor/Microscope/client/views/notifications/notifications.html",
+		"/home/juan/proyectos/meteor/Microscope/client/views/notifications/notifications.js",
+		"/home/juan/proyectos/meteor/Microscope/client/views/posts/post_page.js",
+		"/home/juan/proyectos/meteor/Microscope/client/views/comments/comments.html",
+		"/home/juan/proyectos/meteor/Microscope/client/views/comments/comments.js",
+		"/home/juan/proyectos/meteor/Microscope/client/views/posts/post_item.html",
+		"/home/juan/proyectos/meteor/Microscope/client/views/posts/post_item.js",
+		"/home/juan/proyectos/meteor/Microscope/collections/notifications.js",
+		"/home/juan/proyectos/meteor/Microscope/client/views/posts/post_page.html",
+		"/home/juan/proyectos/meteor/Microscope/client/views/comments/comments_submit.html",
+		"/home/juan/proyectos/meteor/Microscope/collections/comments.js"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+			"/home/juan/proyectos/enpositivo",
+			"/home/juan/proyectos/meteor-onl/packages/foundation5-sass"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"$\\n",
+			"^",
+			"\"",
+			"\\n",
+			"^",
+			"\\n",
+			" $",
+			"^",
+			"\\n",
+			"$",
+			"Anywhere: ",
+			"Client: ",
+			"Anywhere: ",
+			"commands",
+			"\\n",
+			"\"",
+			"$",
+			"^",
+			"returm",
+			"buttons",
+			"'",
+			"rein",
+			"subscribe",
+			"magen",
+			"^",
+			"$",
+			"\",^",
+			"^",
+			"$",
+			"^",
+			"small-2 ",
+			"740",
+			"15px",
+			"3x",
+			"ctrl+c",
+			"comment",
+			"entity",
+			"Pruebas",
+			"__",
+			"div",
+			"ciudad",
+			"butt",
+			"// Or selectively include components\n// @import\n//   \"foundation/components/accordion\",\n//   \"foundation/components/alert-boxes\",\n//   \"foundation/components/block-grid\",\n//   \"foundation/components/breadcrumbs\",\n//   \"foundation/components/button-groups\",\n//   \"foundation/components/buttons\",\n//   \"foundation/components/clearing\",\n//   \"foundation/components/dropdown\",\n//   \"foundation/components/dropdown-buttons\",\n//   \"foundation/components/flex-video\",\n//   \"foundation/components/forms\",\n//   \"foundation/components/grid\",\n//   \"foundation/components/inline-lists\",\n//   \"foundation/components/joyride\",\n//   \"foundation/components/keystrokes\",\n//   \"foundation/components/labels\",\n//   \"foundation/components/magellan\",\n//   \"foundation/components/orbit\",\n//   \"foundation/components/pagination\",\n//   \"foundation/components/panels\",\n//   \"foundation/components/pricing-tables\",\n//   \"foundation/components/progress-bars\",\n//   \"foundation/components/reveal\",\n//   \"foundation/components/side-nav\",\n//   \"foundation/components/split-buttons\",\n//   \"foundation/components/sub-nav\",\n//   \"foundation/components/switch\",\n//   \"foundation/components/tables\",\n   \"foundation/components/tabs\",\n//   \"foundation/components/thumbs\",\n//   \"foundation/components/tooltips\",\n//   \"foundation/components/top-bar\",\n//   \"foundation/components/type\",\n//   \"foundation/components/offcanvas\",\n//   \"foundation/components/visibility\";\n",
+			"bac",
+			"5"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			"\"",
+			",\"",
+			"",
+			"\"",
+			",\"",
+			"",
+			"\"",
+			",\"",
+			"\"",
+			"",
+			"\"",
+			"",
+			"\"",
+			",\"",
+			"\"",
+			"\",",
+			"\"",
+			"",
+			"^\"",
+			"\"",
+			"\",",
+			"\"",
+			"^\"",
+			"",
+			"10px",
+			"2x",
+			"entity_name",
+			"Autoforms"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/home/juan/proyectos/oeneele/client/backend/menu_backend.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 498,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								498,
+								498
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 26.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"project": "oeneele.sublime-project",
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"",
+				"Gruntfile.js"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 284.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

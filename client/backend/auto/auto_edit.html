@@ -1,0 +1,68 @@
+<template name="autoEdit">
+    {{initialItem}}
+    <div class="row">
+        <div class="small-12 columns">
+
+            <div class="panel" id="items_existentes">
+                <ul class="button-group even-3">
+                    <li class="button filter active" type="all">Todo</li>
+                    <li class="button filter" type="form">Formularios</li>
+                    <li class="button filter" type="list">Listados</li>
+                </ul>
+
+                <input type="text" id="filtrar" placeholder="Filtrar elementos (formularios y listados)" />
+                <ul class="inline-list">
+                    <li class="button tiny secondary " id="crear" title="Añadir un nuevo item"><i class="fa fa-plus fa-2x"></i>
+                    </li>
+                    {{#each items }}
+                    <li class="button tiny secondary doc" name="{{name}}" type="{{type}}" id="{{_id}}">{{name}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+
+
+            <div id="bloque-editor">
+                <div class="button-bar">
+                    <ul class="button-group">
+                        <li class="button tiny" id="guardar"><i class="fa fa-save fa-2x"></i>
+                        </li>
+                        <li class="button tiny alert" id="eliminar"><i class="fa fa-remove fa-2x"></i>
+                        </li>
+                        <li class="button tiny" id="ayudacampos" title="Insertar la lista de campos de la colección en el editor"><i class="fa fa-database fa-2x"></i>
+                        </li>
+
+                    </ul>
+                </div>
+
+
+                <input type="text" id="nombre" placeholder="Nombre del item" value="" itemid="">
+
+                <div id="editor" class="large-6 columns " data-equalizer-watch></div>
+                <div id="elitem" class="large-6 columns " data-equalizer-watch>
+                    <!--
+                    {{#if type = 'form'}}
+                    <div data-alert class="alert-box info">
+                        De momento al añadir una nueva coleccion (o modificar una existente) hay que reiniiar la aplicación
+                        <a href="#" class="close">&times;</a>
+                    </div>
+                    {{/if}}
+}
+}
+-->
+
+
+                    <div id="ritem">
+                        <div data-alert class="alert-box info">
+                            Si aparece este mensaje es que no se ha llamado correctamente al renderizado de {{name}}
+                            <a href="#" class="close">&times;</a>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+    {{initFoundation}}
+</template>

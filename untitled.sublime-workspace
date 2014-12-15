@@ -1,0 +1,1706 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"arr",
+				"arrRow"
+			],
+			[
+				"rs",
+				"resBV"
+			],
+			[
+				"res",
+				"resBV"
+			],
+			[
+				"the",
+				"theValue"
+			],
+			[
+				"dat",
+				"dateTypes"
+			],
+			[
+				"auto",
+				"autoSort"
+			],
+			[
+				"aut",
+				"autoFilter"
+			],
+			[
+				"in",
+				"indexOf"
+			],
+			[
+				"ara",
+				"arrCompare"
+			],
+			[
+				"q",
+				"qRes"
+			],
+			[
+				"ob",
+				"obJFields"
+			],
+			[
+				"str",
+				"strOptgroup"
+			],
+			[
+				"query",
+				"query"
+			],
+			[
+				"star",
+				"startsWith"
+			],
+			[
+				"que",
+				"queries"
+			],
+			[
+				"ther",
+				"theradioItem"
+			],
+			[
+				"theR",
+				"theradioItem"
+			],
+			[
+				"val",
+				"value"
+			],
+			[
+				"mai",
+				"maindiv"
+			],
+			[
+				"add",
+				"addClass"
+			],
+			[
+				"table",
+				"table-cell"
+			],
+			[
+				"control",
+				"control-background"
+			],
+			[
+				"ba",
+				"background"
+			],
+			[
+				"def",
+				"defaultSelectConfig"
+			],
+			[
+				"blo",
+				"block"
+			],
+			[
+				"j",
+				"jqueryObject"
+			],
+			[
+				"che",
+				"checkFormValidity"
+			],
+			[
+				"act",
+				"activateCustomValidation"
+			],
+			[
+				"box",
+				"input-box-shadow"
+			],
+			[
+				"insert",
+				"insertObj"
+			],
+			[
+				"form",
+				"formToJson"
+			],
+			[
+				"type",
+				"typeof"
+			],
+			[
+				"has",
+				"hasEnumDepend"
+			],
+			[
+				"arra",
+				"arrayProcess"
+			],
+			[
+				"proce",
+				"processSelectize"
+			],
+			[
+				"pro",
+				"processEnumDependSelects"
+			],
+			[
+				"enum",
+				"enumDependProcess"
+			],
+			[
+				"show",
+				"show"
+			],
+			[
+				"disab",
+				"disable"
+			],
+			[
+				"fie",
+				"fieldSource"
+			],
+			[
+				"activ",
+				"activateHooks"
+			],
+			[
+				"acti",
+				"activateHooks"
+			],
+			[
+				"con",
+				"controlType"
+			],
+			[
+				"clo",
+				"clone"
+			],
+			[
+				"co",
+				"common"
+			],
+			[
+				"fierl",
+				"fieldSource"
+			],
+			[
+				"com",
+				"common"
+			],
+			[
+				"nombre",
+				"nombreItem"
+			],
+			[
+				"nomb",
+				"nombreItem"
+			],
+			[
+				"bord",
+				"border-color"
+			],
+			[
+				"select",
+				"selectized"
+			],
+			[
+				"initCloned",
+				"initClonedRadioControls"
+			],
+			[
+				"ini",
+				"initSelectToSelectize"
+			],
+			[
+				"prep",
+				"prepareShadowClonableRows"
+			],
+			[
+				"theN",
+				"theNewClon"
+			],
+			[
+				"cona",
+				"clonableRows"
+			],
+			[
+				"no",
+				"noprocess"
+			],
+			[
+				"font",
+				"font-variant"
+			],
+			[
+				"text",
+				"text-decoration"
+			],
+			[
+				"pa",
+				"padding"
+			],
+			[
+				"border-l",
+				"border-left-width"
+			],
+			[
+				"theL",
+				"theLi"
+			],
+			[
+				"marg",
+				"margin-left"
+			],
+			[
+				"tab",
+				"table-cell"
+			],
+			[
+				"lig",
+				"lighten	Sass-function"
+			],
+			[
+				"theV",
+				"theValue"
+			],
+			[
+				"theVa",
+				"theValueId"
+			],
+			[
+				"tehV",
+				"theValueId"
+			],
+			[
+				"teh",
+				"theFieldset"
+			],
+			[
+				"cre",
+				"createRadioControl"
+			],
+			[
+				"creat",
+				"createRadioControl"
+			],
+			[
+				"inli",
+				"inline-block"
+			],
+			[
+				"fil",
+				"fieldSource"
+			],
+			[
+				"contr",
+				"control-padding-h"
+			],
+			[
+				"par",
+				"parseaDecimalFields"
+			],
+			[
+				"ht",
+				"htmlAtrributes"
+			],
+			[
+				"rende",
+				"renderedField"
+			],
+			[
+				"sele",
+				"selectedItems"
+			],
+			[
+				"fiel",
+				"fieldSource"
+			],
+			[
+				"field",
+				"fieldSource"
+			],
+			[
+				"MAIN",
+				"mainRow"
+			],
+			[
+				"backg",
+				"background-color"
+			],
+			[
+				"back",
+				"background-color"
+			],
+			[
+				"main",
+				"mainRow"
+			],
+			[
+				"block",
+				"blockSource"
+			],
+			[
+				"bloc",
+				"blockSource"
+			],
+			[
+				"butt",
+				"button"
+			],
+			[
+				"bac",
+				"background-color"
+			],
+			[
+				"coll",
+				"collapseBlocks"
+			],
+			[
+				"wid",
+				"width"
+			],
+			[
+				"borde",
+				"border-color"
+			],
+			[
+				"v",
+				"visibility"
+			],
+			[
+				"cur",
+				"currentBlock"
+			],
+			[
+				"H",
+				"HTML"
+			],
+			[
+				"panel",
+				"panelBlock"
+			],
+			[
+				"labe",
+				"labelBlock"
+			],
+			[
+				"crea",
+				"createBlocks"
+			],
+			[
+				"start",
+				"startsWith"
+			],
+			[
+				"crae",
+				"createBlocks"
+			],
+			[
+				"FIEL",
+				"fieldSource"
+			],
+			[
+				"curr",
+				"currentBlockName"
+			],
+			[
+				"ar",
+				"arrOptionGroups"
+			],
+			[
+				"grou",
+				"groupLabel"
+			],
+			[
+				"s",
+				"size"
+			],
+			[
+				"curre",
+				"currentConfig"
+			],
+			[
+				"date",
+				"datetimepicker"
+			],
+			[
+				"ren",
+				"renderedField"
+			],
+			[
+				"da",
+				"dateFieldProcess"
+			],
+			[
+				"fun",
+				"function"
+			],
+			[
+				"input",
+				"inputTypes"
+			],
+			[
+				"mi",
+				"maindiv"
+			],
+			[
+				"le",
+				"legend"
+			],
+			[
+				"fo",
+				"form"
+			],
+			[
+				"ti",
+				"title"
+			],
+			[
+				"for",
+				"formConfig"
+			],
+			[
+				"el",
+				"elForm"
+			],
+			[
+				"cam",
+				"editor_cambiado"
+			],
+			[
+				"lista",
+				"listaCentros"
+			],
+			[
+				"get",
+				"getCentrosList"
+			],
+			[
+				"ran",
+				"randEl"
+			],
+			[
+				"obj",
+				"objectSource"
+			],
+			[
+				"au",
+				"autopage"
+			],
+			[
+				"d",
+				"dKey"
+			],
+			[
+				"iSour",
+				"iSource"
+			],
+			[
+				"dS",
+				"dSources"
+			],
+			[
+				"sho",
+				"show"
+			],
+			[
+				"id",
+				"idSource"
+			],
+			[
+				"me",
+				"mergeArrayOneToMany"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "/home/juan/proyectos/oeneele/client/my_libs/autoform/autof.js",
+			"settings":
+			{
+				"buffer_size": 31691,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "client/backend/auto/auto_edit.js",
+			"settings":
+			{
+				"buffer_size": 11916,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "// Wednesday 12/10/14 at 08:49PM - 18 files in 0.19 secs\n\n## FIXME (3)\n1. my_libs/autoform/autofActions.js:75     @urgente revisar como devuelve los objetois de un solo elemento\n2. backend/auto/auto_edit.js:115           Parece que no funciona correctamente al hacer update (muestra los antiguos) Revisar!!!\n3. backend/auto/auto_edit.js:228           apñara esto para que los no se pueda cambiar ni filtrar si se ha modificado el editos\n\n## IDEA (1)\n1. my_libs/autoform/autof.js:749           hacer un controlador que renderize valores de tipo escala para los enum de formularios [enum: 1-5]\n\n## RELEASE (2)\n1. my_libs/autolist/autol.js:193           quitar las comas de la lista de clases en tableClass (libreria json2TableList)\n2. my_libs/autoform/autof.js:694           Descomentar para pasar a produccion, para trabajar es un rollo\n\n## TODO (9)\n1. my_libs/autolist/json2TableList.js:24   Hacerla Sortable\n2. my_libs/autolist/json2TableList.js:25   Hacerla filterable\n3. my_libs/autolist/autol.js:194           Ver que ocurre con eval(luhlhlhh) cuando no se utiliza al final de la linea\n4. my_libs/autoform/autof.js:748           Asignar acciones a los botones en función del modo y en función de la validación\n5. my_libs/autoform/autofActions.js:30     Refactorizar hay que extraer siempre los valores de los campos con fieldValue @urgente\n6. my_libs/autoform/autofActions.js:56     Procesar la salida de getBlockValues, para que si limit=1, solo devuelva un objeto y no un array\n7. my_libs/autoform/autofActions.js:87     esta operacion hay que hacerla desde un metodo de meteor, añadiendo autofecha, usuario, etc.....\n8. backend/auto/auto_edit.js:305           Documentar el proceso de eliminar , update  y borrado lógico\n9. backend/auto/auto_edit.js:306           Arreglar las ayudas para que vuelque la estructura de los campos complejos\n",
+			"settings":
+			{
+				"buffer_size": 1846,
+				"line_ending": "Unix",
+				"name": "TodoReview",
+				"scratch": true
+			}
+		},
+		{
+			"file": "client/my_libs/autoform/readme.md",
+			"settings":
+			{
+				"buffer_size": 15687,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "both/tools/onl_function.js",
+			"settings":
+			{
+				"buffer_size": 1451,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/juan/proyectos/oeneele/client/my_libs/autoform/autofActions.js",
+			"settings":
+			{
+				"buffer_size": 8402,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/juan/proyectos/oeneele/client/my_libs/autoform/autof.js_DEPRECATED",
+			"settings":
+			{
+				"buffer_size": 15262,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/juan/.config/sublime-text-3/Packages/TodoReview/Default.sublime-keymap",
+			"settings":
+			{
+				"buffer_size": 1609,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/juan/proyectos/oeneele/client/my_libs/autolist/autol.js",
+			"settings":
+			{
+				"buffer_size": 10422,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/juan/.config/sublime-text-3/Packages/User/TodoReview.sublime-settings",
+			"settings":
+			{
+				"buffer_size": 786,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+			[
+				"todo",
+				"TodoReview: Project Files"
+			],
+			[
+				"tod",
+				"TodoReview: Project Files"
+			],
+			[
+				"todfo",
+				"TodoReview: Project Files"
+			],
+			[
+				"pack",
+				"Package Control: Install Package"
+			],
+			[
+				"prev",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"toc",
+				"MarkdownTOC:Insert TOC"
+			],
+			[
+				"pre",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"mark",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"markd",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"rem",
+				"Package Control: Remove Package"
+			],
+			[
+				"remo",
+				"Package Control: Remove Package"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"mar",
+				"Set Syntax: MultiMarkdown"
+			],
+			[
+				"md",
+				"Set Syntax: Markdown GFM"
+			],
+			[
+				"commi",
+				"Git (SideBarGit): Add & Commit…"
+			],
+			[
+				"comm",
+				"Git: Commit history"
+			],
+			[
+				"commit",
+				"Git (SideBarGit): Add & Commit…"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"disc",
+				"Package Control: Discover Packages"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"sas",
+				"SassBeautify"
+			],
+			[
+				"sass",
+				"SassBeautify"
+			],
+			[
+				"scss",
+				"SassBeautify: Convert from CSS to current type"
+			],
+			[
+				"dis",
+				"Package Control: Discover Packages"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"tdo",
+				"TodoReview: Project Files"
+			],
+			[
+				"too",
+				"TodoReview: Project Files"
+			],
+			[
+				"tas",
+				"Tasks: New"
+			],
+			[
+				"TAS",
+				"Tasks: New"
+			],
+			[
+				"tAS",
+				"Tasks: Archive"
+			],
+			[
+				"com",
+				"Git: Commit"
+			],
+			[
+				"remov",
+				"Package Control: Remove Package"
+			],
+			[
+				"git",
+				"Git (SideBarGit): Add & Commit & Push…"
+			],
+			[
+				"push",
+				"Git: Push"
+			],
+			[
+				"Snippet: ",
+				"Snippet: <?php echo … ?>"
+			],
+			[
+				"lin",
+				"SublimeLinter: Next Error"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"tdoo",
+				"TodoReview: Project Files"
+			],
+			[
+				"tdoi",
+				"TodoReview: Project Files"
+			],
+			[
+				"t",
+				"TodoReview: Project Files"
+			],
+			[
+				"javas",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"func",
+				"Snippet: setTimeout function"
+			],
+			[
+				"",
+				"BracketHighlighter: Select Bracket Content"
+			],
+			[
+				"Meteor",
+				"Git (SideBarGit): Branch: merge changes to current from…"
+			],
+			[
+				"scop",
+				"Scope Hunter: Show Scope Under Cursor(s)"
+			],
+			[
+				"sco",
+				"Scope Hunter: Toggle Instant Scoper"
+			],
+			[
+				"bea",
+				"SassBeautify"
+			],
+			[
+				"in",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 746.0
+	},
+	"console":
+	{
+		"height": 139.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) "
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"//home/juan/proyectos/oeneele",
+		"//home/juan/proyectos/oeneele/both",
+		"//home/juan/proyectos/oeneele/both/tools",
+		"//home/juan/proyectos/oeneele/client",
+		"//home/juan/proyectos/oeneele/client/backend",
+		"//home/juan/proyectos/oeneele/client/backend/auto",
+		"//home/juan/proyectos/oeneele/client/my_libs",
+		"//home/juan/proyectos/oeneele/client/my_libs/autoform",
+		"//home/juan/proyectos/oeneele/client/my_libs/autolist",
+		"//home/juan/proyectos/oeneele/client/scss",
+		"//home/juan/proyectos/oeneele/public",
+		"//home/juan/proyectos/oeneele/server"
+	],
+	"file_history":
+	[
+		"//home/juan/proyectos/oeneele/.meteor/local/build/programs/server/app/both/tools/onl_function.js",
+		"//home/juan/proyectos/oeneele/both/tools/onl_function.js",
+		"//home/juan/proyectos/oeneele/oeneele.TODO",
+		"//home/juan/proyectos/oeneele/client/my_libs/autoform/initSpecialFields.js",
+		"/home/juan/proyectos/oeneele/client/my_libs/autoform/initSpecialFields.js",
+		"/home/juan/.config/sublime-text-3/Packages/TodoReview/Default.sublime-keymap",
+		"/home/juan/.config/sublime-text-3/Packages/TodoReview/Default.sublime-mousemap",
+		"/home/juan/.config/sublime-text-3/Packages/User/TodoReview.sublime-settings",
+		"/home/juan/proyectos/oeneele/client/my_libs/autoform/autof.js_DEPRECATED",
+		"//home/juan/proyectos/oeneele/client/my_libs/autoform/autof.js_DEPRECATED",
+		"/home/juan/.config/sublime-text-3/Packages/TodoReview/TodoReview.sublime-settings",
+		"//home/juan/proyectos/oeneele/client/my_libs/autoform/autof.js",
+		"//home/juan/proyectos/oeneele/client/my_libs/autoform/autofActions.js",
+		"//home/juan/proyectos/oeneele/client/my_libs/autoform/readme.md",
+		"//home/juan/proyectos/oeneele/.meteor/packages",
+		"//home/juan/proyectos/oeneele/client/backend/auto/auto_edit.js",
+		"//home/juan/proyectos/oeneele/both/tools/utilities.js",
+		"//home/juan/proyectos/oeneele/client/scss/autoform.scss",
+		"/home/juan/.config/sublime-text-3/Packages/HTML-CSS-JS Prettify/HTMLPrettify.sublime-settings",
+		"/home/juan/.config/sublime-text-3/Packages/HTML-CSS-JS Prettify/.jsbeautifyrc",
+		"//home/juan/proyectos/oeneele/client/backend/auto/auto_edit.html",
+		"//home/juan/proyectos/oeneele/both/collection_startup.js",
+		"/home/juan/proyectos/oeneele/client/my_libs/autoform/autof.js",
+		"/home/juan/.config/sublime-text-3/Packages/User/Function Name Display.sublime-settings",
+		"/home/juan/.config/sublime-text-3/Packages/User/Default (Linux).sublime-keymap",
+		"/home/juan/.config/sublime-text-3/Packages/Markdown Preview/MarkdownPreview.sublime-settings",
+		"//home/juan/proyectos/oeneele/.meteor/local/build/programs/server/packages/mandrill_ace.js",
+		"//home/juan/proyectos/oeneele/client/scss/main.scss",
+		"//home/juan/proyectos/oeneele/.meteor/cordova-plugins",
+		"//home/juan/proyectos/oeneele/packages/npm-container/.build.npm-container/npm/node_modules/js-yaml/test/samples-common/construct-javascript-regexp.js",
+		"//home/juan/proyectos/oeneele/.meteor/local/build/programs/server/npm/webapp/node_modules/useragent/CREDITS",
+		"//home/juan/proyectos/oeneele/client/my_libs/autoform/formToJson.js",
+		"//home/juan/proyectos/oeneele/client/scss/myFoundationConfig.scss",
+		"//home/juan/proyectos/oeneele/client/scss/backend.scss",
+		"//home/juan/proyectos/oeneele/both/tools/config_libraries.js",
+		"//home/juan/proyectos/oeneele/.meteor/local/bower/select2/select2_locale_el.js",
+		"//home/juan/proyectos/oeneele/smart.json",
+		"//home/juan/proyectos/oeneele/packages.json",
+		"//home/juan/proyectos/oeneele/.meteor/local/bower/js-yaml/lib/js-yaml/mark.js",
+		"//home/juan/proyectos/oeneele/.meteor/local/build/programs/server/node_modules/jsdoc/plugins/markdown.js",
+		"//home/juan/proyectos/oeneele/.meteor/local/build/programs/server/node_modules/fstream/lib/proxy-reader.js",
+		"//home/juan/proyectos/oeneele/.meteor/local/bower/google-code-prettify/src/prettify.css",
+		"//home/juan/proyectos/oeneele/client/my_libs/autoform/autof2/autof2.js",
+		"/home/juan/cursos/m102/final_exam/1/a.sh",
+		"//home/juan/proyectos/oeneele/both/router.js",
+		"//home/juan/proyectos/oeneele/server/fixtures.js",
+		"//home/juan/proyectos/oeneele/server/autof.js",
+		"//home/juan/proyectos/oeneele/client/templates/menu.html",
+		"//home/juan/proyectos/oeneele/lib/collection_startup.js",
+		"//home/juan/proyectos/oeneele/both/1_tools/utilities.js",
+		"//home/juan/proyectos/oeneele/server/kadira.js",
+		"//home/juan/proyectos/oeneele/server/metodos.js",
+		"//home/juan/proyectos/oeneele/both/2_config/userAccounts.js_",
+		"//home/juan/proyectos/oeneele/both/2_config/appCollectionStart.js",
+		"//home/juan/proyectos/oeneele/both/2_config/userCollectionStart.js",
+		"//home/juan/proyectos/oeneele/client/templates/validacion.html",
+		"//home/juan/proyectos/oeneele/client/scss/_settings.scss",
+		"//home/juan/proyectos/oeneele/lib/2_config/userAccounts.js",
+		"//home/juan/proyectos/oeneele/client/backend/users/users.html",
+		"//home/juan/proyectos/oeneele/client/traduce/traduce.js",
+		"//home/juan/proyectos/oeneele/lib/router.js",
+		"//home/juan/proyectos/oeneele/client/pages/autopage.js",
+		"//home/juan/proyectos/oeneele/client/index.js",
+		"//home/juan/proyectos/oeneele/lib/config/userAccounts.js",
+		"//home/juan/proyectos/oeneele/client/my_libs/autolist/autol.js",
+		"//home/juan/proyectos/oeneele/lib/tools/utilities.js",
+		"//home/juan/proyectos/oeneele/client/scss/autolist.scss",
+		"//home/juan/proyectos/oeneele/lib/tools/onl_function.js",
+		"//home/juan/proyectos/oeneele/client/pages/autopage.html",
+		"//home/juan/proyectos/oeneele/client/index.html",
+		"//home/juan/proyectos/oeneele/client/my_libs/commons.js",
+		"//home/juan/proyectos/oeneele/untitled.sublime-project",
+		"/home/juan/.config/sublime-text-3/Packages/User/Package Control.sublime-settings",
+		"//home/juan/proyectos/oeneele/client/paginas",
+		"//home/juan/proyectos/oeneele/client/my_libs/autolist/autolist.md",
+		"//home/juan/proyectos/oeneele/client/backend/auto/HTML/HTML.tmLanguage",
+		"//home/juan/proyectos/oeneele/readme.md",
+		"//home/juan/proyectos/oeneele/.meteor/local/build/programs/server/node_modules/node-inspector/front-end/RuntimeModel.js",
+		"//home/juan/proyectos/oeneele/.meteor/local/build/programs/server/node_modules/node-inspector/front-end/RemoteObject.js",
+		"/home/juan/.config/sublime-text-3/Packages/TernJS/TernJS.sublime-settings",
+		"//home/juan/proyectos/oeneele/client/my_libs/autolist/autol.js_",
+		"//home/juan/proyectos/oeneele/client/my_libs/autolist/json2TableList.js",
+		"/home/juan/.config/sublime-text-3/Packages/Git/Git.sublime-settings",
+		"/home/juan/cursos/m101j/hw1-3/package.json",
+		"/home/juan/cursos/MongoDB_dev/final/final4/blogPostDAO.py",
+		"/home/juan/cursos/m101j/hw1-3/app.js",
+		"/home/juan/cursos/m102/replication.js",
+		"//home/juan/proyectos/oeneele/docs/autof.md",
+		"/home/juan/.config/sublime-text-3/Packages/MarkdownTOC/MarkdownTOC.sublime-settings",
+		"/home/juan/.config/sublime-text-3/Packages/User/Markdown.sublime-settings",
+		"/home/juan/.config/sublime-text-3/Packages/MarkdownEditing/Markdown.sublime-settings",
+		"/home/juan/.config/sublime-text-3/Packages/User/MarkdownTOC.sublime-settings",
+		"//home/juan/proyectos/oeneele/.meteor/local/bower/jquery-autosize/demo.html",
+		"//home/juan/proyectos/oeneele/.meteor/local/bower/ckeditor/skins/kama/dialog_ie.css",
+		"//home/juan/proyectos/oeneele/packages/npm-container/.build.npm-container/npm/node_modules/js-yaml/test/samples-load-errors/document-separator-in-quoted-scalar.yml",
+		"//home/juan/proyectos/oeneele/.meteor/local/build/programs/ctl/node_modules/jsdoc/node_modules/catharsis/node_modules/underscore-contrib/test/dist-concat.html",
+		"//home/juan/proyectos/oeneele/readme.html",
+		"/home/juan/.config/sublime-text-3/Packages/User/SassBeautify.sublime-settings",
+		"/home/juan/proyectos/oeneele/client/my_libs/autolist/json2TableList.js",
+		"/home/juan/proyectos/oeneele/client/my_libs/autolist/autol.js",
+		"/home/juan/proyectos/oeneele/client/backend/auto/auto_edit.js",
+		"/home/juan/proyectos/oeneele/client/my_libs/autoform/formToJson.js",
+		"/home/juan/proyectos/oeneele/lib/tools/utilities.js",
+		"//home/juan/proyectos/oeneele/packages/npm-container/.build.npm-container/npm/node_modules/js-yaml/test/units/is-negative-zero.js",
+		"//home/juan/proyectos/oeneele/.meteor/local/build/programs/ctl/node_modules/npm/scripts/clean-old.sh",
+		"//home/juan/proyectos/oeneele/.meteor/local/bower/chroma-js/LICENSE-colors",
+		"/home/juan/proyectos/oeneele/lib/collection_startup.js",
+		"/home/juan/proyectos/oeneele/docs/autof.md",
+		"/home/juan/.config/sublime-text-3/Packages/PlainTasks/messages/Tutorial.todo",
+		"//home/juan/proyectos/oeneele/OENEELE.TODO",
+		"/home/juan/.config/sublime-text-3/Packages/Git GUI Clients/Git GUI Clients.sublime-settings",
+		"//home/juan/proyectos/oeneele/.meteor/local/build/programs/ctl/node_modules/node-inspector/front-end/RemoteObject.js",
+		"//home/juan/proyectos/oeneele/.meteor/local/bower/select2/.bower.json",
+		"/home/juan/.config/sublime-text-3/Packages/Default/Default (Linux).sublime-keymap",
+		"//home/juan/proyectos/oeneele/.meteor/local/build/programs/server/node_modules/sqlite3/node_modules/nan/.dntrc",
+		"//home/juan/proyectos/oeneele/.meteor/local/build/programs/server/node_modules/source-map-support/node_modules/source-map/.npmignore",
+		"//home/juan/proyectos/oeneele/.meteor/local/build/programs/server/node_modules/request/node_modules/tough-cookie/.npmignore",
+		"//home/juan/proyectos/oeneele/.meteor/local/build/programs/server/node_modules/request/node_modules/tough-cookie/.jshintrc",
+		"//home/juan/proyectos/oeneele/.meteor/local/build/programs/server/node_modules/request/node_modules/qs/.npmignore",
+		"//home/juan/proyectos/oeneele/.meteor/local/build/programs/server/node_modules/request/node_modules/qs/.gitmodules",
+		"//home/juan/proyectos/oeneele/.meteor/local/build/programs/server/node_modules/request/node_modules/node-uuid/.npmignore",
+		"//home/juan/proyectos/oeneele/.meteor/local/build/programs/server/node_modules/request/node_modules/http-signature/.npmignore",
+		"//home/juan/proyectos/oeneele/.meteor/local/build/programs/server/node_modules/request/node_modules/hawk/.npmignore",
+		"//home/juan/proyectos/oeneele/.meteor/local/build/programs/server/node_modules/phantomjs/node_modules/unzip/.npmignore",
+		"//home/juan/proyectos/oeneele/.meteor/local/build/programs/server/node_modules/npm/node_modules/tar/.npmignore",
+		"//home/juan/proyectos/oeneele/.meteor/local/build/programs/server/node_modules/npm/node_modules/sha/.npmignore",
+		"//home/juan/proyectos/oeneele/.meteor/local/build/programs/server/node_modules/npm/node_modules/semver/.npmignore",
+		"//home/juan/proyectos/oeneele/.meteor/local/build/programs/server/node_modules/npm/node_modules/retry/.npmignore"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+			"//home/juan/proyectos/oeneele"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"datetimepicke",
+			"selectize",
+			"initSpecialFields",
+			"sendFormToMongo",
+			"click",
+			"save_as_type",
+			"collec",
+			"eval",
+			"arrOptionGroups",
+			"depend",
+			"bloc",
+			"name",
+			"dbg",
+			"console.cle",
+			"radiocon",
+			"300",
+			"replace",
+			"helpers",
+			"replace",
+			"light",
+			"limit",
+			"tags",
+			"input",
+			"processS",
+			"selectiz",
+			"radio",
+			".*consol.*",
+			".*dbg.*",
+			"required",
+			"requi",
+			"clo",
+			".*dbg\\(.*",
+			".*dbg",
+			"closes",
+			"prepareMultiBlocks",
+			"limit",
+			"comm",
+			"processSelectize",
+			".*dbg..*",
+			".*console..*",
+			"selectize",
+			"noproc",
+			"optgrop",
+			"enum_d",
+			"helpers",
+			"activateHo",
+			"thekey",
+			".*console.cle",
+			"keys",
+			"slug",
+			"fieldSource.id",
+			".*dbg.*",
+			"title",
+			"name",
+			"cargar",
+			"itemId",
+			"cargarItemInicial",
+			"^.*console.log.*",
+			".*console..*",
+			"        //        console.log(currentConfig)",
+			".*console..*$",
+			"^.*console.log.*",
+			"^.*dbg.*",
+			"clear",
+			"fa-",
+			"selecti",
+			"selectiz",
+			"clone",
+			"selectizeProcess",
+			"isClon",
+			"setV",
+			"colo",
+			"rende",
+			"render",
+			"renderType",
+			"selectize",
+			"label",
+			"http://localhost:3000/backend/autolf/kitchen",
+			"wi",
+			"select2",
+			"blockname",
+			"submit",
+			"bloc",
+			"optgrou",
+			"iput",
+			"select2",
+			"eval",
+			"size",
+			"dentro",
+			"obj",
+			"initialItem",
+			"add-",
+			"multipl",
+			"<li>{{currentUser}}  {{>atNavButton}}</li> ",
+			"autof",
+			"inser",
+			"insert",
+			"element",
+			".*_.keys.*",
+			"list.sources)",
+			"sanit",
+			"stringify",
+			"stringif",
+			".*console.cle.*",
+			".*console.lo.*",
+			".*dbg.*",
+			"main",
+			".*dbg.*",
+			"console.clear",
+			"calculateColumns2Array",
+			"arr_",
+			"^.*dbg.*$",
+			"^.*console.*$",
+			"^.*dbg.*$",
+			".dbg.",
+			"*dbg*",
+			".*dbg.*",
+			".dbg[.]",
+			"dbg[.]*",
+			"dbg*",
+			"dbg.*",
+			"dbg.*$",
+			"dbg",
+			"effectiveColumns",
+			"effe",
+			"arr_Ids",
+			"list.source",
+			"sortColumns"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"save_as",
+			"",
+			"textmate",
+			"cCols",
+			"",
+			"var that = this",
+			"//var that = this",
+			"that.",
+			"this."
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/home/juan/proyectos/oeneele/client/my_libs/autoform/autof.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 31691,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								31691,
+								31691
+							]
+						],
+						"settings":
+						{
+							"function_name_status_row": 749,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 10921.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "client/backend/auto/auto_edit.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 11916,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								10554,
+								10554
+							]
+						],
+						"settings":
+						{
+							"function_name_status_row": 269,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3558.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1846,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1846,
+								1846
+							]
+						],
+						"settings":
+						{
+							"function_name_status_row": 24,
+							"line_padding_bottom": 2,
+							"line_padding_top": 2,
+							"review_args":
+							{
+								"paths":
+								[
+									"//home/juan/proyectos/oeneele/client"
+								],
+								"settings":
+								{
+								}
+							},
+							"review_results":
+							{
+								"1090,1214":
+								{
+									"file": "/home/juan/proyectos/oeneele/client/my_libs/autoform/autof.js",
+									"line": 748,
+									"note": "Asignar acciones a los botones en función del modo y en función de la validación",
+									"patt": "todo",
+									"priority": 100
+								},
+								"1214,1344":
+								{
+									"file": "/home/juan/proyectos/oeneele/client/my_libs/autoform/autofActions.js",
+									"line": 30,
+									"note": "Refactorizar hay que extraer siempre los valores de los campos con fieldValue @urgente",
+									"patt": "todo",
+									"priority": 100
+								},
+								"1344,1484":
+								{
+									"file": "/home/juan/proyectos/oeneele/client/my_libs/autoform/autofActions.js",
+									"line": 56,
+									"note": "Procesar la salida de getBlockValues, para que si limit=1, solo devuelva un objeto y no un array",
+									"patt": "todo",
+									"priority": 100
+								},
+								"1484,1624":
+								{
+									"file": "/home/juan/proyectos/oeneele/client/my_libs/autoform/autofActions.js",
+									"line": 87,
+									"note": "esta operacion hay que hacerla desde un metodo de meteor, añadiendo autofecha, usuario, etc.....",
+									"patt": "todo",
+									"priority": 100
+								},
+								"1624,1728":
+								{
+									"file": "/home/juan/proyectos/oeneele/client/backend/auto/auto_edit.js",
+									"line": 305,
+									"note": "Documentar el proceso de eliminar , update  y borrado lógico",
+									"patt": "todo",
+									"priority": 100
+								},
+								"1728,1846":
+								{
+									"file": "/home/juan/proyectos/oeneele/client/backend/auto/auto_edit.js",
+									"line": 306,
+									"note": "Arreglar las ayudas para que vuelque la estructura de los campos complejos",
+									"patt": "todo",
+									"priority": 100
+								},
+								"178,308":
+								{
+									"file": "/home/juan/proyectos/oeneele/client/backend/auto/auto_edit.js",
+									"line": 115,
+									"note": "Parece que no funciona correctamente al hacer update (muestra los antiguos) Revisar!!!",
+									"patt": "fixme",
+									"priority": 100
+								},
+								"308,437":
+								{
+									"file": "/home/juan/proyectos/oeneele/client/backend/auto/auto_edit.js",
+									"line": 228,
+									"note": "apñara esto para que los no se pueda cambiar ni filtrar si se ha modificado el editos",
+									"patt": "fixme",
+									"priority": 100
+								},
+								"450,592":
+								{
+									"file": "/home/juan/proyectos/oeneele/client/my_libs/autoform/autof.js",
+									"line": 749,
+									"note": "hacer un controlador que renderize valores de tipo escala para los enum de formularios [enum: 1-5]",
+									"patt": "idea",
+									"priority": 100
+								},
+								"608,730":
+								{
+									"file": "/home/juan/proyectos/oeneele/client/my_libs/autolist/autol.js",
+									"line": 193,
+									"note": "quitar las comas de la lista de clases en tableClass (libreria json2TableList)",
+									"patt": "release",
+									"priority": 100
+								},
+								"71,178":
+								{
+									"file": "/home/juan/proyectos/oeneele/client/my_libs/autoform/autofActions.js",
+									"line": 75,
+									"note": "@urgente revisar como devuelve los objetois de un solo elemento",
+									"patt": "fixme",
+									"priority": 100
+								},
+								"730,836":
+								{
+									"file": "/home/juan/proyectos/oeneele/client/my_libs/autoform/autof.js",
+									"line": 694,
+									"note": "Descomentar para pasar a produccion, para trabajar es un rollo",
+									"patt": "release",
+									"priority": 100
+								},
+								"849,909":
+								{
+									"file": "/home/juan/proyectos/oeneele/client/my_libs/autolist/json2TableList.js",
+									"line": 24,
+									"note": "Hacerla Sortable",
+									"patt": "todo",
+									"priority": 100
+								},
+								"909,971":
+								{
+									"file": "/home/juan/proyectos/oeneele/client/my_libs/autolist/json2TableList.js",
+									"line": 25,
+									"note": "Hacerla filterable",
+									"patt": "todo",
+									"priority": 100
+								},
+								"971,1090":
+								{
+									"file": "/home/juan/proyectos/oeneele/client/my_libs/autolist/autol.js",
+									"line": 194,
+									"note": "Ver que ocurre con eval(luhlhlhh) cuando no se utiliza al final de la linea",
+									"patt": "todo",
+									"priority": 100
+								}
+							},
+							"syntax": "Packages/TodoReview/TodoReview.hidden-tmLanguage",
+							"todo_results": true,
+							"word_wrap": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "client/my_libs/autoform/readme.md",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 15687,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								157,
+								157
+							]
+						],
+						"settings":
+						{
+							"function_name_status_row": 7,
+							"syntax": "Packages/MarkdownEditing/Markdown.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "both/tools/onl_function.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1451,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								551,
+								551
+							]
+						],
+						"settings":
+						{
+							"function_name_status_row": 20,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/home/juan/proyectos/oeneele/client/my_libs/autoform/autofActions.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8402,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3366,
+								3366
+							]
+						],
+						"settings":
+						{
+							"function_name_status_row": 78,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 556.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "/home/juan/proyectos/oeneele/client/my_libs/autoform/autof.js_DEPRECATED",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 15262,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								14829,
+								14829
+							]
+						],
+						"settings":
+						{
+							"function_name_status_row": 329,
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4651.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "/home/juan/.config/sublime-text-3/Packages/TodoReview/Default.sublime-keymap",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1609,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"function_name_status_row": 0,
+							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "/home/juan/proyectos/oeneele/client/my_libs/autolist/autol.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10422,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8893,
+								8893
+							]
+						],
+						"settings":
+						{
+							"function_name_status_row": 193,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2251.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "/home/juan/.config/sublime-text-3/Packages/User/TodoReview.sublime-settings",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 786,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								424,
+								424
+							]
+						],
+						"settings":
+						{
+							"function_name_status_row": 18,
+							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 34.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.git":
+	{
+		"height": 100.0
+	},
+	"output.markdown":
+	{
+		"height": 100.0
+	},
+	"output.scope_viewer":
+	{
+		"height": 70.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 126.0
+	},
+	"project": "untitled.sublime-project",
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"onl",
+				"both/tools/onl_function.js"
+			],
+			[
+				"aut",
+				"client/my_libs/autolist/autol.js"
+			],
+			[
+				"rou",
+				"lib/router.js"
+			],
+			[
+				"todo",
+				"TodoReview"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 952.0,
+		"selected_items":
+		[
+		],
+		"width": 1414.0
+	},
+	"select_symbol":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+		],
+		"width": 392.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 283.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
