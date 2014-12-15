@@ -54,3 +54,21 @@ li[type=list] a {
         color: red !important;
     }
 }
+li#guardar {
+    #nombre {
+        color: darken($primary-color, 40);
+        background-color: lighten($primary-color, 40);
+        padding: 1px 6px;
+        margin: 1px 10px;
+        font-weight: normal;
+        font-size: 1.3em;
+    }
+}
+li.filtrar {
+    padding: 0px;
+    input {
+        padding: 1px 5px;
+        margin: 0px;
+        height: 1.5em;
+    }
+}
