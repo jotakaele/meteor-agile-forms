@@ -20,9 +20,9 @@ coloreaEtiquetas = function() {
 }
 carga = function carga(options) {
     options = options || {
-        _id: localStorage.getItem('lastFormAdminCharge')
-    }
-    dbg('options', options)
+            _id: localStorage.getItem('lastFormAdminCharge')
+        }
+        // dbg('options', options)
     if ($.type(options) != "object") {
         options = {
             name: options
@@ -44,21 +44,24 @@ carga = function carga(options) {
         callback(res)
     }
     cargarItemInicial(obj.name, function(res) {
-        $('#ritem').html('')
-        $("#nombre").text(res.name)
-        $("#nombre").attr("itemid", res._id)
-        $("#nombre").attr("theType", contentType(res.content))
-        $(".doc[name]").parent().removeClass('active')
-        $('.doc#' + res._id).parent().addClass('active')
-        editor_cambiado = false
-        editor = ace.edit('editor');
-        editor.setOptions(aceOptions)
-        editor.setValue(jsyaml.dump(sanitizeObjectNameKeys(res.content)))
-        colorificaYaml()
-        editor.gotoLine(1)
-        renderForm(res.content, 'ritem')
-        coloreaEtiquetas()
-        localStorage.setItem('lastFormAdminCharge', res._id)
+        if (res) {
+            // dbg('res', res)
+            $('#ritem').html('')
+            $("#nombre").text(res.name)
+            $("#nombre").attr("itemid", res._id)
+            $("#nombre").attr("theType", contentType(res.content))
+            $(".doc[name]").parent().removeClass('active')
+            $('.doc#' + res._id).parent().addClass('active')
+            editor_cambiado = false
+            editor = ace.edit('editor');
+            editor.setOptions(aceOptions)
+            editor.setValue(jsyaml.dump(sanitizeObjectNameKeys(res.content)))
+            colorificaYaml()
+            editor.gotoLine(1)
+            renderForm(res.content, 'ritem')
+            coloreaEtiquetas()
+            localStorage.setItem('lastFormAdminCharge', res._id)
+        }
     })
 }
 colorificaYaml = function colorificaYaml() {
@@ -121,10 +124,12 @@ Template.autoEdit.helpers({
             }
         })
     },
-    initialItem: function() {
-        dbg('this.name', this.name)
-        carga(this.name)
-        coloreaEtiquetas()
+    cargarItemInicial: function() {
+        //FIXME esto no deberia funcionar con setTimeout!!!
+        Meteor.setTimeout(function() {
+            // dbg('this', this)
+            carga(this.name)
+        }, 500)
     }
 });
 //fixme Parece que no funciona correctamente al hacer update (muestra los antiguos) Revisar!!!
