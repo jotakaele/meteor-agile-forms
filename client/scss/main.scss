@@ -1,7 +1,7 @@
 @import "_settings";
-@import "myFoundationConfig";
+// @import "myFoundationConfig";
 @import ".meteor/local/build/programs/server/assets/packages/matthew_foundation5-sass/scss/foundation";
- .button.active {
+.button.active {
     background-color: darken($primary-color, 15);
     color: #fff
 }

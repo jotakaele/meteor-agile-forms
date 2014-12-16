@@ -38,8 +38,8 @@ carga = function carga(options) {
         $("#nombre").text(res.name)
         $("#nombre").attr("itemid", res._id)
         $("#nombre").attr("theType", contentType(res.content))
-        $(".doc[name]").removeClass('active')
-        $('.doc#' + res._id).addClass('active')
+        $(".doc[name]").parent().removeClass('active')
+        $('.doc#' + res._id).parent().addClass('active')
         editor_cambiado = false
         editor = ace.edit('editor');
         editor.setOptions(aceOptions)
@@ -213,14 +213,13 @@ Template.autoEdit.events({
             }, 10)
         },
         'click #items_existentes .doc[id]': function seleccionarDocumento(e) {
-            dbg('click')
             if (editor_cambiado) {
                 if (confirm("¿El item se ha modificado, pero no se ha guardado aún. \nSe perderán los cambios!! \n\n¿Continuar?") == false) {
                     return false;
                 }
             }
-            $('.doc').removeClass('active')
-            $(e.target).addClass('active')
+            $('.doc').parent().removeClass('active')
+            $(e.target).parent().addClass('active')
             carga({
                 name: $(e.target).attr('name'),
                 _id: $(e.target).attr('id')
@@ -228,7 +227,7 @@ Template.autoEdit.events({
         },
         'keyup input#filtrar': function filtarLista(e) {
             tx = $(e.target).val()
-            $("#items_existentes li[name]").each(function() {
+            $("#items_existentes dd[name]").each(function() {
                 if ($(this).text().toUpperCase().indexOf(tx.toUpperCase()) == -1) {
                     $(this).hide(100)
                 } else {

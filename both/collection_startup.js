@@ -1,5 +1,4 @@
 //Instanciamos en server y client Autof
-
 Autof = new Meteor.Collection('_af', {})
 if (Meteor.isServer) {
     //Publicamos autof, de mood que esta disponible para todos
@@ -63,7 +62,6 @@ function getAutoColArray() {
     //FIXME Esto debería ser de solo lectura si el user no es admin @security
 if (Meteor.isClient) {
     Meteor.subscribe('_af', function() {
-        dbg('AUTOF YA DISPONIBLE')
         loadAutoCollection()
         Session.set('AutofLoad', 1)
     })
@@ -72,11 +70,8 @@ cCols = {} //Aqui guardamos los objetos collection del CLIENTE
 function loadAutoCollection() {
     //cols = {}
     var arrToRegister = getAutoColArray()
-        // dbg('client arrToRegister', arrToRegister)
     arrToRegister.forEach(function(colName) {
         cCols[colName] = new Meteor.Collection(colName)
-        Meteor.subscribe(colName, function() {
-            //         dbg(colName + ' YA DISPONIBLE')
-        })
+        Meteor.subscribe(colName, function() {})
     })
 }

@@ -1,37 +1,6 @@
 
-<!-- MarkdownTOC -->
 
-- [AgileForm (AF)][agileform-af]
-    - [form:][form]
-        - [collection:][collection]
-        - [title:][title]
-        - [id:][id]
-        - [modes:][modes]
-        - [permissions:][permissions]
-        - [classes:][classes]
-        - [fields][fields]
-            - [bloques][bloques]
-            - [campos][campos]
-                - [propiedades comunes de todos los campos][propiedades-comunes-de-todos-los-campos]
-                    - [save_as][save_as]
-                    - [noprocess][noprocess]
-                    - [html][html]
-                    - [columns][columns]
-                    - [value][value]
-                - [datetimepicker, selectize y autosize][datetimepicker-selectize-y-autosize]
-                - [input][input]
-                - [select][select]
-                - [textarea][textarea]
-                - [activate][activate]
-        - [common][common]
-    - [helpers (y sustituciones)][helpers-y-sustituciones]
-    - [queries (consultas contra la base de datos)][queries-consultas-contra-la-base-de-datos]
-
-<!-- /MarkdownTOC -->
-
-
-
-# AgileForm (AF)
+# AgileForms (AF)
 AgileForm es un sistema de definicion de formularios pensado para funcionar con Meteor y Mongodb. La configuración se hace mediante un objeto JSON, que puede editarse directamente desde la aplicación. 
 Para facilitar la edición y convertirlo en "Agil", la configuración de los formularios se hace mediante YAML, lo que permite construir y/o modificar rápidamente y eficazmente formularios sencillos o muy complejos, sin tener que tocar nada de html.
 La definicion de cada formulario, se guarda en MongoDb en la colección `_af`, que se crea automaticamente cuando se instala el paquete.
