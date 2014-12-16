@@ -59,10 +59,10 @@ li[type=list] a {
         display: table-cell;
         vertical-align: middle;
         #nombre {
-            color: darken($primary-color, 40);
-            background-color: lighten($primary-color, 40);
+            color: darken($primary-color, 50);
+            background-color: lighten($primary-color, 50);
             padding: 0px 6px;
-            margin: 1px 10px;
+            margin: 0px 10px;
             font-weight: normal;
             min-width: 10em;
             display: inline-block;

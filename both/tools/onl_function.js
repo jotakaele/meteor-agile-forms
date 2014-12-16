@@ -20,27 +20,23 @@ onl.arr2label = function(theArray) {
     return tx
 }
 onl.textCollapse = function(texto, characters) {
-        var theId = '_' + makeId(6)
-        var char = characters || 20
-        var action = 'onclick = "$(\'#' + theId + '\').toggle(200)"'
-        tx = '<a class="showmore" showid="makeId" title="' + texto + '" ' + action + '>' + _(texto).prune(char) + '</a>'
-        tx = tx + '<div id="' + theId + '" style="display:none;"' + action + '>' + texto + '</div>'
-        return tx
+    var theId = '_' + makeId(6)
+    var char = characters || 20
+    var action = 'onclick = "$(\'#' + theId + '\').toggle(200)"'
+    tx = '<a class="showmore" showid="makeId" title="' + texto + '" ' + action + '>' + _(texto).prune(char) + '</a>'
+    tx = tx + '<div id="' + theId + '" style="display:none;"' + action + '>' + texto + '</div>'
+    return tx
+}
+onl.randomSeedColor = function randomSeedColor(cadena) {
+    function seedColor(seed) {
+        return (Math.ceil(Math.abs(Math.sin(seed == undefined ? seed = Math.random() : seed = seed)) * 16777215) % 16777215).toString(16);
     }
-    /*Renderiza un elemento en funcion de su tipo (form, list) */
-    /*renderType = function renderType(objectSource, divDestName) {
-        if (objectSource.form) {
-            nx = objectSource
-            autof = new AUTOF(divDestName, {
-                def: sanitizeObjectNameKeys(objectSource)
-            })
-        }
-
-        if (objectSource.list) {
-            nx = objectSource
-            autol = new AUTOL(divDestName, {
-                def: sanitizeObjectNameKeys(objectSource)
-            })
-        }
-    }
-    */
+    var master = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzñÑ?¡<>="\'_';
+    var res = ''
+    cadena = cadena + ' '
+    cadena.split('').forEach(function(car) {
+            res = res + master.indexOf(car) || 0
+        })
+        // console.log(res)
+    return seedColor(parseFloat(res))
+}

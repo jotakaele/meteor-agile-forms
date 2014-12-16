@@ -12,7 +12,17 @@ aceOptions = {
 }
 var myFold = {}
 editor_cambiado = false
+coloreaEtiquetas = function() {
+    $('dd[collection]').each(function() {
+        var color = onl.randomSeedColor($(this).attr('collection'))
+        $(this).css('border-bottom', '3px solid #' + color)
+    })
+}
 carga = function carga(options) {
+    options = options || {
+        _id: localStorage.getItem('lastFormAdminCharge')
+    }
+    dbg('options', options)
     if ($.type(options) != "object") {
         options = {
             name: options
@@ -47,6 +57,8 @@ carga = function carga(options) {
         colorificaYaml()
         editor.gotoLine(1)
         renderForm(res.content, 'ritem')
+        coloreaEtiquetas()
+        localStorage.setItem('lastFormAdminCharge', res._id)
     })
 }
 colorificaYaml = function colorificaYaml() {
@@ -64,6 +76,7 @@ colorificaYaml = function colorificaYaml() {
         })
     }
     setTimeout(function() {
+        coloreaEtiquetas()
         tag2Color(['fields', 'common', 'sources', 'options'], 'level1')
         tag2Color(['form', 'list', 'helpers', 'queries'], 'level0')
         tag2Color(['selectize', 'html', 'enum', 'datetimepicker'], 'collapsible')
@@ -111,6 +124,7 @@ Template.autoEdit.helpers({
     initialItem: function() {
         dbg('this.name', this.name)
         carga(this.name)
+        coloreaEtiquetas()
     }
 });
 //fixme Parece que no funciona correctamente al hacer update (muestra los antiguos) Revisar!!!
