@@ -19,8 +19,9 @@ coloreaEtiquetas = function() {
     })
 }
 carga = function carga(options) {
+    dbg('options',o2S(options))
     options = options || {
-            _id: localStorage.getItem('lastFormAdminCharge')
+            _id: localStorage.getItem('lastFormAdminChargeId')
         }
         // dbg('options', options)
     if ($.type(options) != "object") {
@@ -38,7 +39,9 @@ carga = function carga(options) {
     obj = _.extend({
             state: 'active'
         }, objItem)
-        // dbg('cargando ', nombreItem)
+    dbg('cargando ', o2S(obj))
+
+
     function cargarItemInicial(nombreItem, callback) {
         res = Autof.findOne(obj)
         callback(res)
@@ -49,7 +52,7 @@ carga = function carga(options) {
             $('#ritem').html('')
             $("#nombre").text(res.name)
             $("#nombre").attr("itemid", res._id)
-            $("#nombre").attr("theType", contentType(res.content))
+            $("#nombre").attr("theType", contentType(res))
             $(".doc[name]").parent().removeClass('active')
             $('.doc#' + res._id).parent().addClass('active')
             editor_cambiado = false
@@ -58,9 +61,10 @@ carga = function carga(options) {
             editor.setValue(jsyaml.dump(sanitizeObjectNameKeys(res.content)))
             colorificaYaml()
             editor.gotoLine(1)
-            renderForm(res.content, 'ritem')
+            renderForm(res, 'ritem')
             coloreaEtiquetas()
-            localStorage.setItem('lastFormAdminCharge', res._id)
+            localStorage.setItem('lastFormAdminChargeId', res._id)
+            localStorage.setItem('lastFormAdminChargeName', res.name)
         }
     })
 }
@@ -147,13 +151,16 @@ Template.autoEdit.events({
             }
         },
         'click #guardar i': function guardarItem() {
+            if(!editor_cambiado){
+                return false;
+            }
             if (confirm("¿Guardar la definición del item \n[" + $("#nombre").text() + "]")) {
                 if ($("#nombre").attr('itemid')) {
                     var okUpdate = Autof.update({
                         _id: $("#nombre").attr('itemid')
                     }, {
                         $set: {
-                            name: $("#nombre").text(),
+                            name: $("#nombre").text() + moment().format('YYYYMMDD-HHmmss'),
                             state: 'autobackup',
                             update_date: new Date(),
                         }
@@ -175,20 +182,23 @@ Template.autoEdit.events({
                     state: "active",
                     type: theType
                 })
-                dbg('okInsert', okInsert)
+                //dbg('okInsert', okInsert)
                 if (okInsert) {
                     editor_cambiado = false
+                    $('li#guardar i').addClass('hide')
                     $("div#editor").removeClass("modificado")
                 }
             }
         },
         'keypress #editor,keydown #editor': function alModificarEditor() {
             editor_cambiado = true
+            $('li#guardar i').removeClass('hide')
             $("div#editor").addClass("modificado")
             colorificaYaml()
         },
         'mouseleave #editor, dblclick #editor': function alSacarElMouseDelEditor() {
             if (editor_cambiado === true) {
+               
                 $("#ritem").html('')
                 tx = jsyaml.load(editor.getValue())
                 $('#ritem').fadeOut(200).fadeIn(300)

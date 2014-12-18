@@ -1,4 +1,4 @@
-AF = function(element, options) {
+AF = function(element, options, formName) {
         // todo cambiar el nombre a la libreria por af
         //console.clear()
         clonableRows = {}
@@ -11,12 +11,14 @@ AF = function(element, options) {
         parseRootQueries(options)
         c = {} //Creamos un objeto que va a contener la configuración general
         c.form = options.def.form || {}
+        c.form.name = options.name
         c.fields = options.def.form.fields || {}
         c.element = $('#' + element)
         c.common = c.form.common || {}
         c.common.control = c.common.control || {}
         c.common.type = c.common.type || {}
         c.form.title = c.form.title || _.humanize('Form ' + c.form.collection)
+
         c.form.id = c.form.id || _.slugify((c.form.title || 'form') + "_" + c.form.collection)
         c.HTML = {}
             //Creamos el $ form
@@ -36,6 +38,16 @@ AF = function(element, options) {
         c.HTML.title = $('<span>', {
                 class: "form_title"
             }).text(c.form.title).appendTo(c.HTML.form)
+
+            //TODO Importante @security Poner una condicion que permita que solo los ususrios administradores puedan manejar la configuración
+        if (1 == 1) {
+           c.HTML.title.wrap('<a target = _blank class="admin" href="/backend/af/' + c.form.name + '" title="You are admin. Setup form">')
+        }
+
+
+
+
+
             //////MONTAMOS EL PUZLE
         c.HTML.maindiv.appendTo(c.HTML.form)
             //Recorremos los fields
@@ -789,7 +801,8 @@ setInitialRadioValues = function setInitialRadioValues() {
 renderForm = function renderForm(objectSource, divDestName) {
         nx = objectSource
         autof = new AF(divDestName, {
-            def: sanitizeObjectNameKeys(objectSource)
+            def: sanitizeObjectNameKeys(objectSource.content || objectSource),
+            name: objectSource.name
         })
     }
     /*

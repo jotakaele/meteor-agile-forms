@@ -1,5 +1,6 @@
 cargaForm = function cargaForm(options) {
         // dbg('options', options)
+
         if ($.type(options) != "object") {
             options = {
                 name: options
@@ -17,14 +18,17 @@ cargaForm = function cargaForm(options) {
             }, objItem)
             // dbg('cargando ', nombreItem)
         function cargarItemInicial(nombreItem, callback) {
-            res = Autof.findOne(obj)
+            res =  Autof.findOne(obj)
+
+            
             callback(res)
+
         }
         cargarItemInicial(obj.name, function(res) {
-            // dbg('obj', obj)
-            // dbg("res", res)
+            
             if (res) {
-                renderForm(res.content, 'formdest')
+            	//dbg("res",res.name)
+            	renderForm(res, 'formdest')
             }
         })
     }

@@ -3,11 +3,13 @@ Router.map(function() {
         path: '/backend/af/:itemname?',
         data: function() {
             vname = this.params.itemname
+            localStorage.removeItem('lastFormAdminChargeId')
                 //dbg('ir', this.params._itemname)
             datos = {
                 name: vname
             }
-            return datos
+            dbg('datos', datos)
+            return datos || null
         }
     });
     this.route('test', {

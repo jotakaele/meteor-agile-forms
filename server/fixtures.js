@@ -45,4 +45,7 @@ if (Autof.find().count() === 0) {
         content: defaultAutoF,
         state: "active"
     })
+
+Autof._ensureIndex({ name: 1 }, {unique:true , dropDups: true})
 }
+
