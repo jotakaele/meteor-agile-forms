@@ -10,4 +10,8 @@ Router.map(function() {
             return datos
         }
     });
+    this.route('test', {
+        path: '/test',
+        name: 'exampleform'
+    });
 });
