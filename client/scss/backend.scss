@@ -42,7 +42,7 @@ li[type=list] a {
         color: #555 !important;
     }
     &.fieldgroup {
-        background-color: $secondary-color;
+        background-color: darken($secondary-color,40);
         color: #fff !important;
     }
     &.level0 {
@@ -73,4 +73,9 @@ input#filtrar {
     padding: 1px 5px;
     margin: 0px;
     height: 2em;
+}
+a.admin {
+    * {
+        background-color: yellow;
+    }
 }

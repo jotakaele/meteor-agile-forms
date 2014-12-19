@@ -1,0 +1,12 @@
+<template name="formshow">
+    <div id="formdest"></div>
+</template>
+<template name="exampleform"> {{> formshow formName="Personas" mode="new"}} </template>
+<template name="pageForm">
+    <p> esto podería ser una plantilla de página de autoformularios</p>
+    <div class="row">
+        <div class="large-8 columns" id="formdest" name="{{this.name}}" mode="{{this.mode}}"></div>
+        <div class="large-4 columns">
+            <h3> Aqui podría venir contenido lateral</h3> </div>
+    </div>
+</template>
