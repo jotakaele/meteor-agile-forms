@@ -10,6 +10,8 @@ aceOptions = {
     wrap: true,
     tabSize: 2
 }
+var initialYAML = ''
+var initiallNameText = ''
 var myFold = {}
 editor_cambiado = false
 coloreaEtiquetas = function() {
@@ -18,29 +20,46 @@ coloreaEtiquetas = function() {
         $(this).css('border-bottom', '3px solid #' + color)
     })
 }
-carga = function carga(options) {
-    dbg('options',o2S(options))
-    options = options || {
-            _id: localStorage.getItem('lastFormAdminChargeId')
-        }
-        // dbg('options', options)
-    if ($.type(options) != "object") {
-        options = {
-            name: options
-        }
-    }
-    var objItem = {}
-    if (options.name) {
-        objItem.name = options.name
-    }
-    if (options._id) {
-        objItem._id = options._id
-    }
-    obj = _.extend({
-            state: 'active'
-        }, objItem)
-    dbg('cargando ', o2S(obj))
+var hacer = ''
 
+function lanzarRenderizado() {
+    if (hacer) {
+        clearTimeout(hacer)
+        delete hacer
+    }
+    hacer = setTimeout(function() {
+        if (editor_cambiado === true) {
+            $("#ritem").html('')
+            tx = jsyaml.load(editor.getValue())
+            $('#ritem').fadeOut(200).fadeIn(300)
+            renderForm(tx, 'ritem')
+        }
+    }, 800)
+}
+
+function editorCambiado(status) {
+    // function isChanged(status) {
+    // if(status === true){
+    // }else if(status == false){
+    // }
+    // }
+    if (initialYAML != editor.getValue() || initiallNameText != $('li#guardar #nombre').text()) {
+        editor_cambiado = true
+        $('li#guardar i').removeClass('hide')
+        $("div#editor").addClass("modificado")
+    } else {
+        editor.session.getUndoManager().reset()
+        editor_cambiado = false
+        $('li#guardar i').addClass('hide')
+        $("div#editor").removeClass("modificado")
+    }
+    colorificaYaml()
+}
+carga = function carga(nombreForm) {
+    obj = {
+        state: 'active',
+        name: nombreForm
+    }
 
     function cargarItemInicial(nombreItem, callback) {
         res = Autof.findOne(obj)
@@ -48,7 +67,6 @@ carga = function carga(options) {
     }
     cargarItemInicial(obj.name, function(res) {
         if (res) {
-            // dbg('res', res)
             $('#ritem').html('')
             $("#nombre").text(res.name)
             $("#nombre").attr("itemid", res._id)
@@ -58,12 +76,15 @@ carga = function carga(options) {
             editor_cambiado = false
             editor = ace.edit('editor');
             editor.setOptions(aceOptions)
-            editor.setValue(jsyaml.dump(sanitizeObjectNameKeys(res.content)))
+            initialYAML = jsyaml.dump(sanitizeObjectNameKeys(res.content))
+            initiallNameText = $('li#guardar #nombre').text()
+            editor.setValue(initialYAML)
+            editor.on('input', editorCambiado)
+            $('li#guardar #nombre').on("input", editorCambiado)
             colorificaYaml()
             editor.gotoLine(1)
             renderForm(res, 'ritem')
             coloreaEtiquetas()
-            localStorage.setItem('lastFormAdminChargeId', res._id)
             localStorage.setItem('lastFormAdminChargeName', res.name)
         }
     })
@@ -131,102 +152,159 @@ Template.autoEdit.helpers({
     cargarItemInicial: function() {
         //FIXME esto no deberia funcionar con setTimeout!!!
         Meteor.setTimeout(function() {
-            // dbg('this', this)
-            carga(this.name)
+            carga(this.vname)
         }, 500)
     }
 });
 //fixme Parece que no funciona correctamente al hacer update (muestra los antiguos) Revisar!!!
 Template.autoEdit.events({
         'click #eliminar': function eliminarItem() {
-            if (confirm("¿Eliminar este item? \n[" + $("#nombre").text() + "]")) {
-                var okDelete = Autof.update({
-                    _id: $("#nombre").attr('itemid')
-                }, {
-                    $set: {
-                        state: 'deleted',
-                        update_date: new Date()
-                    }
-                })
-            }
-        },
-        'click #guardar i': function guardarItem() {
-            if(!editor_cambiado){
-                return false;
-            }
-            if (confirm("¿Guardar la definición del item \n[" + $("#nombre").text() + "]")) {
-                if ($("#nombre").attr('itemid')) {
-                    var okUpdate = Autof.update({
-                        _id: $("#nombre").attr('itemid')
+            var theNameToDelete = $("li#guardar #nombre").text()
+            var theIdToDelete = $("li#guardar #nombre").attr('itemid')
+            if (confirm("¿Eliminar este item? \n[" + theNameToDelete + "]")) {
+                if (theIdToDelete) {
+                    var okDelete = Autof.update({
+                        _id: theIdToDelete
                     }, {
                         $set: {
-                            name: $("#nombre").text() + moment().format('YYYYMMDD-HHmmss'),
+                            state: 'deleted',
+                            update_date: new Date()
+                        }
+                    })
+                }
+                editor.setValue('')
+                editor.session.getUndoManager().reset()
+                editor_cambiado = false
+                $('li#guardar i').addClass('hide')
+                $("div#editor").removeClass("modificado")
+            }
+        },
+        'click #guardar i': function() {
+            var theNameToSave = $("li#guardar #nombre").text()
+            var theIdToSave = $("#nombre").attr('itemid')
+            if (!editor_cambiado) {
+                return false;
+            }
+            if (confirm("¿Guardar la definición del item \n[" + theNameToSave + "]")) {
+                if (theIdToSave) {
+                    var okUpdate = Autof.update({
+                        _id: theIdToSave
+                    }, {
+                        $set: {
+                            name: theNameToSave + moment().format('YYYYMMDD-HHmmss'),
                             state: 'autobackup',
                             update_date: new Date(),
                         }
                     })
                 }
                 var theContent = jsyaml.load(editor.getValue())
-                if (theContent.form) {
-                    theType = "form"
-                }
-                if (theContent.list) {
-                    theType = "list"
-                        //   theContent.list.source.filter = JSON.stringify(theContent.list.source.filter)
-                }
                 var okInsert = Autof.insert({
-                    name: $("#nombre").text(),
+                    name: theNameToSave,
                     content: desanitizeObjectNameKeys(theContent),
                     create_date: new Date(),
                     update: new Date(),
-                    state: "active",
-                    type: theType
+                    state: "active"
                 })
-                //dbg('okInsert', okInsert)
+                console.info('Se ha guardado el formulario ' + theNameToSave)
                 if (okInsert) {
                     editor_cambiado = false
                     $('li#guardar i').addClass('hide')
                     $("div#editor").removeClass("modificado")
+                    $('.doc[name="' + theNameToSave + '"]').parent().addClass('active')
                 }
             }
         },
-        'keypress #editor,keydown #editor': function alModificarEditor() {
-            editor_cambiado = true
-            $('li#guardar i').removeClass('hide')
-            $("div#editor").addClass("modificado")
-            colorificaYaml()
-        },
-        'mouseleave #editor, dblclick #editor': function alSacarElMouseDelEditor() {
-            if (editor_cambiado === true) {
-               
-                $("#ritem").html('')
-                tx = jsyaml.load(editor.getValue())
-                $('#ritem').fadeOut(200).fadeIn(300)
-                renderForm(tx, 'ritem')
-            }
-        },
+        'input #editor': lanzarRenderizado,
         'click #crear': function crearDocumento(e) {
             if (editor_cambiado) {
                 if (confirm("¿El item se ha modificado, pero no se ha guardado aún. \nSe perderán los cambios!! \n\n¿Continuar?") == false) return false;
             }
             $("#ritem").html('')
             $("div#editor").removeClass("modificado")
-            $("#nombre").removeAttr("itemid").text("Nuevo item")
+            $("#nombre").removeAttr("itemid").text(makeId(8))
             defaultForm = jsyaml.dump({
                 "form": {
-                    "collection": "nombre_coleccion",
-                    "name": "Titulo formulario",
+                    "collection": "personas",
+                    "title": "Titulo formulario",
                     "modes": "add,update,delete",
                     "permisions": null,
                     "classes": "none",
                     "fields": {
-                        "_bloque_1": {
-                            "class": "none"
+                        "_bloque_1": null,
+                        "field1": {
+                            "title": "Un name"
                         },
-                        "nombre": {
-                            "maxlength": 13,
-                            "title": "Mi nombre"
+                        "_bloque_2": {
+                            "limit": 1
+                        },
+                        "field2": {
+                            "type": "currency"
+                        },
+                        "field3": {
+                            "enum": "a,b"
+                        },
+                        "_bloque_3": {
+                            "limit": 5
+                        },
+                        "field4": {
+                            "value": "$helper1$"
+                        },
+                        "field5": {
+                            "enum": "queries.lista_personas"
                         }
+                    },
+                    "common": {
+                        "all": {
+                            "html": {
+                                "placeholder": "Im a field"
+                            }
+                        },
+                        "control": {
+                            "input": {
+                                "html": {
+                                    "placeholder": "Im a input"
+                                }
+                            }
+                        },
+                        "type": {
+                            "currency": {
+                                "html": {
+                                    "placeholder": "Im a currency"
+                                }
+                            }
+                        },
+                        "block_content": {
+                            "_bloque_1": {
+                                "html": {
+                                    "placeholder": "Im in _bloque_1"
+                                }
+                            }
+                        },
+                        "blocks": {
+                            "style": "box-shadow: 0px 0px 5px  #777"
+                        }
+                    }
+                },
+                "helpers": {
+                    "helper1": "eval(makeId(7))"
+                },
+                "queries": {
+                    "lista_personas": {
+                        "collection": "personas",
+                        "filter": {
+                            "nombre": {
+                                "$in": ["juan", "pedro"]
+                            }
+                        },
+                        "format": {
+                            "sort": {
+                                "apellidos": 1
+                            },
+                            "limit": 14
+                        },
+                        "value": "[nombre]",
+                        "label": "[nombre] + ' ' + [apellidos]",
+                        "optgroup": "[apellidos]"
                     }
                 }
             })
@@ -236,9 +314,7 @@ Template.autoEdit.events({
             setTimeout(function() {
                 editor.gotoLine(1)
                 colorificaYaml()
-                renderForm({
-                    def: jsyaml.load(defaultForm)
-                }, 'ritem')
+                renderForm(jsyaml.load(editor.getValue()), 'ritem')
             }, 10)
         },
         'click #items_existentes .doc[id]': function seleccionarDocumento(e) {
@@ -249,10 +325,7 @@ Template.autoEdit.events({
             }
             $('.doc').parent().removeClass('active')
             $(e.target).parent().addClass('active')
-            carga({
-                name: $(e.target).attr('name'),
-                _id: $(e.target).attr('id')
-            })
+            carga($(e.target).attr('name'))
         },
         'keyup input#filtrar': function filtarLista(e) {
             tx = $(e.target).val()

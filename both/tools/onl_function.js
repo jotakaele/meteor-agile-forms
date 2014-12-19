@@ -38,5 +38,5 @@ onl.randomSeedColor = function randomSeedColor(cadena) {
             res = res + master.indexOf(car) || 0
         })
         // console.log(res)
-    return seedColor(parseFloat(res))
+    return '#' + seedColor(parseFloat(res))
 }

@@ -1,6 +1,7 @@
 AF = function(element, options, formName) {
         // todo cambiar el nombre a la libreria por af
         //console.clear()
+        // dbg('options', o2S(options))
         clonableRows = {}
         activateHooks = {}
         processSelectize = {}
@@ -18,7 +19,6 @@ AF = function(element, options, formName) {
         c.common.control = c.common.control || {}
         c.common.type = c.common.type || {}
         c.form.title = c.form.title || _.humanize('Form ' + c.form.collection)
-
         c.form.id = c.form.id || _.slugify((c.form.title || 'form') + "_" + c.form.collection)
         c.HTML = {}
             //Creamos el $ form
@@ -38,17 +38,11 @@ AF = function(element, options, formName) {
         c.HTML.title = $('<span>', {
                 class: "form_title"
             }).text(c.form.title).appendTo(c.HTML.form)
-
             //TODO Importante @security Poner una condicion que permita que solo los ususrios administradores puedan manejar la configuración
         if (1 == 1) {
-           c.HTML.title.wrap('<a target = _blank class="admin" href="/backend/af/' + c.form.name + '" title="You are admin. Setup form">')
+            c.HTML.title.wrap('<a target = _blank class="admin" href="/backend/af/' + c.form.name + '" title="You are admin. Setup form">')
         }
-
-
-
-
-
-            //////MONTAMOS EL PUZLE
+        //////MONTAMOS EL PUZLE
         c.HTML.maindiv.appendTo(c.HTML.form)
             //Recorremos los fields
         arrBlockNames = []
@@ -897,8 +891,6 @@ sendFormToMongo = function sendFormToMongo($form) {
         var dest = $form.attr('collection')
         var insertObj = formToJson($form)
         var insert = cCols[dest].insert(insertObj)
-            // if (Session.get('debug') == true) {
-            // }
         return insert
     }
     // //Devuelve un array de objetos con las claves value y label, listo para ser usado en un campo tipo enum de formulario.
