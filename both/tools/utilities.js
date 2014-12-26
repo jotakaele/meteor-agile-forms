@@ -15,7 +15,7 @@ makeId = function(num) {
         return text;
     }
     //Muestra  la salida de console log
-    //NOTE  Modificar de manera que quede desactivado en producción
+    //RELEASE  Modificar de manera que quede desactivado en producción
 dbg = function dbg(sometitle, something) {
         var d = new Date()
         a = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + ":" + d.getMilliseconds()

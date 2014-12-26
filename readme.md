@@ -186,13 +186,18 @@ Podemos utilizar todos los tipos aceptados por [html5](https://developer.mozilla
 ##### select
 Todos los campos que contiene la clave `enum` (a excepción de los `type: radio`) son convertidos en controles `select`. 
 Pueden contener las siguientes claves:
-- **enum** Define el origen de la lista a utilizar. Puede haber tres tipos:
+- **enum** Define el origen de la lista a utilizar. Puede haber varios tipos:
     + **Mediante un string de elementos separados por comas**: 
         * Ejemplo:    `letras-, a, b*, c, numeros-, 1,2,3`
         * Los items finalizados en _guión medio (-)_ son considerados como inicios de un grupo, *no como valores de la lista*
         * Los item finalizados en _asterisco (*)_ son considerados como valores seleccionados `selected=selected`
+    + **Mediante el tipo especial `boolean`**: 
+        * Ejemplo:    enum: `boolean`
+        * Devuelve una lista con lo valores _Sí_, _No_ 
+        * Al procesar el formulario, son almacenados como _true_ o _false_
     + **Mediante un array con un lista de valores**
         * Ejemplo: 
+        
  ```yaml
 form:
     fields:
