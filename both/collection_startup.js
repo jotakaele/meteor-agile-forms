@@ -1,12 +1,16 @@
 //Instanciamos en server y client Autof
 Autof = new Meteor.Collection('_af', {})
+Translations = new Meteor.Collection('_translations')
 if (Meteor.isServer) {
     //Publicamos autof, de mood que esta disponible para todos
     Meteor.publish('_af', function() {
-            return Autof.find({
-                state: 'active'
-            })
+        return Autof.find({
+            state: 'active'
         })
+    })
+    Meteor.publish('_translations', function() {
+            return Translations.find()
+        }) //Publicamos las traducciones
         //Inicializamos el objeto sCols , ene el cual vamos a guardar las conexiones a cada colección del SERVER
     var sCols = {}
         //Recuperamos e forma de array la lista de colecciones que hay que manejar... lo hacemos a traves de la function  getAutoColArray
