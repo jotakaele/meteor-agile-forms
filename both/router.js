@@ -9,24 +9,6 @@ Router.map(function() {
             return datos || null
         },
         controller: 'BaseController'
-            /*,
-                    waitOn: function() {
-                        // return one handle, a function, or an array
-                        if (i18n('en') == '') {
-                            return Meteor.subscribe('_translations');
-                        }
-                    },
-                    action: function() {
-                        // this.ready() is true if all items returned from waitOn are ready
-                        if (this.ready()) {
-                            if (i18n('en') == '') {
-                                translationsStrings('es')
-                            }
-                            this.render();
-                        } else {
-                            this.render('Loading');
-                        }
-                    }*/
     });
     this.route('pageForm', {
         path: '/af/:itemname/:itemmode/',
@@ -44,6 +26,7 @@ Router.map(function() {
         name: 'exampleform'
     });
 });
+//Elementos comunes para todas las rutas
 BaseController = RouteController.extend({
     // specify stuff that every controller should have
     waitOn: function() {
@@ -56,7 +39,7 @@ BaseController = RouteController.extend({
         // this.ready() is true if all items returned from waitOn are ready
         if (this.ready()) {
             if (i18n('en') == '') {
-                translationsStrings('es')
+                translationsStrings(localStorage.getItem('lc'))
             }
             this.render();
         } else {
