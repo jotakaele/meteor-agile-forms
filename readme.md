@@ -23,6 +23,13 @@ La definicion de cada formulario, se guarda en MongoDb en la colección `_af`, q
 ### permissions:
 - Pendiente de implementación
 
+### i18n:
+- Opcional. Default `true`  Si no existe o el valor es `true` traduce los siguientes elementos del formulario:
+    + Etiquetas de los campos (incluidos los bloques)
+    + Título del Formulario
+    + Mensajes del formulario
+    
+
 ### classes:
 - Opcional. Clases que se añadirán al formulario. Siempre se añade la clase `autof`.
 
@@ -186,13 +193,18 @@ Podemos utilizar todos los tipos aceptados por [html5](https://developer.mozilla
 ##### select
 Todos los campos que contiene la clave `enum` (a excepción de los `type: radio`) son convertidos en controles `select`. 
 Pueden contener las siguientes claves:
-- **enum** Define el origen de la lista a utilizar. Puede haber tres tipos:
+- **enum** Define el origen de la lista a utilizar. Puede haber varios tipos:
     + **Mediante un string de elementos separados por comas**: 
         * Ejemplo:    `letras-, a, b*, c, numeros-, 1,2,3`
         * Los items finalizados en _guión medio (-)_ son considerados como inicios de un grupo, *no como valores de la lista*
         * Los item finalizados en _asterisco (*)_ son considerados como valores seleccionados `selected=selected`
+    + **Mediante el tipo especial `boolean`**: 
+        * Ejemplo:    enum: `boolean`
+        * Devuelve una lista con lo valores _Sí_, _No_ 
+        * Al procesar el formulario, son almacenados como _true_ o _false_
     + **Mediante un array con un lista de valores**
         * Ejemplo: 
+        
  ```yaml
 form:
     fields:
@@ -248,7 +260,11 @@ form:
  ```
 
 - **multiple** Opcional. `[true|false] Default false`. Indica si el control puede devolver más de un elemento, en cuyo caso devolverá un array.
-- **enum_depend** Indica de qué otro campo depende lo que se muestra en la lista. Para ello utiliza como selector el `optgroup`.
+- **enum_depend** Indica de qué otro campo depende lo que se muestra en la lista. Para ello utiliza como selector el `optgroup`. **NOTA: Tener cuidado en el caso de utilizar *enum_i18n* porque esto puede alterar el resultado del filtro. En este caso se recomienda traducir solamente los valores de label**  
+-  **enum_i18n** Opcional. `[label|all]`. Indica si hay que traducir los valores de la lista.
+    +  `label` Solamente traduce la etiqueta y el valor lo deja intacto
+    +  `all` Traduce tanto la etiqueta como el valor.
+
  
  ```yaml
     form:
