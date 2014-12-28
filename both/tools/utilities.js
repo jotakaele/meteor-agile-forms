@@ -23,8 +23,31 @@ dbg = function dbg(sometitle, something) {
             console.log(a + ' >>> [' + sometitle + ']', something);
         }
     }
+    //Atajo para escribir y recoger de Session. Mantiene el valor de la variable en la base de datos a no ser que pasemos el parametro saveToBD como false
+s = function s(key, value, saveToBD) {
+        if (Meteor.isClient) {
+            if (!value) {
+                return Session.get(key)
+            }
+            Session.set(key, value)
+            if (saveToBD != false) {
+                if (Defaults.update({
+                        _id: key
+                    }, {
+                        _id: key,
+                        value: value
+                    }, {
+                        upsert: true
+                    }) != 1) {
+                    {
+                        console.log('No se ha podido almacenar la variable en la base de datos')
+                    }
+                }
+            }
+        }
+    }
     /*
-                                            Evalua en Javascript la cadena pasada por @cadena
+                                            EvalUa en Javascript la cadena pasada por @cadena
                                             @param cadena Una cadena que debe comenzar por "eval ..." (notese el espacio). Si la cadena es "eval new Date()" devolverá una fecha.
                                             @return Depende de lo que evalue o la mima cadena que ha recibido si no se ha pasado eval
                                             */
