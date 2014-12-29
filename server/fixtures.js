@@ -160,9 +160,7 @@ if (Translations.find().count() === 0) {
 if (Defaults.find().count() === 0) {
     var objDef = {
         lang: 'en',
-        translating: false,
-        showUnTranslated: false,
-        showChangeTranslate: false
+        translating: 'none' // auto|none|manual
     }
     dbg('Cargando tabla _defaults')
     _.each(objDef, function(value, key) {
