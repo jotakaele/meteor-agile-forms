@@ -163,3 +163,12 @@
            })
        }
    })
+
+
+
+
+//Registro para usar en templates
+Template.registerHelper('tr', function(cadToTranslate){
+  return(t(cadToTranslate))
+
+});
