@@ -1,17 +1,9 @@
 //Instanciamos en server y client Autof
-Autof = new Meteor.Collection('_af', {})
-Translations = new Meteor.Collection('_translations')
+
 Defaults = new Meteor.Collection('_defaults')
 if (Meteor.isServer) {
     //Publicamos autof, de mood que esta disponible para todos
-    Meteor.publish('_af', function() {
-        return Autof.find({
-            state: 'active'
-        })
-    })
-    Meteor.publish('_translations', function() {
-            return Translations.find()
-        }) //Publicamos las traducciones
+   
     Meteor.publish('_defaults', function() {
             return Defaults.find()
         }) //Publicamos los valores defaults
