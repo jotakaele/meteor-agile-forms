@@ -604,14 +604,17 @@ fieldValue = function fieldValue(name) {
             var field = name
             theName = name.attr('name')
         }
+
         switch (field.attr('type')) {
             case 'radio':
                 return $('.autof [name=' + theName + ']:checked').val()
                 break;
             default:
-                return field.val()
+
+                return field.val() == "" ? null : field.val()
                 break;
         }
+
     }
     // Esta función procesa las definiciones "activate" de los campos o bloques de grupo, que determinan su visibilidad o activación.
 activateHooksTriggers = function activateHooksTriggers() {
@@ -866,8 +869,9 @@ formToJson = function formToJson(objForm) {
             if ($(this).attr('type') == 'tags') {
                 theValue = fieldValue($(this)).split(',')
             }
-            // dbg(this.name, theValue)
-            res[this.name] = theValue || null
+
+            res[this.name] = (theValue == '' ? null : theValue) || null
+
         })
 
         $('div.block[limit]', objForm).each(function() {

@@ -1,6 +1,5 @@
 //Instanciamos en server y client Autof
 Autof = new Meteor.Collection('_af', {})
-
 if (Meteor.isClient) {
     cCols = {} //Aqui guardamos los }objetos collection del CLIENTE
 }
@@ -11,14 +10,11 @@ if (Meteor.isServer) {
             state: 'active'
         })
     })
-
     if (!sCols) {
         var sCols = {}
     }
-
     var arrToRegister = getAutoColArray()
-
-    //Instanciamos y publicamos en SERVER cada colección que hemos recuperado (de momento sin restricciones)
+        //Instanciamos y publicamos en SERVER cada colección que hemos recuperado (de momento sin restricciones)
     arrToRegister.forEach(function(colName) {
         sCols[colName] = new Meteor.Collection(colName) //Instanciamos
         Meteor.publish(colName, function() { //Publicamos
@@ -27,11 +23,9 @@ if (Meteor.isServer) {
         })
     })
 }
-
 //Nos subscribimos a Autof, para poder usarlo en todas partes
 //FIXME Esto debería ser de solo lectura si el user no es admin @security
 if (Meteor.isClient) {
-
     Meteor.subscribe('_af', function() {
         loadAutoCollection()
         Session.set('AutofLoad', 1)
@@ -39,26 +33,22 @@ if (Meteor.isClient) {
 }
 
 function loadAutoCollection() {
-
-    var arrToRegister = getAutoColArray()
-    arrToRegister.forEach(function(colName) {
-        cCols[colName] = new Meteor.Collection(colName)
-        Meteor.subscribe(colName, function() {})
-    })
-}
-
-// if (Meteor.isClient) {
-//     Meteor.subscribe('_af', function() {
-
-//         Session.set('AutofLoad', 1)
-//     })
-// }
-
-/*
- * Devuelve un array con todos los elementos collection definidos en la colacción autof
- * @param none
- * @return Array con los nombres de las colecciones
- */
+        var arrToRegister = getAutoColArray()
+        arrToRegister.forEach(function(colName) {
+            cCols[colName] = new Meteor.Collection(colName)
+            Meteor.subscribe(colName, function() {})
+        })
+    }
+    // if (Meteor.isClient) {
+    //     Meteor.subscribe('_af', function() {
+    //         Session.set('AutofLoad', 1)
+    //     })
+    // }
+    /*
+     * Devuelve un array con todos los elementos collection definidos en la colacción autof
+     * @param none
+     * @return Array con los nombres de las colecciones
+     */
 function getAutoColArray() {
     var arrToRegister = []
     var xcols = Autof.find({

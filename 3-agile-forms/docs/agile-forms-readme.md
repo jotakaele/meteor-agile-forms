@@ -323,6 +323,7 @@ El order en que se van sobrescribiendo las configuración, esn caso de existir e
 ** `control`
 ** `type`
 ** `block_content`
+** `blocks`
 ** El definido en la clave de cada campo
 
 ```yaml
