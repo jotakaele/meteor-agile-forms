@@ -15,7 +15,7 @@ Meteor.methods({
 
             //check require
 
-            dbg('check-require ' + key, theForm.fields[key].required == false ? false : true)
+            dbg('check-require ' + key, theForm.fields[key].required == false ? false : true, value)
 
             if (theForm.fields[key].required == false ? false : true) {
                 if (!value || value == '') {

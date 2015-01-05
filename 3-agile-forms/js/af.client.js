@@ -856,6 +856,8 @@ formToJson = function formToJson(objForm) {
                 } else if ($(value).attr("type") == 'time') {
                     theValue = toDate('00-00-0000' + ' ' + theValue)
                 }
+                theValue = isNaN(theValue) ? null : theValue
+
             } else if (this.save_as == 'boolean') {
                 theValue = eval(theValue)
             }
@@ -864,7 +866,7 @@ formToJson = function formToJson(objForm) {
             if ($(this).attr('type') == 'tags') {
                 theValue = fieldValue($(this)).split(',')
             }
-            dbg(this.name, theValue)
+            // dbg(this.name, theValue)
             res[this.name] = theValue || null
         })
 
