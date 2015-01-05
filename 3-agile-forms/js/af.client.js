@@ -820,11 +820,13 @@ renderForm = function renderForm(objectSource, divDestName) {
 formToJson = function formToJson(objForm) {
         //  console.clear()
         var fields = $('[name][id]:not(.subObject)', objForm)
+            //console.log(fields)
         var numberTypes = ['number', 'currency', 'range']
         var dateTypes = ['date', 'datetime', 'time']
         var f = objForm
         var res = {}
         fields.each(function(index, value) {
+
             if (_.indexOf(numberTypes, $('#' + this.name, f).attr('type')) >= 0) {
                 this.save_as = $('#' + this.name, f).attr('save_as') || 'number'
             } else if (_.indexOf(dateTypes, $('#' + this.name, f).attr('type')) >= 0) {
@@ -832,7 +834,10 @@ formToJson = function formToJson(objForm) {
             } else {
                 this.save_as = $('#' + this.name, f).attr('save_as') || 'string'
             }
+
             var theValue = fieldValue($(this))
+
+            //procesamos los number
             if (this.save_as == 'number') {
                 if (_.isArray(theValue)) {
                     theValue.forEach(function(elem, key) {
@@ -842,7 +847,7 @@ formToJson = function formToJson(objForm) {
                     theValue = theValue * 1
                 }
             }
-            //TODO Refactorizar hay que extraer siempre los valores de los campos con fieldValue @urgente
+
             //procesemos los date
             //Los campos date los procesamos como date
             if (this.save_as == 'date') {
@@ -854,15 +859,19 @@ formToJson = function formToJson(objForm) {
             } else if (this.save_as == 'boolean') {
                 theValue = eval(theValue)
             }
+
             //Precesamos los campos typo tags, para convertirlos en un array
             if ($(this).attr('type') == 'tags') {
                 theValue = fieldValue($(this)).split(',')
             }
-            res[this.name] = theValue
+            dbg(this.name, theValue)
+            res[this.name] = theValue || null
         })
+
         $('div.block[limit]', objForm).each(function() {
             _.extend(res, getBlocValues($(this)))
         })
+
         return res
     }
     /*
@@ -903,10 +912,22 @@ getBlocValues = function getBlocValues($object, intLimit) {
     }
     //TODO esta operacion hay que hacerla desde un metodo de meteor, añadiendo autofecha, usuario, etc.....
 sendFormToMongo = function sendFormToMongo($form) {
-        var dest = $form.attr('collection')
+        //var dest = $form.attr('collection')
         var insertObj = formToJson($form)
-        var insert = cCols[dest].insert(insertObj)
-        return insert
+
+        Meteor.call('saveAfRecord', c.form.name, insertObj, function(err, res) {
+            if (err) {
+                console.error(err)
+            }
+            if (res) {
+                dbg('res', res)
+
+            }
+
+        })
+
+        //var insert = cCols[dest].insert(insertObj)
+        //return insert
     }
     // //Devuelve un array de objetos con las claves value y label, listo para ser usado en un campo tipo enum de formulario.
     // //Como parametro requiere un objeto con las siguientes claves:

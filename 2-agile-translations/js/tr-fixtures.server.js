@@ -1,4 +1,3 @@
-
 // TODO El bloque de idiomas deberia ir en la parte general, no en agile-forms
 //Inicializamos la base de datos de traducciones.
 if (Translations.find().count() === 0) {
@@ -12,18 +11,4 @@ if (Translations.find().count() === 0) {
         nObj[itemLn] = itemLn
     })
     Translations.insert(nObj)
-}
-//Inicializamos la tabla _defaults, con los valores que necesitamos al inicio
-if (Defaults.find().count() === 0) {
-    var objDef = {
-        lang: 'en',
-        translating: 'none' // auto|none|manual
-    }
-    dbg('Cargando tabla _defaults')
-    _.each(objDef, function(value, key) {
-        Defaults.insert({
-            _id: key,
-            value: value
-        })
-    })
 }

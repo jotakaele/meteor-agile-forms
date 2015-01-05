@@ -1,7 +1,9 @@
 //Instanciamos en server y client Autof
 Autof = new Meteor.Collection('_af', {})
 
-
+if (Meteor.isClient) {
+    cCols = {} //Aqui guardamos los }objetos collection del CLIENTE
+}
 if (Meteor.isServer) {
     //Publicamos autof, de mood que esta disponible para todos
     Meteor.publish('_af', function() {
@@ -26,11 +28,31 @@ if (Meteor.isServer) {
     })
 }
 
+//Nos subscribimos a Autof, para poder usarlo en todas partes
+//FIXME Esto debería ser de solo lectura si el user no es admin @security
 if (Meteor.isClient) {
+
     Meteor.subscribe('_af', function() {
+        loadAutoCollection()
         Session.set('AutofLoad', 1)
     })
 }
+
+function loadAutoCollection() {
+
+    var arrToRegister = getAutoColArray()
+    arrToRegister.forEach(function(colName) {
+        cCols[colName] = new Meteor.Collection(colName)
+        Meteor.subscribe(colName, function() {})
+    })
+}
+
+// if (Meteor.isClient) {
+//     Meteor.subscribe('_af', function() {
+
+//         Session.set('AutofLoad', 1)
+//     })
+// }
 
 /*
  * Devuelve un array con todos los elementos collection definidos en la colacción autof
