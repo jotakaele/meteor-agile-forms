@@ -139,7 +139,7 @@ colorificaYaml = function colorificaYaml() {
         }
     }, 1)
 }
-Template.autoEdit.helpers({
+Template.autoFormEdit.helpers({
     items: function() {
         return Autof.find({
             state: "active"
@@ -157,7 +157,7 @@ Template.autoEdit.helpers({
     }
 });
 //fixme Parece que no funciona correctamente al hacer update (muestra los antiguos) Revisar!!!
-Template.autoEdit.events({
+Template.autoFormEdit.events({
         'click #eliminar': function eliminarItem() {
             var theNameToDelete = $("li#guardar #nombre").text()
             var theIdToDelete = $("li#guardar #nombre").attr('itemid')

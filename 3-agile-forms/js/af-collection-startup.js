@@ -14,7 +14,7 @@ if (Meteor.isServer) {
         // if (!sCols) {
         //     sCols = {}
         // }
-    var arrToRegister = getAutoColArray()
+    var arrToRegister = getAutoFormColArray()
         //Instanciamos y publicamos en SERVER cada colección que hemos recuperado (de momento sin restricciones)
     arrToRegister.forEach(function(colName) {
         sCols[colName] = new Meteor.Collection(colName) //Instanciamos
@@ -34,7 +34,7 @@ if (Meteor.isClient) {
 }
 
 function loadAutoCollection() {
-        var arrToRegister = getAutoColArray()
+        var arrToRegister = getAutoFormColArray()
         arrToRegister.forEach(function(colName) {
             cCols[colName] = new Meteor.Collection(colName)
             Meteor.subscribe(colName, function() {})
@@ -46,38 +46,22 @@ function loadAutoCollection() {
     //     })
     // }
     /*
-     * Devuelve un array con todos los elementos collection definidos en la colacción autof
+     * Devuelve un array con todos los elementos collection definidos en la colección autof
      * @param none
      * @return Array con los nombres de las colecciones
      */
-function getAutoColArray() {
+function getAutoFormColArray() {
     var arrToRegister = []
     var xcols = Autof.find({
         state: 'active'
     })
     xcols.forEach(function(key) {
         try {
-            var nLCol = key.content.list.sources.main.collection
-            var nLJoinCol = _.keys(key.content.list.sources)
-                // console.log(nLJoinCol)
-        } catch (err) {}
-        try {
             var nFCol = key.content.form.collection
         } catch (err) {}
         // console.log(nFCol, nLCol)
         if (nFCol) {
             arrToRegister.push(_.underscored(nFCol))
-        }
-        if (nLCol) {
-            arrToRegister.push(_.underscored(nLCol))
-        }
-        if (nLJoinCol) {
-            nLJoinCol.forEach(function(k) {
-                // console.log(k)
-                if (k != 'main') {
-                    arrToRegister.push(_.underscored(k))
-                }
-            })
         }
     })
     arrToRegister = _.uniq(arrToRegister)
