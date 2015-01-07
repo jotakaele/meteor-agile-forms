@@ -17,33 +17,72 @@ makeId = function(num) {
     //Muestra  la salida de console log
     //RELEASE  Modificar de manera que quede desactivado en producción
 dbg = function dbg(sometitle, something) {
-        var d = new Date()
-        a = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + ":" + d.getMilliseconds()
-        var theType = Meteor.isClient ? 'c' : 's'
-            //if (Meteor.isClient) {
-        console.log(a + ' >>> [' + sometitle + '][' + theType + ']', something);
+        //if (Meteor.isClient) {
+        if (s('dbg') == true) {
+            var d = new Date()
+            a = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + ":" + d.getMilliseconds()
+            var theType = Meteor.isClient ? 'c' : 's'
+            console.log(a + ' >>> [' + sometitle + '][' + theType + ']', something);
+        }
         //}
     }
     //Atajo para escribir y recoger de Session. Mantiene el valor de la variable en la base de datos a no ser que pasemos el parametro saveToBD como false
 s = function s(key, value, saveToBD) {
         if (Meteor.isClient) {
-            if (!value) {
+            if (value == undefined) {
                 return Session.get(key)
             }
-            Session.set(key, value)
-            if (saveToBD != false) {
-                if (Defaults.update({
-                        _id: key
-                    }, {
-                        _id: key,
-                        value: value
-                    }, {
-                        upsert: true
-                    }) != 1) {
-                    {
-                        console.log('No se ha podido almacenar la variable en la base de datos')
+            var curVal = Session.get(key) || null
+            if (curVal != value) { // Solo guardamos en base de datos en caso de que sea diferente (hay que ahorrar escrituras a disco)
+                Session.set(key, value)
+                if (saveToBD != false) {
+                    if (Defaults.update({
+                            _id: key
+                        }, {
+                            _id: key,
+                            value: value
+                        }, {
+                            upsert: true
+                        }) != 1) {
+                        {
+                            console.log('No se ha podido almacenar la variable en la base de datos')
+                        }
                     }
                 }
+                Meteor.call('setLog', 'session_variable_changed', {
+                    from: 'client',
+                    key: key,
+                    value: value
+                })
+            }
+        }
+        //server
+        if (Meteor.isServer) {
+            var curVal = (Defaults.findOne(key) || {}).value || null
+            if (value == undefined) {
+                return curVal
+            }
+            if (curVal != value) {
+                if (saveToBD != false) {
+                    if (Defaults.update({
+                            _id: key
+                        }, {
+                            _id: key,
+                            value: value
+                        }, {
+                            upsert: true
+                        }) != 1) {
+                        {
+                            console.log('No se ha podido almacenar la variable en la base de datos')
+                        }
+                    }
+                }
+                //fixme Esto lo dejamos desactivado de momento, porque hace más inserciones en la base de datos de las esperadas
+                // Meteor.call('setLog', 'session_variable_changed', {
+                //     from: 'server',
+                //     key: key,
+                //     value: value
+                // })
             }
         }
     }
