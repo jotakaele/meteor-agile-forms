@@ -1,4 +1,5 @@
 Meteor.methods({
+    //Guradar un registro desde af 
     'saveAfRecord': function(formName, formResults) {
         var theForm = Autof.findOne({
                 name: formName
@@ -15,8 +16,10 @@ Meteor.methods({
         }
         _.extend(theSave.data, autoData)
         if (theSave.isValid) {
-            var currentCol = new Meteor.Collection(theSave.collection)
-            var theId = currentCol.insert(theSave.data)
+            // if (!currentCol) var currentCol = new Meteor.Collection(theSave.collection)
+            var theId = sCols[theSave.collection].insert(theSave.data)
+                //var theId = 'idsimulada'
+            dbg("theId", theId)
             if (theId) {
                 return {
                     status: 'saved',

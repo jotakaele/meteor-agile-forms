@@ -10,9 +10,10 @@ if (Meteor.isServer) {
             state: 'active'
         })
     })
-    if (!sCols) {
-        var sCols = {}
-    }
+    sCols = {}
+        // if (!sCols) {
+        //     sCols = {}
+        // }
     var arrToRegister = getAutoColArray()
         //Instanciamos y publicamos en SERVER cada colección que hemos recuperado (de momento sin restricciones)
     arrToRegister.forEach(function(colName) {

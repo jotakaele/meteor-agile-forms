@@ -19,9 +19,10 @@ makeId = function(num) {
 dbg = function dbg(sometitle, something) {
         var d = new Date()
         a = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + ":" + d.getMilliseconds()
-        if (Meteor.isClient) {
-            console.log(a + ' >>> [' + sometitle + ']', something);
-        }
+        var theType = Meteor.isClient ? 'c' : 's'
+            //if (Meteor.isClient) {
+        console.log(a + ' >>> [' + sometitle + '][' + theType + ']', something);
+        //}
     }
     //Atajo para escribir y recoger de Session. Mantiene el valor de la variable en la base de datos a no ser que pasemos el parametro saveToBD como false
 s = function s(key, value, saveToBD) {
