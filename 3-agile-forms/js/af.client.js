@@ -75,6 +75,7 @@ AF = function(element, options, formName) {
         activateCustomValidation(c.HTML.form)
         alertFormChange(c.HTML.form)
         setInitialRadioValues()
+        activarTooltips()
             //delete c
             //delete options
     }
@@ -140,7 +141,7 @@ createField = function createField(myname, fieldSource) {
             id: "label-" + fieldSource.id
         }).text(fieldSource.title).appendTo(row)
         if (fieldSource.help) {
-            row.addClass("hint--top").attr('data-hint', ft(fieldSource.help))
+            row.attr('help', ft(fieldSource.help))
         }
         switch (fieldSource.controlType) {
             case 'input':
@@ -158,6 +159,25 @@ createField = function createField(myname, fieldSource) {
         if (!fieldSource.required == false) {
             theRenderedControl.attr('required', true)
         }
+        /* if (fieldSource.help) {
+             theRenderedControl.qtip({
+                 content: theRenderedControl.closest('[help]').attr('help'),
+                 show: 'click focus',
+                 hide: 'blur',
+                 position: {
+                     my: 'bottom left',
+                     at: 'top left',
+                     target: $('label', theRenderedControl.parent()),
+                     adjust: {
+                         resize: true
+                     }
+                 },
+                 style: {
+                     classes: 'qtip-dark qtip-shadow',
+                     width: theRenderedControl.innerWidth()
+                 }
+             })
+         }*/
         //Anadimos los atributos html indicados en la configuracion
         $.each(fieldSource.html || {}, function(item, value) {
             fieldSource.control.attr(item, value)
@@ -1017,4 +1037,30 @@ ft = function ft(cadena) {
     } else {
         return cadena
     }
+}
+activarTooltips = function activarTooltips() {
+    //fixme No se muestran los tooltip en los campos selectize
+    $('[help] input, [help] select,[help] textarea, [help] div.selectize-input ').each(function() {
+        $(this).qtip({
+            content: {
+                text: $(this).closest('[help]').attr('help'),
+                title: $('label', $(this).parent()).text()
+            },
+            show: 'hover focus',
+            hide: 'blur',
+            position: {
+                my: 'bottom left',
+                at: 'top left',
+                //target: $('label', $(this).parent()),
+                adjust: {
+                    resize: true,
+                    y: 10
+                }
+            },
+            style: {
+                // classes: 'qtip-dark qtip-shadow',
+                width: $(this).innerWidth()
+            }
+        })
+    })
 }
