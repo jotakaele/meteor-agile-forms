@@ -604,17 +604,14 @@ fieldValue = function fieldValue(name) {
             var field = name
             theName = name.attr('name')
         }
-
         switch (field.attr('type')) {
             case 'radio':
                 return $('.autof [name=' + theName + ']:checked').val()
                 break;
             default:
-
                 return field.val() == "" ? null : field.val()
                 break;
         }
-
     }
     // Esta función procesa las definiciones "activate" de los campos o bloques de grupo, que determinan su visibilidad o activación.
 activateHooksTriggers = function activateHooksTriggers() {
@@ -829,7 +826,6 @@ formToJson = function formToJson(objForm) {
         var f = objForm
         var res = {}
         fields.each(function(index, value) {
-
             if (_.indexOf(numberTypes, $('#' + this.name, f).attr('type')) >= 0) {
                 this.save_as = $('#' + this.name, f).attr('save_as') || 'number'
             } else if (_.indexOf(dateTypes, $('#' + this.name, f).attr('type')) >= 0) {
@@ -837,10 +833,8 @@ formToJson = function formToJson(objForm) {
             } else {
                 this.save_as = $('#' + this.name, f).attr('save_as') || 'string'
             }
-
             var theValue = fieldValue($(this))
-
-            //procesamos los number
+                //procesamos los number
             if (this.save_as == 'number') {
                 if (_.isArray(theValue)) {
                     theValue.forEach(function(elem, key) {
@@ -850,7 +844,6 @@ formToJson = function formToJson(objForm) {
                     theValue = theValue * 1
                 }
             }
-
             //procesemos los date
             //Los campos date los procesamos como date
             if (this.save_as == 'date') {
@@ -860,24 +853,18 @@ formToJson = function formToJson(objForm) {
                     theValue = toDate('00-00-0000' + ' ' + theValue)
                 }
                 theValue = isNaN(theValue) ? null : theValue
-
             } else if (this.save_as == 'boolean') {
                 theValue = eval(theValue)
             }
-
             //Precesamos los campos typo tags, para convertirlos en un array
             if ($(this).attr('type') == 'tags') {
                 theValue = fieldValue($(this)).split(',')
             }
-
             res[this.name] = (theValue == '' ? null : theValue) || null
-
         })
-
         $('div.block[limit]', objForm).each(function() {
             _.extend(res, getBlocValues($(this)))
         })
-
         return res
     }
     /*
@@ -920,20 +907,19 @@ getBlocValues = function getBlocValues($object, intLimit) {
 sendFormToMongo = function sendFormToMongo($form) {
         //var dest = $form.attr('collection')
         var insertObj = formToJson($form)
-
         Meteor.call('saveAfRecord', c.form.name, insertObj, function(err, res) {
-            if (err) {
-                console.error(err)
-            }
-            if (res) {
-                dbg('res', res)
-
-            }
-
-        })
-
-        //var insert = cCols[dest].insert(insertObj)
-        //return insert
+                if (err) {
+                    console.error(err)
+                }
+                if (res) {
+                    dbg('res', res)
+                    if (res.status == 'saved') {
+                        document.getElementById($form.attr('id')).reset();
+                    }
+                }
+            })
+            //var insert = cCols[dest].insert(insertObj)
+            //return insert
     }
     // //Devuelve un array de objetos con las claves value y label, listo para ser usado en un campo tipo enum de formulario.
     // //Como parametro requiere un objeto con las siguientes claves:
