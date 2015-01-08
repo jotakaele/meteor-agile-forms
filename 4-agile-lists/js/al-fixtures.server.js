@@ -50,10 +50,16 @@ if (Autol.find().count() === 0) {
         content: defaultAutoL,
         state: "active"
     });
+    Autol._ensureIndex({
+        name: 1
+    }, {
+        unique: true,
+        dropDups: true
+    })
 }
 Fixtures = new Mongo.Collection('fixtures_data', {})
-if (Fixtures.find().count() === 0) {
-    var cantidad = 100
+if (Fixtures.find().count() === 0) {var cantidad = 100
+
     for (c = 1; c <= cantidad; c++) {
         Fixtures.insert({
             name: randEl(nombres),

@@ -197,7 +197,17 @@ AL = function(element, options) {
 renderList = function renderList(objectSource, divDestName) {
     dbg("objectSource", objectSource)
     autol = new AL(divDestName, {
-        def: sanitizeObjectNameKeys(objectSource.content || objectSource),
-        name: objectSource.name
-    })
+            def: sanitizeObjectNameKeys(objectSource.content || objectSource),
+            name: objectSource.name
+        })
+        //TODO Importante @security Poner una condicion que permita que solo los ususrios administradores puedan manejar la configuración
+    if (1 == 1) {
+        var theAdminLink = $('<a>', {
+                class: 'admin admin-list',
+                target: '_blank',
+                href: '/backend/al/' + objectSource.name,
+                title: t('Setup this list')
+            }).html('<i class="fa fa-wrench"></i>').prependTo($('#' + divDestName).parent())
+            // c.HTML.title.wrap('<a target = _blank class="admin" href="/backend/af/' + c.form.name + '" title="You are admin. Setup form">')
+    }
 }

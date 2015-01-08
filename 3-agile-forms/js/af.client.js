@@ -38,12 +38,8 @@ AF = function(element, options, formName) {
         }).appendTo(c.HTML.maindiv).text(c.form.change_notice || ft("Form changed"))
         c.HTML.title = $('<span>', {
                 class: "form_title"
-            }).text(c.form.title).appendTo(c.HTML.form)
-            //TODO Importante @security Poner una condicion que permita que solo los ususrios administradores puedan manejar la configuración
-        if (1 == 1) {
-            c.HTML.title.wrap('<a target = _blank class="admin" href="/backend/af/' + c.form.name + '" title="You are admin. Setup form">')
-        }
-        //////MONTAMOS EL PUZLE
+            }).text(c.form.title).prependTo(c.HTML.maindiv)
+            //////MONTAMOS EL PUZLE
         c.HTML.maindiv.appendTo(c.HTML.form)
             //Recorremos los fields
         arrBlockNames = []
@@ -810,9 +806,19 @@ setInitialRadioValues = function setInitialRadioValues() {
 renderForm = function renderForm(objectSource, divDestName) {
         nx = objectSource
         autof = new AF(divDestName, {
-            def: sanitizeObjectNameKeys(objectSource.content || objectSource),
-            name: objectSource.name
-        })
+                def: sanitizeObjectNameKeys(objectSource.content || objectSource),
+                name: objectSource.name
+            })
+            //TODO Importante @security Poner una condicion que permita que solo los ususrios administradores puedan manejar la configuración
+        if (1 == 1) {
+            var theAdminLink = $('<a>', {
+                    class: 'admin admin-form',
+                    target: '_blank',
+                    href: '/backend/af/' + objectSource.name,
+                    title: t('Setup this form')
+                }).html('<i class="fa fa-wrench"></i>').prependTo($('#' + divDestName).parent())
+                // c.HTML.title.wrap('<a target = _blank class="admin" href="/backend/af/' + c.form.name + '" title="You are admin. Setup form">')
+        }
     }
     /*
     Convierte en Array los datos de un fromulario

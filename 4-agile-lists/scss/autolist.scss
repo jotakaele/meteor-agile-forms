@@ -1,0 +1,41 @@
+@import "../../1-agile-main/scss/main";
+table.autol {
+    width: 100% !important;
+    td {
+        padding: 2px;
+        span.array-list {
+            border: 1px solid darken($secondary-color, 20);
+        }
+        padding: 0px;
+        height: auto;
+    }
+    td.block {
+        span.array-list {
+            display: block;
+        }
+    }
+    div[objectlevel="0"] table.object_table thead > tr > td {
+        display: none;
+    }
+    table.object_table {
+        margin: 0px;
+        padding: 0px;
+        td {
+            display: inline-flex;
+        }
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+    }
+    div.array_element {
+        background-color: #FFAFF6;
+        padding: 1px;
+        margin: 1px;
+        border: 1px solid #000;
+    }
+    div[type="object"] {
+        padding: 0px;
+        margin: 0px;
+    }
+}
