@@ -1,4 +1,4 @@
-<template name="autoEdit">
+<template name="autoFormEdit">
     <!-- {{initialItem}} -->
     <nav class="top-bar" data-topbar role="navigation">
         <ul class="title-area">
@@ -20,9 +20,9 @@
     </nav>
     <dl class="sub-nav" id="items_existentes">
         <dt>
-            <input type="search" id="filtrar" placeholder="{{tr "Form filter"}}" /> </dt>
+            <input type="search" id="filtrar" placeholder="{{tr " Form filter "}}" /> </dt>
         {{#each items }}
-            <dd name="{{name}}" collection="{{content.form.collection}}"><a class="doc" name="{{name}}" id="{{_id}}">{{name}}</a> </dd>
+        <dd name="{{name}}" collection="{{content.form.collection}}"><a class="doc" name="{{name}}" id="{{_id}}">{{name}}</a> </dd>
         {{/each}}
     </dl>
     <div class="small-12 columns">
@@ -38,6 +38,6 @@
             </div>
         </div>
     </div>
-    <p>Soy un texto   {{tr "male"}}</p>
-    <!-- </div> -->{{initFoundation}} {{cargarItemInicial}} 
-    </template>
+    <p>Soy un texto {{tr "male"}}</p>
+    <!-- </div> -->{{initFoundation}} {{cargarItemInicial}}
+</template>
