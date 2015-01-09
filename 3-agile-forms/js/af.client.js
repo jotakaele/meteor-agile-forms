@@ -131,7 +131,7 @@ createField = function createField(myname, fieldSource) {
         fieldSource.type = fieldSource.type || 'text'
         fieldSource.class = "large-" + fieldSource.columns + " small-12 columns " + (fieldSource.class || '') //Para que encaje con foundation
         var row = $('<div>', {
-            class: fieldSource.class,
+            class: 'fieldrow' + ' ' + fieldSource.class,
             id: 'div-' + fieldSource.id
                 // ,        title: fieldSource.help
         })
@@ -1039,27 +1039,26 @@ ft = function ft(cadena) {
     }
 }
 activarTooltips = function activarTooltips() {
-    //fixme No se muestran los tooltip en los campos selectize
-    $('[help] input, [help] select,[help] textarea, [help] div.selectize-input ').each(function() {
+    $('[help] input, [help] select,[help] textarea, [help] div.selectize-control').each(function() {
         $(this).qtip({
             content: {
                 text: $(this).closest('[help]').attr('help'),
-                title: $('label', $(this).parent()).text()
+                title: $('label', $(this).closest('.fieldrow')).text()
             },
-            show: 'hover focus',
+            show: 'focus',
             hide: 'blur',
             position: {
                 my: 'bottom left',
-                at: 'top left',
-                //target: $('label', $(this).parent()),
+                at: 'bottom left',
+                target: $('label', $(this).closest('.fieldrow')),
                 adjust: {
+                    mouse: false,
                     resize: true,
-                    y: 10
+                    y: 11
                 }
             },
             style: {
-                // classes: 'qtip-dark qtip-shadow',
-                width: $(this).innerWidth()
+                width: $('label', $(this).closest('.fieldrow')).innerWidth() - 2
             }
         })
     })
