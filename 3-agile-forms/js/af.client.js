@@ -76,6 +76,7 @@ AF = function(element, options, formName) {
         alertFormChange(c.HTML.form)
         setInitialRadioValues()
         activarTooltips()
+        focusOnLabelClick()
             //delete c
             //delete options
     }
@@ -449,6 +450,11 @@ createBlock = function createBlock(name, blockSource) {
     var blockname = $('<span>', {
         class: "blockname"
     }).text(ft(_.titleize(_.humanize(name)).trim())).appendTo(panelBlock)
+    if (blockSource.limit > 1) {
+        var maxinfo = $('<span>', {
+            class: "maxinfo"
+        }).text(ft('Max') + ' ' + blockSource.limit).appendTo(blockname)
+    }
     $('<i>', {
         class: "fa fa-chevron-down"
     }).appendTo(blockname)
@@ -515,6 +521,11 @@ prepareMultiBlocks = function prepareMultiBlocks() {
                 $(this).removeClass("disabled alert")
                 initClonedRadioControls()
                 initSelectToSelectize()
+                    // Activamos datetimepicker para los nuevos campos clonados de type date
+                $('input[type=date]', theNewClon).each(function() {
+                        datetimeFieldProcess($(this), c.fields[$(this).attr('id')])
+                    })
+                    //
                 $(this).addClass("disabled alert")
                 activateCustomValidation($('.isClon:last', block))
             }
@@ -817,9 +828,7 @@ setInitialRadioValues = function setInitialRadioValues() {
         })
     }
     //todo Asignar acciones a los botones en función del modo y en función de la validación
-    //todo Habilitar para que al hacer click en los titulos y :after(iconos) simule el hecho de entrar en el campo, por ejemplo para desplegar el calendario
     //todo crear un tipo de campo booleano, que maneje los valores sí-no y almacene siempre true/false
-    //fixme Los ssegundos campos tipo date, no depliegan el calendario
     //todo hacer funcion que devuelva el pattern apropiado para DNI, DOI o pasaporte.Quizas seria una buena idea hacer una colección de patterns ubicados en el mismo sitio. La colección tambien podría incluir mascaras de entrada.
     //Habilitar la posibilidad de poner una configuracion especifica por bloques, según el nombre del bloque.
     //fixme No funciona poner value en common
@@ -1039,27 +1048,39 @@ ft = function ft(cadena) {
     }
 }
 activarTooltips = function activarTooltips() {
-    $('[help] input, [help] select,[help] textarea, [help] div.selectize-control').each(function() {
-        $(this).qtip({
-            content: {
-                text: $(this).closest('[help]').attr('help'),
-                title: $('label', $(this).closest('.fieldrow')).text()
-            },
-            show: 'focus',
-            hide: 'blur',
-            position: {
-                my: 'bottom left',
-                at: 'bottom left',
-                target: $('label', $(this).closest('.fieldrow')),
-                adjust: {
-                    mouse: false,
-                    resize: true,
-                    y: 11
+        $('[help] input, [help] select,[help] textarea, [help] div.selectize-control').each(function() {
+            $(this).qtip({
+                content: {
+                    text: $(this).closest('[help]').attr('help'),
+                    title: "<span class='info'></span>" + $('label', $(this).closest('.fieldrow')).text(),
+                    button: true,
+                },
+                show: 'focus',
+                hide: 'blur ',
+                position: {
+                    my: 'bottom left',
+                    at: 'bottom left',
+                    target: $('label', $(this).closest('.fieldrow')),
+                    adjust: {
+                        mouse: false,
+                        resize: true,
+                        y: 11
+                    }
+                },
+                style: {
+                    width: $('label', $(this).closest('.fieldrow')).innerWidth() - 2
                 }
-            },
-            style: {
-                width: $('label', $(this).closest('.fieldrow')).innerWidth() - 2
-            }
+            })
+        })
+    }
+    //Hace focus en el campo al clickear sobre el label
+focusOnLabelClick = function focusOnLabelClick() {
+    $('.fieldrow').each(function() {
+        var $theRow = $(this)
+        $('label', $(this)).unbind('click')
+        $('label', $(this)).click(function() {
+            $('[name]', $theRow).focus()
+            $('.selectize-input', $theRow).click()
         })
     })
 }

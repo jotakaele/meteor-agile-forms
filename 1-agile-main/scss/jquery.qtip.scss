@@ -1,5 +1,6 @@
 /* qTip2 v2.2.1 | Plugins: None | Styles: core basic | qtip2.com | Licensed MIT | Sun Sep 07 2014 00:52:32 */
 
+@import "main";
 .qtip {
     position: absolute;
     left: -28000px;
@@ -11,7 +12,16 @@
     line-height: .9em;
     direction: ltr;
     box-shadow: none;
-    padding: 0
+    padding: 0;
+    span.info {
+        font-family: FontAwesome;
+        &:after {
+            content: "\f129";
+            font-weight: normal;
+            padding-right: 5px;
+            color:
+        }
+    }
 }
 .qtip-content {
     position: relative;
@@ -189,7 +199,7 @@
     z-index: 10;
 }
 /* Opera bug #357 - Incorrect tip position
-	https://github.com/Craga89/qTip2/issues/367 */
+    https://github.com/Craga89/qTip2/issues/367 */
 
 x:-o-prefocus, .qtip .qtip-tip {
     visibility: hidden;
