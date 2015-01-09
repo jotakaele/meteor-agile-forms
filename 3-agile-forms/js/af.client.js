@@ -499,13 +499,17 @@ createButtonsActions = function createButtonsActions() {
 prepareMultiBlocks = function prepareMultiBlocks() {
     $('.autof .block[limit]').each(function() {
         var block = $(this)
-        $('div', this).wrapAll('<div class="fieldsRow large-11 small-11 columns">')
-        var utilityRow = $('<div>', {
-            class: "utilityRow large-1 small-1 columns addsubrow"
-        }).html('<label class="action">&nbsp; </label>').appendTo(this)
-        var addButton = $('<span>', {
-            class: 'tiny secondary'
-        }).html('<i class="fa fa-plus fa-2x"></i>').appendTo(utilityRow)
+        if (block.attr('limit') == 1) {
+            $('div', this).wrapAll('<div class="fieldsRow">')
+        } else {
+            $('div', this).wrapAll('<div class="fieldsRow large-11 small-11 columns">')
+            var utilityRow = $('<div>', {
+                class: "utilityRow large-1 small-1 columns addsubrow"
+            }).html('<label class="action">&nbsp; </label>').appendTo(this)
+            var addButton = $('<span>', {
+                class: 'tiny secondary'
+            }).html('<i class="fa fa-plus fa-2x"></i>').appendTo(utilityRow)
+        }
         var mainRow = $('.fieldsRow,.utilityRow', this).wrapAll('<div class="subrow large-12 small-12 columns">')
         renumeraMultiBlockIndex()
         var newRow = $('.addsubrow', this).on('click', function() {
@@ -906,7 +910,6 @@ formToJson = function formToJson(objForm) {
     Procesa los valores de un bloque de varios campos convirtiendolo en un array
     */
 getBlocValues = function getBlocValues($object, intLimit) {
-        //todo Procesar la salida de getBlockValues, para que si limit=1, solo devuelva un objeto y no un array
         var theBlock = $object
         var index = 0
         var theBlockName = theBlock.attr('id')
@@ -1075,12 +1078,13 @@ activarTooltips = function activarTooltips() {
     }
     //Hace focus en el campo al clickear sobre el label
 focusOnLabelClick = function focusOnLabelClick() {
-    $('.fieldrow').each(function() {
-        var $theRow = $(this)
-        $('label', $(this)).unbind('click')
-        $('label', $(this)).click(function() {
-            $('[name]', $theRow).focus()
-            $('.selectize-input', $theRow).click()
+        $('.fieldrow').each(function() {
+            var $theRow = $(this)
+            $('label', $(this)).unbind('click')
+            $('label', $(this)).click(function() {
+                $('[name]', $theRow).focus()
+                $('.selectize-input', $theRow).click()
+            })
         })
-    })
-}
+    }
+    //fixme Vaya, parece que no guarda las fechas como date
