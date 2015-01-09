@@ -309,7 +309,6 @@ createInput = function createInput(name, fieldSource) {
 }
 createSelect = function createSelect(name, fieldSource) {
     //Si es un tipo booleano, directamente creamos el objeto
-    //todo @urgente La lista de valores sí, no debe mostrarse en el idioma del sistema y si no, por defecto en ingles
     if (fieldSource.enum == 'boolean') {
         fieldSource.save_as = 'boolean'
         fieldSource.enum = [{
@@ -832,10 +831,8 @@ setInitialRadioValues = function setInitialRadioValues() {
         })
     }
     //todo Asignar acciones a los botones en función del modo y en función de la validación
-    //todo crear un tipo de campo booleano, que maneje los valores sí-no y almacene siempre true/false
     //todo hacer funcion que devuelva el pattern apropiado para DNI, DOI o pasaporte.Quizas seria una buena idea hacer una colección de patterns ubicados en el mismo sitio. La colección tambien podría incluir mascaras de entrada.
     //Habilitar la posibilidad de poner una configuracion especifica por bloques, según el nombre del bloque.
-    //fixme No funciona poner value en common
 renderForm = function renderForm(objectSource, divDestName) {
         nx = objectSource
         autof = new AF(divDestName, {
@@ -941,7 +938,7 @@ getBlocValues = function getBlocValues($object, intLimit) {
         }
         return resBV
     }
-    //TODO esta operacion hay que hacerla desde un metodo de meteor, añadiendo autofecha, usuario, etc.....
+    //TODO Añadir metodos para update y delete, desde el server
 sendFormToMongo = function sendFormToMongo($form) {
         //var dest = $form.attr('collection')
         var insertObj = formToJson($form)
@@ -1040,7 +1037,6 @@ queryToEnum = function queryToEnum(query) {
         })
         return _.unique(arrRes)
     }
-    //todo @urgente Quitar los inconos de los bloques [limit=1]
     //todo añadir una opcion el la definicion del form que indique donde queremos ir o que queremos hacer despues de insertar, o eliminar, o modificar estableciendo ademas valores por defecto.
     //Traduce una cadena en el formulario si esta habilitada la traduccion a nivel de formulario
 ft = function ft(cadena) {
@@ -1088,3 +1084,4 @@ focusOnLabelClick = function focusOnLabelClick() {
         })
     }
     //fixme Vaya, parece que no guarda las fechas como date
+    //TODO Mostrar solo los botones de accín según se hay llamado al formulario
