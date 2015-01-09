@@ -76,6 +76,7 @@ AF = function(element, options, formName) {
         alertFormChange(c.HTML.form)
         setInitialRadioValues()
         activarTooltips()
+        focusOnLabelClick()
             //delete c
             //delete options
     }
@@ -308,7 +309,6 @@ createInput = function createInput(name, fieldSource) {
 }
 createSelect = function createSelect(name, fieldSource) {
     //Si es un tipo booleano, directamente creamos el objeto
-    //todo @urgente La lista de valores sí, no debe mostrarse en el idioma del sistema y si no, por defecto en ingles
     if (fieldSource.enum == 'boolean') {
         fieldSource.save_as = 'boolean'
         fieldSource.enum = [{
@@ -449,6 +449,11 @@ createBlock = function createBlock(name, blockSource) {
     var blockname = $('<span>', {
         class: "blockname"
     }).text(ft(_.titleize(_.humanize(name)).trim())).appendTo(panelBlock)
+    if (blockSource.limit > 1) {
+        var maxinfo = $('<span>', {
+            class: "maxinfo"
+        }).text(ft('Max') + ' ' + blockSource.limit).appendTo(blockname)
+    }
     $('<i>', {
         class: "fa fa-chevron-down"
     }).appendTo(blockname)
@@ -493,13 +498,17 @@ createButtonsActions = function createButtonsActions() {
 prepareMultiBlocks = function prepareMultiBlocks() {
     $('.autof .block[limit]').each(function() {
         var block = $(this)
-        $('div', this).wrapAll('<div class="fieldsRow large-11 small-11 columns">')
-        var utilityRow = $('<div>', {
-            class: "utilityRow large-1 small-1 columns addsubrow"
-        }).html('<label class="action">&nbsp; </label>').appendTo(this)
-        var addButton = $('<span>', {
-            class: 'tiny secondary'
-        }).html('<i class="fa fa-plus fa-2x"></i>').appendTo(utilityRow)
+        if (block.attr('limit') == 1) {
+            $('div', this).wrapAll('<div class="fieldsRow">')
+        } else {
+            $('div', this).wrapAll('<div class="fieldsRow large-11 small-11 columns">')
+            var utilityRow = $('<div>', {
+                class: "utilityRow large-1 small-1 columns addsubrow"
+            }).html('<label class="action">&nbsp; </label>').appendTo(this)
+            var addButton = $('<span>', {
+                class: 'tiny secondary'
+            }).html('<i class="fa fa-plus fa-2x"></i>').appendTo(utilityRow)
+        }
         var mainRow = $('.fieldsRow,.utilityRow', this).wrapAll('<div class="subrow large-12 small-12 columns">')
         renumeraMultiBlockIndex()
         var newRow = $('.addsubrow', this).on('click', function() {
@@ -515,6 +524,11 @@ prepareMultiBlocks = function prepareMultiBlocks() {
                 $(this).removeClass("disabled alert")
                 initClonedRadioControls()
                 initSelectToSelectize()
+                    // Activamos datetimepicker para los nuevos campos clonados de type date
+                $('input[type=date]', theNewClon).each(function() {
+                        datetimeFieldProcess($(this), c.fields[$(this).attr('id')])
+                    })
+                    //
                 $(this).addClass("disabled alert")
                 activateCustomValidation($('.isClon:last', block))
             }
@@ -817,12 +831,8 @@ setInitialRadioValues = function setInitialRadioValues() {
         })
     }
     //todo Asignar acciones a los botones en función del modo y en función de la validación
-    //todo Habilitar para que al hacer click en los titulos y :after(iconos) simule el hecho de entrar en el campo, por ejemplo para desplegar el calendario
-    //todo crear un tipo de campo booleano, que maneje los valores sí-no y almacene siempre true/false
-    //fixme Los ssegundos campos tipo date, no depliegan el calendario
     //todo hacer funcion que devuelva el pattern apropiado para DNI, DOI o pasaporte.Quizas seria una buena idea hacer una colección de patterns ubicados en el mismo sitio. La colección tambien podría incluir mascaras de entrada.
     //Habilitar la posibilidad de poner una configuracion especifica por bloques, según el nombre del bloque.
-    //fixme No funciona poner value en common
 renderForm = function renderForm(objectSource, divDestName) {
         nx = objectSource
         autof = new AF(divDestName, {
@@ -897,7 +907,6 @@ formToJson = function formToJson(objForm) {
     Procesa los valores de un bloque de varios campos convirtiendolo en un array
     */
 getBlocValues = function getBlocValues($object, intLimit) {
-        //todo Procesar la salida de getBlockValues, para que si limit=1, solo devuelva un objeto y no un array
         var theBlock = $object
         var index = 0
         var theBlockName = theBlock.attr('id')
@@ -929,7 +938,7 @@ getBlocValues = function getBlocValues($object, intLimit) {
         }
         return resBV
     }
-    //TODO esta operacion hay que hacerla desde un metodo de meteor, añadiendo autofecha, usuario, etc.....
+    //TODO Añadir metodos para update y delete, desde el server
 sendFormToMongo = function sendFormToMongo($form) {
         //var dest = $form.attr('collection')
         var insertObj = formToJson($form)
@@ -1028,7 +1037,6 @@ queryToEnum = function queryToEnum(query) {
         })
         return _.unique(arrRes)
     }
-    //todo @urgente Quitar los inconos de los bloques [limit=1]
     //todo añadir una opcion el la definicion del form que indique donde queremos ir o que queremos hacer despues de insertar, o eliminar, o modificar estableciendo ademas valores por defecto.
     //Traduce una cadena en el formulario si esta habilitada la traduccion a nivel de formulario
 ft = function ft(cadena) {
@@ -1039,27 +1047,41 @@ ft = function ft(cadena) {
     }
 }
 activarTooltips = function activarTooltips() {
-    $('[help] input, [help] select,[help] textarea, [help] div.selectize-control').each(function() {
-        $(this).qtip({
-            content: {
-                text: $(this).closest('[help]').attr('help'),
-                title: $('label', $(this).closest('.fieldrow')).text()
-            },
-            show: 'focus',
-            hide: 'blur',
-            position: {
-                my: 'bottom left',
-                at: 'bottom left',
-                target: $('label', $(this).closest('.fieldrow')),
-                adjust: {
-                    mouse: false,
-                    resize: true,
-                    y: 11
+        $('[help] input, [help] select,[help] textarea, [help] div.selectize-control').each(function() {
+            $(this).qtip({
+                content: {
+                    text: $(this).closest('[help]').attr('help'),
+                    title: "<span class='info'></span>" + $('label', $(this).closest('.fieldrow')).text(),
+                    button: true,
+                },
+                show: 'focus',
+                hide: 'blur ',
+                position: {
+                    my: 'bottom left',
+                    at: 'bottom left',
+                    target: $('label', $(this).closest('.fieldrow')),
+                    adjust: {
+                        mouse: false,
+                        resize: true,
+                        y: 11
+                    }
+                },
+                style: {
+                    width: $('label', $(this).closest('.fieldrow')).innerWidth() - 2
                 }
-            },
-            style: {
-                width: $('label', $(this).closest('.fieldrow')).innerWidth() - 2
-            }
+            })
         })
-    })
-}
+    }
+    //Hace focus en el campo al clickear sobre el label
+focusOnLabelClick = function focusOnLabelClick() {
+        $('.fieldrow').each(function() {
+            var $theRow = $(this)
+            $('label', $(this)).unbind('click')
+            $('label', $(this)).click(function() {
+                $('[name]', $theRow).focus()
+                $('.selectize-input', $theRow).click()
+            })
+        })
+    }
+    //fixme Vaya, parece que no guarda las fechas como date
+    //TODO Mostrar solo los botones de accín según se hay llamado al formulario

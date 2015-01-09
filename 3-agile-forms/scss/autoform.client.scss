@@ -66,13 +66,13 @@ form.autof {
                 display: none;
             }
         }
-        &[limit] {
-            .blockname, .blockname i {
-                background-color: $secondary-color !important;
-                border-color: $secondary-color !important;
-            }
-        }
         .blockname, .blockname i {
+            .maxinfo {
+                display: inline-block;
+                margin-left: 2em;
+                font-size: .7em;
+                font-weight: normal;
+            }
             font-size: 110%;
             background-color: $primary-color;
             color: lighten($primary-color, 60);
