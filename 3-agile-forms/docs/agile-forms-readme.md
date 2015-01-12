@@ -7,7 +7,7 @@ La definicion de cada formulario, se guarda en MongoDb en la colección `_af`, q
 
 
 
-## form: 
+## form (YAML config): 
 ### collection:
 - Requerido. El nombre de la colección sobre la cual actua el formulario. solo una 
 
@@ -381,3 +381,35 @@ queries:
 
 
 
+## Cargar un formulario
+
+### Desde Javascript. 
+Se puede llamra a un formulario usando la función `cargaForm`
+
+
+```javascript
+
+    cargaForm({
+        divName: 'divname',  // Opcional. Default 'formdest' El id del div donde se va a renderizar el form
+        mode: 'edit', // Opcional. Default 'new' [new,edit,delete,readonly]
+        name: 'Personas', //Requerido. Nombre del formulario a cargar
+        docId: 'kjhklgh876ggf5c' // Requerido si 'mode' es 'edit' o 'readonly'. Id del documento a cargar enel formulario
+    })
+
+```
+
+
+### Desde una template
+
+```html
+  
+    {{> formshow name="torneos" mode="edit" docId="kjhklgh876ggf5c"}}
+
+
+    {{> formshow name="Personas"}}
+
+
+    {{> formshow name="theFormName" mode="new"}}
+
+
+```
