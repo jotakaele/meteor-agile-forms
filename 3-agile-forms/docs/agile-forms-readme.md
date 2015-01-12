@@ -384,7 +384,7 @@ queries:
 ## Cargar un formulario
 
 ### Desde Javascript. 
-Se puede llamra a un formulario usando la función `cargaForm`
+Se puede llamar a un formulario usando la función `cargaForm`
 
 
 ```javascript

@@ -35,7 +35,7 @@ cargaForm = function cargaForm(objOptions) {
     }
     cargarItemInicial(obj.name, function(res) {
         if (res) {
-            renderForm(res, options.divName)
+            renderForm(res, options)
         }
     })
 }

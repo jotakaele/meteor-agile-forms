@@ -1,3 +1,10 @@
+devForm = {
+    mode: s('_formDesignMode'),
+    name: 'miname',
+    docId: s('_formDesignDocId')
+}
+dbg('devForm', devForm)
+    //modo en que estamos trabajando en diseño
 aceOptions = {
     maxLines: Infinity,
     enableBasicAutocompletion: true,
@@ -31,8 +38,11 @@ function lanzarRenderizado() {
         if (editor_cambiado === true) {
             $("#ritem").html('')
             tx = jsyaml.load(editor.getValue())
+            var options = _.extend({
+                divName: 'ritem'
+            }, devForm)
             $('#ritem').fadeOut(200).fadeIn(300)
-            renderForm(tx, 'ritem')
+            renderForm(tx, options)
         }
     }, 800)
 }
@@ -83,7 +93,10 @@ carga = function carga(nombreForm) {
             $('li#guardar #nombre').on("input", editorCambiado)
             colorificaYaml()
             editor.gotoLine(1)
-            renderForm(res, 'ritem')
+            var options = _.extend({
+                divName: 'ritem'
+            }, devForm)
+            renderForm(res, options)
             coloreaEtiquetas()
             localStorage.setItem('lastFormAdminChargeName', res.name)
         }
@@ -140,6 +153,13 @@ colorificaYaml = function colorificaYaml() {
     }, 1)
 }
 Template.autoFormEdit.helpers({
+    formdefaults: function() {
+        return {
+            _formDesignDocId: s('_formDesignDocId'),
+            _formDesignMode: s('_formDesignMode'),
+            _theClass: s('_formDesignMode') == 'new' ? 'hide' : null
+        }
+    },
     items: function() {
         return Autof.find({
             state: "active"
@@ -158,6 +178,14 @@ Template.autoFormEdit.helpers({
 });
 //fixme Parece que no funciona correctamente al hacer update (muestra los antiguos) Revisar!!!
 Template.autoFormEdit.events({
+        'blur input#form-mode': function(event) {
+            s('_formDesignMode', $('input#form-mode').val())
+            lanzarRenderizado()
+        },
+        'blur input#form-doc-id': function(event) {
+            s('_formDesignDocId', $('input#form-doc-id').val())
+            lanzarRenderizado()
+        },
         'click #eliminar': function eliminarItem() {
             var theNameToDelete = $("li#guardar #nombre").text()
             var theIdToDelete = $("li#guardar #nombre").attr('itemid')
@@ -322,7 +350,10 @@ Template.autoFormEdit.events({
             setTimeout(function() {
                 editor.gotoLine(1)
                 colorificaYaml()
-                renderForm(jsyaml.load(editor.getValue()), 'ritem')
+                var options = _.extend({
+                    divName: 'ritem'
+                }, devForm)
+                renderForm(jsyaml.load(editor.getValue()), options)
             }, 10)
         },
         'click #items_existentes .doc[id]': function seleccionarDocumento(e) {

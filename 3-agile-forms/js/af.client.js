@@ -1,7 +1,9 @@
 AF = function(element, options, formName) {
-        // todo cambiar el nombre a la libreria por af
-        //console.clear()
-        // dbg('options', o2S(options))
+        console.clear()
+        dbg('options', o2S(options))
+            //comprobamos los modos
+        var posibleModes = options.def.form.modes || null
+        if (posibleModes) {}
         clonableRows = {}
         activateHooks = {}
         processSelectize = {}
@@ -832,12 +834,14 @@ setInitialRadioValues = function setInitialRadioValues() {
     }
     //todo Asignar acciones a los botones en función del modo y en función de la validación
     //todo hacer funcion que devuelva el pattern apropiado para DNI, DOI o pasaporte.Quizas seria una buena idea hacer una colección de patterns ubicados en el mismo sitio. La colección tambien podría incluir mascaras de entrada.
-    //Habilitar la posibilidad de poner una configuracion especifica por bloques, según el nombre del bloque.
-renderForm = function renderForm(objectSource, divDestName) {
+    //idea Habilitar la posibilidad de poner una configuracion especifica por bloques, según el nombre del bloque.
+renderForm = function renderForm(objectSource, options) {
         nx = objectSource
-        autof = new AF(divDestName, {
+        autof = new AF(options.divName, {
                 def: sanitizeObjectNameKeys(objectSource.content || objectSource),
-                name: objectSource.name
+                name: objectSource.name,
+                mode: options.mode || 'new',
+                docId: options.docId || null
             })
             //TODO Importante @security Poner una condicion que permita que solo los ususrios administradores puedan manejar la configuración
         if (1 == 1) {
@@ -846,7 +850,7 @@ renderForm = function renderForm(objectSource, divDestName) {
                     target: '_blank',
                     href: '/backend/af/' + objectSource.name,
                     title: t('Setup this form')
-                }).html('<i class="fa fa-wrench"></i>').prependTo($('#' + divDestName).parent())
+                }).html('<i class="fa fa-wrench"></i>').prependTo($('#' + options.divName).parent())
                 // c.HTML.title.wrap('<a target = _blank class="admin" href="/backend/af/' + c.form.name + '" title="You are admin. Setup form">')
         }
     }
