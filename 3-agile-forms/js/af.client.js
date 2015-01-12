@@ -1,9 +1,29 @@
 AF = function(element, options, formName) {
-        console.clear()
-        dbg('options', o2S(options))
+        //        console.clear()
+        dbg('options', options)
             //comprobamos los modos
-        var posibleModes = options.def.form.modes || null
-        if (posibleModes) {}
+        var mode = {
+            allowed: options.def.form.modes || {
+                "edit": null,
+                "update": null,
+                "readonly": null,
+                "new": null
+            },
+            current: options.mode
+        }
+        if (!_.has(mode.allowed, mode.current)) {
+            var errorInfo = {
+                "formName": options.name,
+                "allowed": mode.allowed,
+                "current": mode.current
+            }
+            dbg('errorInfo', errorInfo)
+            Meteor.call('setLog', 'form_mode_not_allowed', errorInfo, function(error, result) {
+                console.info('No se muestra el formulario, por que se ha llamado en un modo no permitido', errorInfo)
+            });
+            return null
+        }
+        dbg('mode', mode)
         clonableRows = {}
         activateHooks = {}
         processSelectize = {}
@@ -61,7 +81,7 @@ AF = function(element, options, formName) {
                 $(nField).appendTo(c.HTML.currentBlock || c.HTML.maindiv)
             }
         })
-        c.HTML.button = createButtons()
+        c.HTML.button = createButtons(mode)
         c.HTML.maindiv.appendTo(c.HTML.form)
         c.HTML.button.appendTo(c.HTML.form)
         c.HTML.form.appendTo(c.element)
@@ -471,29 +491,37 @@ collapseBlocks = function collapseBlocks() {
         $(this).parent().toggleClass('collapse')
     })
 }
-createButtons = function createButtons() {
+createButtons = function createButtons(mode) {
     var buttonsGroup = $('<ul>', {
         class: "button-group"
     })
-    var btDelete = $('<li>', {
-        class: "tiny button alert disabled",
-        id: "delete-button",
-        tittle: t("Delete")
-    }).appendTo(buttonsGroup).html('<i class="fa fa-remove fa-2x"></i>')
-    var btAdd = $('<li>', {
-        class: "tiny button disabled",
-        id: "add-button",
-        title: ft("The form values aren't yet validated")
-    }).appendTo(buttonsGroup).html('<i class="fa fa-plus fa-2x"></i>')
-    var btSave = $('<li>', {
-        class: "tiny button disabled",
-        id: "save-button",
-        title: ft("Save this record")
-    }).appendTo(buttonsGroup).html('<i class="fa fa-save fa-2x"></i>')
+    if (mode.current == 'delete' || mode.current == 'edit') {
+        if (_.has(mode.allowed, 'delete')) {
+            var btDelete = $('<li>', {
+                class: "tiny button alert disabled left",
+                id: "delete-button",
+                tittle: t("Delete")
+            }).appendTo(buttonsGroup).html('<i class="fa fa-remove fa-2x">' + t('Delete record') + '</i>')
+        }
+    }
+    if (mode.current == 'new') {
+        var btNew = $('<li>', {
+            class: "tiny button disabled right",
+            id: "new-button",
+            title: ft("The form values aren't yet validated")
+        }).appendTo(buttonsGroup).html('<i class="fa fa-plus fa-2x">' + t('Add record') + '</i>')
+    }
+    if (mode.current == 'edit') {
+        var btSave = $('<li>', {
+            class: "tiny button disabled right",
+            id: "save-button",
+            title: ft("Save this record")
+        }).appendTo(buttonsGroup).html('<i class="fa fa-save fa-2x">' + t('Update record') + '</i>')
+    }
     return buttonsGroup
 }
 createButtonsActions = function createButtonsActions() {
-    $('#add-button').on('click', function() {
+    $('#new-button').on('click', function() {
         sendFormToMongo($(this).closest('form.autof'))
     })
 }
@@ -836,6 +864,7 @@ setInitialRadioValues = function setInitialRadioValues() {
     //todo hacer funcion que devuelva el pattern apropiado para DNI, DOI o pasaporte.Quizas seria una buena idea hacer una colección de patterns ubicados en el mismo sitio. La colección tambien podría incluir mascaras de entrada.
     //idea Habilitar la posibilidad de poner una configuracion especifica por bloques, según el nombre del bloque.
 renderForm = function renderForm(objectSource, options) {
+        dbg("rf", options)
         nx = objectSource
         autof = new AF(options.divName, {
                 def: sanitizeObjectNameKeys(objectSource.content || objectSource),

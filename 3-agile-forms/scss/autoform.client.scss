@@ -170,6 +170,13 @@ form.autof {
             text-align: left;
         }
     }
+    .button-group {
+        .button {
+            i:before {
+                margin-right: .4em;
+            }
+        }
+    }
 }
 /*dimensiones  normales del formulario*/
 

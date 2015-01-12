@@ -1,9 +1,9 @@
 devForm = {
-    mode: s('_formDesignMode'),
-    name: 'miname',
-    docId: s('_formDesignDocId')
-}
-dbg('devForm', devForm)
+        mode: s('_formDesignMode'),
+        name: 'miname',
+        docId: s('_formDesignDocId')
+    }
+    //dbg('devForm', devForm)
     //modo en que estamos trabajando en diseño
 aceOptions = {
     maxLines: Infinity,
@@ -42,6 +42,7 @@ function lanzarRenderizado() {
                 divName: 'ritem'
             }, devForm)
             $('#ritem').fadeOut(200).fadeIn(300)
+            dbg('options45', options)
             renderForm(tx, options)
         }
     }, 800)
@@ -96,6 +97,7 @@ carga = function carga(nombreForm) {
             var options = _.extend({
                 divName: 'ritem'
             }, devForm)
+            dbg('options100', options)
             renderForm(res, options)
             coloreaEtiquetas()
             localStorage.setItem('lastFormAdminChargeName', res.name)
@@ -180,10 +182,12 @@ Template.autoFormEdit.helpers({
 Template.autoFormEdit.events({
         'blur input#form-mode': function(event) {
             s('_formDesignMode', $('input#form-mode').val())
+            devForm.mode = $('input#form-mode').val()
             lanzarRenderizado()
         },
         'blur input#form-doc-id': function(event) {
             s('_formDesignDocId', $('input#form-doc-id').val())
+            devForm.docId = $('input#form-doc-id').val()
             lanzarRenderizado()
         },
         'click #eliminar': function eliminarItem() {
@@ -353,6 +357,7 @@ Template.autoFormEdit.events({
                 var options = _.extend({
                     divName: 'ritem'
                 }, devForm)
+                dbg('options353', options)
                 renderForm(jsyaml.load(editor.getValue()), options)
             }, 10)
         },

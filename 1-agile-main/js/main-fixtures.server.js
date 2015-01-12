@@ -14,6 +14,9 @@ if (Defaults.find().count() === 0) {
             },
             update_record: {
                 year: 1
+            },
+            form_mode_not_allowed: {
+                day: 5
             }
         }
     }
