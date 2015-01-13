@@ -1,4 +1,5 @@
 <template name="autoFormEdit">
+
     <!-- {{initialItem}} -->
     <nav class="top-bar" data-topbar role="navigation">
         <ul class="title-area">
@@ -34,6 +35,7 @@
             </ul>
         </section>
     </nav>
+
     <dl class="sub-nav" id="items_existentes">
         <dt>
             <input type="search" id="filtrar" placeholder="{{tr " Form filter "}}" /> </dt>
@@ -45,6 +47,7 @@
         <div id="items_existentes" class="row">
             <div class="large-2 small-12 columns"> </div>
         </div>
+        {{> meteorErrors}}
         <div id="bloque-editor">
             <div id="editor" class="large-6 columns " data-equalizer-watch></div>
             <div id="elitem" class="large-6 columns " data-equalizer-watch>

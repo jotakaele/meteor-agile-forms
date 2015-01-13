@@ -3,7 +3,12 @@ if (Autof.find().count() === 0) {
         "form": {
             "collection": "persons",
             "title": "Persons data",
-            "modes": "add,update,delete",
+            "modes": {
+                "new": null,
+                "edit": null,
+                "delete": null,
+                "readonly": null
+            },
             "permisions": null,
             "classes": "none",
             "fields": {
@@ -35,7 +40,12 @@ if (Autof.find().count() === 0) {
         "form": {
             "collection": "persons",
             "title": "Form title",
-            "modes": "add,update,delete",
+            "modes": {
+                "new": null,
+                "edit": null,
+                "delete": null,
+                "readonly": null
+            },
             "permisions": null,
             "classes": "none",
             "fields": {

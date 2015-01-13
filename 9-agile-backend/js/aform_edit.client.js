@@ -1,10 +1,5 @@
-devForm = {
-        mode: s('_formDesignMode'),
-        name: 'miname',
-        docId: s('_formDesignDocId')
-    }
-    //dbg('devForm', devForm)
-    //modo en que estamos trabajando en diseño
+//dbg('devForm', devForm)
+//modo en que estamos trabajando en diseño
 aceOptions = {
     maxLines: Infinity,
     enableBasicAutocompletion: true,
@@ -174,6 +169,11 @@ Template.autoFormEdit.helpers({
     cargarItemInicial: function() {
         //FIXME esto no deberia funcionar con setTimeout!!!
         Meteor.setTimeout(function() {
+            devForm = {
+                mode: s('_formDesignMode'),
+                name: 'miname',
+                docId: s('_formDesignDocId')
+            }
             carga(this.vname)
         }, 500)
     }
@@ -265,7 +265,12 @@ Template.autoFormEdit.events({
                 "form": {
                     "collection": "personas",
                     "title": "Titulo formulario",
-                    "modes": "add,update,delete",
+                    "modes": {
+                        "new": null,
+                        "edit": null,
+                        "delete": null,
+                        "readonly": null
+                    },
                     "permisions": null,
                     "i18n": true,
                     "classes": "none",

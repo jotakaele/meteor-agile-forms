@@ -1,29 +1,34 @@
 AF = function(element, options, formName) {
         //        console.clear()
-        dbg('options', options)
-            //comprobamos los modos
-        var mode = {
-            allowed: options.def.form.modes || {
-                "edit": null,
-                "update": null,
-                "readonly": null,
-                "new": null
-            },
-            current: options.mode
-        }
-        if (!_.has(mode.allowed, mode.current)) {
-            var errorInfo = {
-                "formName": options.name,
-                "allowed": mode.allowed,
-                "current": mode.current
-            }
-            dbg('errorInfo', errorInfo)
-            Meteor.call('setLog', 'form_mode_not_allowed', errorInfo, function(error, result) {
-                console.info('No se muestra el formulario, por que se ha llamado en un modo no permitido', errorInfo)
-            });
-            return null
-        }
-        dbg('mode', mode)
+        dbg('options', o2S(options))
+            //Comprobamos los modos delformulario
+        var mode = (function() {
+                var mode = {
+                    allowed: options.def.form.modes || {
+                        //todo debemos habilitar permisos individuales para acceder a un modo determinado de un formularioo
+                        "edit": null,
+                        "update": null,
+                        "readonly": null,
+                        "new": null
+                    },
+                    current: options.mode
+                }
+                if (!_.has(mode.allowed, mode.current)) {
+                    dbg('errorInfo', errorInfo)
+                    var errorInfo = {
+                        "formName": options.name,
+                        "allowed": mode.allowed,
+                        "current": mode.current
+                    }
+                    Meteor.call('setLog', 'form_mode_not_allowed', errorInfo, function(error, result) {
+                        Meteor.Errors.throw(t('The mode') + ' ' + errorInfo.current + ' ' + t('is not allowed in this form'))
+                    });
+                    return null
+                }
+                dbg('mode', mode)
+                return mode
+            })()
+            //---------------------
         clonableRows = {}
         activateHooks = {}
         processSelectize = {}
@@ -864,7 +869,6 @@ setInitialRadioValues = function setInitialRadioValues() {
     //todo hacer funcion que devuelva el pattern apropiado para DNI, DOI o pasaporte.Quizas seria una buena idea hacer una colección de patterns ubicados en el mismo sitio. La colección tambien podría incluir mascaras de entrada.
     //idea Habilitar la posibilidad de poner una configuracion especifica por bloques, según el nombre del bloque.
 renderForm = function renderForm(objectSource, options) {
-        dbg("rf", options)
         nx = objectSource
         autof = new AF(options.divName, {
                 def: sanitizeObjectNameKeys(objectSource.content || objectSource),
@@ -980,7 +984,6 @@ sendFormToMongo = function sendFormToMongo($form) {
                     console.error(err)
                 }
                 if (res) {
-                    dbg('res', res)
                     if (res.status == 'saved') {
                         document.getElementById($form.attr('id')).reset();
                     }
