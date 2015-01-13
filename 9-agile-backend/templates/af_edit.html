@@ -1,4 +1,5 @@
 <template name="autoFormEdit">
+
     <!-- {{initialItem}} -->
     <nav class="top-bar" data-topbar role="navigation">
         <ul class="title-area">
@@ -15,9 +16,26 @@
                 <li class="button" id="ayudacampos" title="Insertar la lista de campos de la colección en el editor"><i class="fa fa-database "></i> </li>
                 <li class="button" id="eliminar"><i class="fa fa-remove"></i> </li>
                 <li class="button" id="idiomas" title="Show traductions panel"><i class="fa fa-language"></i> </li>
+                <li>
+                    <input list="modeList" type="text" placeholder="form mode [new|edit|readonly|delete]" id="form-mode" value="{{formdefaults._formDesignMode}}">
+                    <datalist id="modeList">
+                        <option>new</option>
+                        <option>edit</option>
+                        <option>readonly</option>
+                        <option>delete</option>
+                    </datalist>
+
+
+                </li>
+
+                <li>
+                    <input class="{{formdefaults._theClass}}" type="text" placeholder="document id" id="form-doc-id" value="{{formdefaults._formDesignDocId}}">
+                </li>
+
             </ul>
         </section>
     </nav>
+
     <dl class="sub-nav" id="items_existentes">
         <dt>
             <input type="search" id="filtrar" placeholder="{{tr " Form filter "}}" /> </dt>
@@ -29,6 +47,7 @@
         <div id="items_existentes" class="row">
             <div class="large-2 small-12 columns"> </div>
         </div>
+        {{> meteorErrors}}
         <div id="bloque-editor">
             <div id="editor" class="large-6 columns " data-equalizer-watch></div>
             <div id="elitem" class="large-6 columns " data-equalizer-watch>

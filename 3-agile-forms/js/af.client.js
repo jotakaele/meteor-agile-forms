@@ -1,7 +1,34 @@
 AF = function(element, options, formName) {
-        // todo cambiar el nombre a la libreria por af
-        //console.clear()
-        // dbg('options', o2S(options))
+        //        console.clear()
+        dbg('options', o2S(options))
+            //Comprobamos los modos delformulario
+        var mode = (function() {
+                var mode = {
+                    allowed: options.def.form.modes || {
+                        //todo debemos habilitar permisos individuales para acceder a un modo determinado de un formularioo
+                        "edit": null,
+                        "update": null,
+                        "readonly": null,
+                        "new": null
+                    },
+                    current: options.mode
+                }
+                if (!_.has(mode.allowed, mode.current)) {
+                    dbg('errorInfo', errorInfo)
+                    var errorInfo = {
+                        "formName": options.name,
+                        "allowed": mode.allowed,
+                        "current": mode.current
+                    }
+                    Meteor.call('setLog', 'form_mode_not_allowed', errorInfo, function(error, result) {
+                        Meteor.Errors.throw(t('The mode') + ' ' + errorInfo.current + ' ' + t('is not allowed in this form'))
+                    });
+                    return null
+                }
+                dbg('mode', mode)
+                return mode
+            })()
+            //---------------------
         clonableRows = {}
         activateHooks = {}
         processSelectize = {}
@@ -59,7 +86,7 @@ AF = function(element, options, formName) {
                 $(nField).appendTo(c.HTML.currentBlock || c.HTML.maindiv)
             }
         })
-        c.HTML.button = createButtons()
+        c.HTML.button = createButtons(mode)
         c.HTML.maindiv.appendTo(c.HTML.form)
         c.HTML.button.appendTo(c.HTML.form)
         c.HTML.form.appendTo(c.element)
@@ -469,29 +496,37 @@ collapseBlocks = function collapseBlocks() {
         $(this).parent().toggleClass('collapse')
     })
 }
-createButtons = function createButtons() {
+createButtons = function createButtons(mode) {
     var buttonsGroup = $('<ul>', {
         class: "button-group"
     })
-    var btDelete = $('<li>', {
-        class: "tiny button alert disabled",
-        id: "delete-button",
-        tittle: t("Delete")
-    }).appendTo(buttonsGroup).html('<i class="fa fa-remove fa-2x"></i>')
-    var btAdd = $('<li>', {
-        class: "tiny button disabled",
-        id: "add-button",
-        title: ft("The form values aren't yet validated")
-    }).appendTo(buttonsGroup).html('<i class="fa fa-plus fa-2x"></i>')
-    var btSave = $('<li>', {
-        class: "tiny button disabled",
-        id: "save-button",
-        title: ft("Save this record")
-    }).appendTo(buttonsGroup).html('<i class="fa fa-save fa-2x"></i>')
+    if (mode.current == 'delete' || mode.current == 'edit') {
+        if (_.has(mode.allowed, 'delete')) {
+            var btDelete = $('<li>', {
+                class: "tiny button alert disabled left",
+                id: "delete-button",
+                tittle: t("Delete")
+            }).appendTo(buttonsGroup).html('<i class="fa fa-remove fa-2x">' + t('Delete record') + '</i>')
+        }
+    }
+    if (mode.current == 'new') {
+        var btNew = $('<li>', {
+            class: "tiny button disabled right",
+            id: "new-button",
+            title: ft("The form values aren't yet validated")
+        }).appendTo(buttonsGroup).html('<i class="fa fa-plus fa-2x">' + t('Add record') + '</i>')
+    }
+    if (mode.current == 'edit') {
+        var btSave = $('<li>', {
+            class: "tiny button disabled right",
+            id: "save-button",
+            title: ft("Save this record")
+        }).appendTo(buttonsGroup).html('<i class="fa fa-save fa-2x">' + t('Update record') + '</i>')
+    }
     return buttonsGroup
 }
 createButtonsActions = function createButtonsActions() {
-    $('#add-button').on('click', function() {
+    $('#new-button').on('click', function() {
         sendFormToMongo($(this).closest('form.autof'))
     })
 }
@@ -832,12 +867,14 @@ setInitialRadioValues = function setInitialRadioValues() {
     }
     //todo Asignar acciones a los botones en función del modo y en función de la validación
     //todo hacer funcion que devuelva el pattern apropiado para DNI, DOI o pasaporte.Quizas seria una buena idea hacer una colección de patterns ubicados en el mismo sitio. La colección tambien podría incluir mascaras de entrada.
-    //Habilitar la posibilidad de poner una configuracion especifica por bloques, según el nombre del bloque.
-renderForm = function renderForm(objectSource, divDestName) {
+    //idea Habilitar la posibilidad de poner una configuracion especifica por bloques, según el nombre del bloque.
+renderForm = function renderForm(objectSource, options) {
         nx = objectSource
-        autof = new AF(divDestName, {
+        autof = new AF(options.divName, {
                 def: sanitizeObjectNameKeys(objectSource.content || objectSource),
-                name: objectSource.name
+                name: objectSource.name,
+                mode: options.mode || 'new',
+                docId: options.docId || null
             })
             //TODO Importante @security Poner una condicion que permita que solo los ususrios administradores puedan manejar la configuración
         if (1 == 1) {
@@ -846,7 +883,7 @@ renderForm = function renderForm(objectSource, divDestName) {
                     target: '_blank',
                     href: '/backend/af/' + objectSource.name,
                     title: t('Setup this form')
-                }).html('<i class="fa fa-wrench"></i>').prependTo($('#' + divDestName).parent())
+                }).html('<i class="fa fa-wrench"></i>').prependTo($('#' + options.divName).parent())
                 // c.HTML.title.wrap('<a target = _blank class="admin" href="/backend/af/' + c.form.name + '" title="You are admin. Setup form">')
         }
     }
@@ -947,7 +984,6 @@ sendFormToMongo = function sendFormToMongo($form) {
                     console.error(err)
                 }
                 if (res) {
-                    dbg('res', res)
                     if (res.status == 'saved') {
                         document.getElementById($form.attr('id')).reset();
                     }

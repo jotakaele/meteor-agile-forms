@@ -21,8 +21,7 @@ dbg = function dbg(sometitle, something) {
         if (s('dbg') == true) {
             var d = new Date()
             a = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + ":" + d.getMilliseconds()
-            var theType = Meteor.isClient ? 'c' : 's'
-            console.log(a + ' >>> [' + sometitle + '][' + theType + ']', something);
+            console.log(a + ' >>> [' + sometitle + ']', something);
         }
         //}
     }
