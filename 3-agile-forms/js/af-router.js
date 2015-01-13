@@ -1,12 +1,12 @@
-
 Router.map(function() {
     this.route('pageForm', {
-        path: '/af/:itemname/:itemmode/',
+        path: '/af/:itemname/:itemmode/:itemid?',
         controller: 'BaseController',
         data: function() {
             return {
                 name: this.params.itemname,
-                mode: this.params.itemmode
+                mode: this.params.itemmode,
+                id: this.params.itemid
             }
         }
     });

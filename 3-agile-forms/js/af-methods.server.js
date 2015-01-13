@@ -40,6 +40,10 @@ Meteor.methods({
             }
         }
     },
+    //Recuperar un registro
+    'getDoc': function(theCollection, theId) {
+        return sCols[theCollection].findOne(theId)
+    },
     //Guardamos información en el log, lo que necesitemos
     'setLog': function(theType, objContent) {
         if (s('log') == true) {

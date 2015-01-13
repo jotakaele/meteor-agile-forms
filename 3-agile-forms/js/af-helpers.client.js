@@ -25,26 +25,63 @@ cargaForm = function cargaForm(objOptions) {
     var obj = _.extend({
         state: 'active'
     }, objItem)
-
-    function cargarItemInicial(nombreItem, callback) {
-        res = Autof.findOne(obj)
-        callback(res)
-    }
-    cargarItemInicial(obj.name, function(res) {
-        if (res) {
-            renderForm(res, options)
-        }
-    })
+    dbg("options", options)
+    var theRes = {}
+        //recuperamos el af
+    $.when(Autof.findOne(obj))
+        //recuperamos el nombre de la coleccion a partir del resultado y extraemos el documento
+        .then(function(res) {
+            _(theRes).extend(res)
+            var colName = res.content.form.collection
+            if (_(['edit', 'readonly', 'delete']).indexOf(options.mode) >= 0) {
+                //Quizas debamos recuperar desde un metodo, porque no siempre estarán todos los registros en el cliente....
+                return cCols[colName].findOne(options.id)
+            }
+            return null
+        })
+        // Incorporamos los datos del documento a theRes
+        .then(function(theDoc) {
+            dbg("theDoc", theDoc)
+            dbg("theRes", theRes)
+            insertDataValues(theRes.content.form.fields, theDoc)
+        })
+        //lanzamos renderForm
+        .done(function(res) {
+            dbg('finalres', theRes)
+            renderForm(theRes, options)
+        })
+        /*    function cargarItemInicial(nombreItem, callback) {
+                // res = Autof.findOne(obj)
+                // callback(res)
+            }
+            cargarItemInicial(obj.name, function(res) {
+                if (res) {
+                    renderForm(res, options)
+                }
+            })
+        */
 }
 Template.formshow.rendered = function() {
+    dbg('this.data', this.data)
     var config = this.data
     Meteor.setTimeout(function() {
         cargaForm(config)
     }, 100)
 }
 Template.pageForm.rendered = function() {
-    var config = this.data
-    Meteor.setTimeout(function() {
-        cargaForm(config)
-    }, 500)
+        dbg('this.data', this.data)
+        var config = this.data
+        Meteor.setTimeout(function() {
+            cargaForm(config)
+        }, 500)
+    }
+    //Inserta los datos del documento (si existe) como value en la definición de cada field
+insertDataValues = function insertDataValues(form, data) {
+    _(form).each(function(value, key, theR) {
+        console.log(key)
+        if (data[key]) {
+            //current hay que devolver los values dependiendo del tipo de campo que sea, especialmente cuidado con los date, arrays y objetos
+            value['value'] = data[key]
+        }
+    })
 }

@@ -1,7 +1,7 @@
 AF = function(element, options, formName) {
-        //        console.clear()
-        dbg('options', o2S(options))
-            //Comprobamos los modos delformulario
+        //console.clear()
+        //dbg('options', o2S(options))
+        //Comprobamos los modos delformulario
         var mode = (function() {
                 var mode = {
                     allowed: options.def.form.modes || {
@@ -28,7 +28,21 @@ AF = function(element, options, formName) {
                 dbg('mode', mode)
                 return mode
             })()
-            //---------------------
+            /*  function getDoc(options, callback) {
+                      //Quizas debamos recuperar desde un metodo, porque no siempre estarán todos los registros en el cliente....
+                      var doc = cCols[options.def.form.collection].findOne(options.docId)
+                      callback(doc)
+                  }
+                  // if (_(['edit', 'readonly', 'delete']).indexOf(mode.current) >= 0) {
+                  //Si estamos en modo edit, delete o readonly vamos a recuperar el documento
+              getDoc(options, function(res) {
+                      if (res) {
+                          console.log("options.def.form.fields", options.def.form.fields)
+                          console.log("res", res)
+                          return res;
+                      }
+                  })*/
+            // }
         clonableRows = {}
         activateHooks = {}
         processSelectize = {}
@@ -1121,3 +1135,13 @@ focusOnLabelClick = function focusOnLabelClick() {
     }
     //fixme Vaya, parece que no guarda las fechas como date
     //TODO Mostrar solo los botones de accín según se hay llamado al formulario
+    //---------------------
+    // function cargarItemInicial(nombreItem, callback) {
+    //         res = Autof.findOne(obj)
+    //         callback(res)
+    //     }
+    // cargarItemInicial(obj.name, function(res) {
+    //     if (res) {
+    //         renderForm(res, options)
+    //     }
+    // })
