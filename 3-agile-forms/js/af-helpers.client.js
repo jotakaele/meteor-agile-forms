@@ -1,16 +1,16 @@
 /*
 La función cargaForm espera un objeto tal que 
 {
-    divName: 'id_del_div_donde renderizar',
+    div: 'id_del_div_donde renderizar',
     mode: 'el modo del formulario [new,edit,delete,readonly]',
     name: El nombre del formulario a cargar
-    docId: el id del documento(a cargar) si estamos en modo edit
+    doc: el id del documento(a cargar) si estamos en modo edit
 }
 
 */
 cargaForm = function cargaForm(objOptions) {
     defOptions = {
-        divName: 'formdest',
+        div: 'formdest',
         mode: 'new'
     }
     if ($.type(objOptions) == 'string') {
@@ -35,7 +35,7 @@ cargaForm = function cargaForm(objOptions) {
             var colName = res.content.form.collection
             if (_(['edit', 'readonly', 'delete']).indexOf(options.mode) >= 0) {
                 //Quizas debamos recuperar desde un metodo, porque no siempre estarán todos los registros en el cliente....
-                return cCols[colName].findOne(options.id)
+                return cCols[colName].findOne(options.doc)
             }
             return null
         })
@@ -43,23 +43,15 @@ cargaForm = function cargaForm(objOptions) {
         .then(function(theDoc) {
             dbg("theDoc", theDoc)
             dbg("theRes", theRes)
-            insertDataValues(theRes.content.form.fields, theDoc)
+            if (theDoc) {
+                insertDataValues(theRes.content.form.fields, theDoc)
+            }
         })
         //lanzamos renderForm
         .done(function(res) {
             dbg('finalres', theRes)
             renderForm(theRes, options)
         })
-        /*    function cargarItemInicial(nombreItem, callback) {
-                // res = Autof.findOne(obj)
-                // callback(res)
-            }
-            cargarItemInicial(obj.name, function(res) {
-                if (res) {
-                    renderForm(res, options)
-                }
-            })
-        */
 }
 Template.formshow.rendered = function() {
     dbg('this.data', this.data)
@@ -78,7 +70,7 @@ Template.pageForm.rendered = function() {
     //Inserta los datos del documento (si existe) como value en la definición de cada field
 insertDataValues = function insertDataValues(form, data) {
     _(form).each(function(value, key, theR) {
-        console.log(key)
+        // console.log(key)
         if (data[key]) {
             //current hay que devolver los values dependiendo del tipo de campo que sea, especialmente cuidado con los date, arrays y objetos
             value['value'] = data[key]

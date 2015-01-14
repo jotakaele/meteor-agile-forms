@@ -8,9 +8,4 @@ Router.map(function() {
             }
         }
     });
-    this.route('altest', {
-        path: '/altest',
-        controller: 'BaseController',
-        name: 'examplelist'
-    });
 });

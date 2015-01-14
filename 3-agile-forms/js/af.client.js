@@ -884,7 +884,7 @@ setInitialRadioValues = function setInitialRadioValues() {
     //idea Habilitar la posibilidad de poner una configuracion especifica por bloques, según el nombre del bloque.
 renderForm = function renderForm(objectSource, options) {
         nx = objectSource
-        autof = new AF(options.divName, {
+        autof = new AF(options.div, {
                 def: sanitizeObjectNameKeys(objectSource.content || objectSource),
                 name: objectSource.name,
                 mode: options.mode || 'new',

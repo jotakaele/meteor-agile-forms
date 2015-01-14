@@ -1,0 +1,26 @@
+<template name="alf">
+    <div id="alf-template">
+        <div id="add" class="reveal-modal" data-reveal>
+
+            <div id="newdiv" form="{{this.form}}"></div>
+
+            <a class="close-reveal-modal">&#215;</a>
+        </div>
+
+        <div id="edit" class="reveal-modal" data-reveal>
+            <h2>Editar datos</h2>
+            <div id="editdiv" form="{{this.form}}">
+
+            </div>
+            <a class="close-reveal-modal">&#215;</a>
+        </div>
+
+
+        <div class="small-12 columns" id="lalista">
+            <a class="small-12 large-4 columns button right" href="#" data-reveal-id="add" id="addrecord">{{tr 'Add a record' }}</a>
+            <div class="panel" id="list" list="{{this.list}}"></div>
+        </div>
+
+    </div>
+    {{initFoundation}}
+</template>
