@@ -32,13 +32,9 @@ function lanzarRenderizado() {
     hacer = setTimeout(function() {
         if (editor_cambiado === true) {
             $("#ritem").html('')
-            tx = jsyaml.load(editor.getValue())
-            var options = _.extend({
-                divName: 'ritem'
-            }, devForm)
+            devForm.src = jsyaml.load(editor.getValue())
             $('#ritem').fadeOut(200).fadeIn(300)
-            dbg('options45', options)
-            renderForm(tx, options)
+            cargaForm(devForm)
         }
     }, 800)
 }
@@ -89,11 +85,12 @@ carga = function carga(nombreForm) {
             $('li#guardar #nombre').on("input", editorCambiado)
             colorificaYaml()
             editor.gotoLine(1)
-            var options = _.extend({
-                divName: 'ritem'
-            }, devForm)
-            dbg('options100', options)
-            renderForm(res, options)
+                // var options = _.extend({
+                //     div: 'ritem'
+                // }, devForm)
+                // dbg('options100', options)
+            devForm.src = res
+            cargaForm(devForm)
             coloreaEtiquetas()
             localStorage.setItem('lastFormAdminChargeName', res.name)
         }
@@ -171,8 +168,9 @@ Template.autoFormEdit.helpers({
         Meteor.setTimeout(function() {
             devForm = {
                 mode: s('_formDesignMode'),
-                name: 'miname',
-                docId: s('_formDesignDocId')
+                div: 'ritem',
+                name: this.vname,
+                doc: s('_formDesignDocId')
             }
             carga(this.vname)
         }, 500)
@@ -187,7 +185,7 @@ Template.autoFormEdit.events({
         },
         'blur input#form-doc-id': function(event) {
             s('_formDesignDocId', $('input#form-doc-id').val())
-            devForm.docId = $('input#form-doc-id').val()
+            devForm.doc = $('input#form-doc-id').val()
             lanzarRenderizado()
         },
         'click #eliminar': function eliminarItem() {
@@ -359,11 +357,12 @@ Template.autoFormEdit.events({
             setTimeout(function() {
                 editor.gotoLine(1)
                 colorificaYaml()
-                var options = _.extend({
-                    divName: 'ritem'
-                }, devForm)
-                dbg('options353', options)
-                renderForm(jsyaml.load(editor.getValue()), options)
+                    // var options = _.extend({
+                    //     div: 'ritem'
+                    // }, devForm)
+                    //dbg('options353', options)
+                devForm.src = jsyaml.load(editor.getValue())
+                cargaForm(devForm)
             }, 10)
         },
         'click #items_existentes .doc[id]': function seleccionarDocumento(e) {

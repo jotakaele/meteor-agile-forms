@@ -15,3 +15,13 @@ Ejemplos
 + `http://localhost:3000/alf/personas`
     
 
+Para que la edición funcione, el listado debe tener al menos un campo definido con el siguiente formato:
+```javascript
+    onl.link({texto:[actividad],edit:[_id])
+```
+
+y tiene que renderizar tal que 
+
+```html
+    <a edit="p98ybpuhyuf65e">Texto del enlace</a>
+```

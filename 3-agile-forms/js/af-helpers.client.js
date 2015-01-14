@@ -9,30 +9,42 @@ La función cargaForm espera un objeto tal que
 
 */
 cargaForm = function cargaForm(objOptions) {
+    dbg("objOptions", objOptions) //dbug
+        // creamos opciones por defecto
     defOptions = {
-        div: 'formdest',
-        mode: 'new'
-    }
+            div: 'formdest',
+            mode: 'new'
+        }
+        // Si solo hemos recibido un string lo tratamos como el nombre del formulario y lo integramos en defOptions
     if ($.type(objOptions) == 'string') {
         defOptions.name = 'objOptions'
     }
-    options = {}
-    _.extend(options, defOptions, objOptions)
+    //Creamos options y le ponemos los valores por defecto más los que hemos recibido como argumentos
+    options = _.extend({}, defOptions, objOptions)
+        //Creamo objItem para conectar a la base de datos
     var objItem = {} //cremaos el objeto temporal
-    if (options.name) {
-        objItem.name = options.name
+        //Si no existe objOptions.src es que estamos construyeno a apartir del nombre y vamos a coger el formualrio desde la bd
+    if (!objOptions.src) {
+        var obj = {
+            state: 'active',
+            name: objOptions.name
+        }
     }
-    var obj = _.extend({
-        state: 'active'
-    }, objItem)
-    dbg("options", options)
-    var theRes = {}
-        //recuperamos el af
-    $.when(Autof.findOne(obj))
+    //recuperamos el af, solo si no estamos recibiendo  objOptions.src como un objeto
+    $.when(function() {
+            if (!objOptions.src) {
+                return Autof.findOne(obj)
+            } else {
+                return objOptions.src
+            }
+        })
         //recuperamos el nombre de la coleccion a partir del resultado y extraemos el documento
         .then(function(res) {
-            _(theRes).extend(res)
-            var colName = res.content.form.collection
+            if (!objOptions.src) {
+                objOptions.src = res
+            }
+            var colName = objOptions.src.content.form.collection
+            dbg("colName", colName)
             if (_(['edit', 'readonly', 'delete']).indexOf(options.mode) >= 0) {
                 //Quizas debamos recuperar desde un metodo, porque no siempre estarán todos los registros en el cliente....
                 return cCols[colName].findOne(options.doc)
@@ -41,16 +53,13 @@ cargaForm = function cargaForm(objOptions) {
         })
         // Incorporamos los datos del documento a theRes
         .then(function(theDoc) {
-            dbg("theDoc", theDoc)
-            dbg("theRes", theRes)
             if (theDoc) {
-                insertDataValues(theRes.content.form.fields, theDoc)
+                insertDataValues(objOptions.src.content.form.fields, theDoc)
             }
         })
         //lanzamos renderForm
         .done(function(res) {
-            dbg('finalres', theRes)
-            renderForm(theRes, options)
+            renderForm(options)
         })
 }
 Template.formshow.rendered = function() {
