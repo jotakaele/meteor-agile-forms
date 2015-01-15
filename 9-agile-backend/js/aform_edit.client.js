@@ -1,4 +1,3 @@
-//dbg('devForm', devForm)
 //modo en que estamos trabajando en diseño
 aceOptions = {
     maxLines: Infinity,
@@ -23,6 +22,8 @@ coloreaEtiquetas = function() {
     })
 }
 var hacer = ''
+initialYAML = {}
+initiallNameText = ''
 
 function lanzarRenderizado() {
     if (hacer) {
@@ -34,67 +35,64 @@ function lanzarRenderizado() {
             $("#ritem").html('')
             devForm.src = jsyaml.load(editor.getValue())
             $('#ritem').fadeOut(200).fadeIn(300)
+            dbg('devForm', devForm)
             cargaForm(devForm)
         }
     }, 800)
 }
-
-function editorCambiado(status) {
-    // function isChanged(status) {
-    // if(status === true){
-    // }else if(status == false){
-    // }
-    // }
-    if (initialYAML != editor.getValue() || initiallNameText != $('li#guardar #nombre').text()) {
-        editor_cambiado = true
-        $('li#guardar i').removeClass('hide')
-        $("div#editor").addClass("modificado")
-    } else {
-        editor.session.getUndoManager().reset()
-        editor_cambiado = false
-        $('li#guardar i').addClass('hide')
-        $("div#editor").removeClass("modificado")
-    }
-    colorificaYaml()
-}
-carga = function carga(nombreForm) {
-    obj = {
-        state: 'active',
-        name: nombreForm
-    }
-
-    function cargarItemInicial(nombreItem, callback) {
-        res = Autof.findOne(obj)
-        callback(res)
-    }
-    cargarItemInicial(obj.name, function(res) {
-        if (res) {
-            $('#ritem').html('')
-            $("#nombre").text(res.name)
-            $("#nombre").attr("itemid", res._id)
-            $("#nombre").attr("theType", contentType(res))
-            $(".doc[name]").parent().removeClass('active')
-            $('.doc#' + res._id).parent().addClass('active')
+editorCambiado = function editorCambiado() {
+        /*dbg("initialYAML", initialYAML)
+        dbg("editor.getValue()", editor.getValue())*/
+        if (initialYAML != editor.getValue() || initiallNameText != $('li#guardar #nombre').text()) {
+            editor_cambiado = true
+            $('li#guardar i').removeClass('hide')
+            $("div#editor").addClass("modificado")
+        } else {
+            editor.session.getUndoManager().reset()
             editor_cambiado = false
-            editor = ace.edit('editor');
-            editor.setOptions(aceOptions)
-            initialYAML = jsyaml.dump(sanitizeObjectNameKeys(res.content))
-            initiallNameText = $('li#guardar #nombre').text()
-            editor.setValue(initialYAML)
-            editor.on('input', editorCambiado)
-            $('li#guardar #nombre').on("input", editorCambiado)
-            colorificaYaml()
-            editor.gotoLine(1)
-                // var options = _.extend({
-                //     div: 'ritem'
-                // }, devForm)
-                // dbg('options100', options)
-            devForm.src = res
-            cargaForm(devForm)
-            coloreaEtiquetas()
-            localStorage.setItem('lastFormAdminChargeName', res.name)
+            $('li#guardar i').addClass('hide')
+            $("div#editor").removeClass("modificado")
         }
-    })
+        colorificaYaml()
+    }
+    //current Conntrolar el estad del editor, cambiado etc
+carga = function carga(nombreForm) {
+    //1 Recuperamos la def del form
+    var res = {}
+    $.when((function(nombreForm) {
+            dbg(nombreForm)
+            var res = Autof.findOne({
+                state: "active",
+                name: nombreForm
+            })
+            return res
+        })(nombreForm))
+        //2 Ponemos yaml en editor
+        .then(function(res) {
+            dbg('res', res)
+            initialYAML = jsyaml.dump(sanitizeObjectNameKeys(res.content))
+            editor.setValue(initialYAML)
+            $('#ritem').html('')
+            $("#nombre").text(nombreForm)
+            $(".doc[name]").parent().removeClass('active')
+            initiallNameText = $('li#guardar #nombre').text()
+            editor.gotoLine(1)
+            coloreaEtiquetas()
+            colorificaYaml()
+            $('li#guardar #nombre').on("input", editorCambiado)
+            editorCambiado = false
+                // editorCambiado()
+            devForm = {
+                mode: s('_formDesignMode'),
+                div: 'ritem',
+                name: nombreForm,
+                doc: s('_formDesignDocId'),
+                src: jsyaml.load(editor.getValue())
+            }
+            cargaForm(devForm)
+            $('.doc[name="' + nombreForm + '"]').parent().addClass('active')
+        })
+        //3. Hacemos algo más
 }
 colorificaYaml = function colorificaYaml() {
     function tag2Color(cadenas, clase, ambito) {
@@ -146,6 +144,11 @@ colorificaYaml = function colorificaYaml() {
         }
     }, 1)
 }
+Template.autoFormEdit.rendered = function() {
+    editor = ace.edit('editor');
+    editor.setOptions(aceOptions)
+    editor.on('input', editorCambiado)
+};
 Template.autoFormEdit.helpers({
     formdefaults: function() {
         return {
@@ -166,12 +169,6 @@ Template.autoFormEdit.helpers({
     cargarItemInicial: function() {
         //FIXME esto no deberia funcionar con setTimeout!!!
         Meteor.setTimeout(function() {
-            devForm = {
-                mode: s('_formDesignMode'),
-                div: 'ritem',
-                name: this.vname,
-                doc: s('_formDesignDocId')
-            }
             carga(this.vname)
         }, 500)
     }
@@ -260,108 +257,105 @@ Template.autoFormEdit.events({
             $("div#editor").removeClass("modificado")
             $("#nombre").removeAttr("itemid").text(makeId(8))
             defaultForm = jsyaml.dump({
-                "form": {
-                    "collection": "personas",
-                    "title": "Titulo formulario",
-                    "modes": {
-                        "new": null,
-                        "edit": null,
-                        "delete": null,
-                        "readonly": null
-                    },
-                    "permisions": null,
-                    "i18n": true,
-                    "classes": "none",
-                    "fields": {
-                        "_bloque_1": null,
-                        "field1": {
-                            "title": "Un name"
+                    "form": {
+                        "collection": "persons",
+                        "title": "Titulo formulario",
+                        "modes": {
+                            "new": null,
+                            "edit": null,
+                            "delete": null,
+                            "readonly": null
                         },
-                        "_bloque_2": {
-                            "limit": 1
-                        },
-                        "field2": {
-                            "type": "currency"
-                        },
-                        "field3": {
-                            "enum": "a,b"
-                        },
-                        "_bloque_3": {
-                            "limit": 5
-                        },
-                        "field4": {
-                            "value": "$helper1$"
-                        },
-                        "field5": {
-                            "enum": "queries.lista_personas"
-                        }
-                    },
-                    "common": {
-                        "all": {
-                            "html": {
-                                "placeholder": "Im a field"
-                            }
-                        },
-                        "control": {
-                            "input": {
-                                "html": {
-                                    "placeholder": "Im a input"
-                                }
-                            }
-                        },
-                        "type": {
-                            "currency": {
-                                "html": {
-                                    "placeholder": "Im a currency"
-                                }
-                            }
-                        },
-                        "block_content": {
-                            "_bloque_1": {
-                                "html": {
-                                    "placeholder": "Im in _bloque_1"
-                                }
-                            }
-                        },
-                        "blocks": {
-                            "style": "box-shadow: 0px 0px 5px  #777"
-                        }
-                    }
-                },
-                "helpers": {
-                    "helper1": "eval(makeId(7))"
-                },
-                "queries": {
-                    "lista_personas": {
-                        "collection": "personas",
-                        "filter": {
-                            "nombre": {
-                                "$in": ["juan", "pedro"]
-                            }
-                        },
-                        "format": {
-                            "sort": {
-                                "apellidos": 1
+                        "permisions": null,
+                        "i18n": true,
+                        "classes": "none",
+                        "fields": {
+                            "_bloque_1": null,
+                            "field1": {
+                                "title": "Un name"
                             },
-                            "limit": 14
+                            "_bloque_2": {
+                                "limit": 1
+                            },
+                            "field2": {
+                                "type": "currency"
+                            },
+                            "field3": {
+                                "enum": "a,b"
+                            },
+                            "_bloque_3": {
+                                "limit": 5
+                            },
+                            "field4": {
+                                "value": "$helper1$"
+                            },
+                            "field5": {
+                                "enum": "queries.lista_personas"
+                            }
                         },
-                        "value": "[nombre]",
-                        "label": "[nombre] + ' ' + [apellidos]",
-                        "optgroup": "[apellidos]"
+                        "common": {
+                            "all": {
+                                "html": {
+                                    "placeholder": "Im a field"
+                                }
+                            },
+                            "control": {
+                                "input": {
+                                    "html": {
+                                        "placeholder": "Im a input"
+                                    }
+                                }
+                            },
+                            "type": {
+                                "currency": {
+                                    "html": {
+                                        "placeholder": "Im a currency"
+                                    }
+                                }
+                            },
+                            "block_content": {
+                                "_bloque_1": {
+                                    "html": {
+                                        "placeholder": "Im in _bloque_1"
+                                    }
+                                }
+                            },
+                            "blocks": {
+                                "style": "box-shadow: 0px 0px 5px  #777"
+                            }
+                        }
+                    },
+                    "helpers": {
+                        "helper1": "eval(makeId(7))"
+                    },
+                    "queries": {
+                        "lista_personas": {
+                            "collection": "persons",
+                            "filter": {
+                                "nombre": {
+                                    "$in": ["juan", "pedro"]
+                                }
+                            },
+                            "format": {
+                                "sort": {
+                                    "apellidos": 1
+                                },
+                                "limit": 14
+                            },
+                            "value": "[nombre]",
+                            "label": "[nombre] + ' ' + [apellidos]",
+                            "optgroup": "[apellidos]"
+                        }
                     }
-                }
-            })
-            editor = ace.edit("editor")
-            editor.setOptions(aceOptions)
+                })
+                // editor = ace.edit("editor")
+                // editor.setOptions(aceOptions)
             editor.setValue(defaultForm)
             setTimeout(function() {
                 editor.gotoLine(1)
                 colorificaYaml()
-                    // var options = _.extend({
-                    //     div: 'ritem'
-                    // }, devForm)
-                    //dbg('options353', options)
                 devForm.src = jsyaml.load(editor.getValue())
+                devForm.mode = 'new'
                 cargaForm(devForm)
             }, 10)
         },
@@ -371,8 +365,7 @@ Template.autoFormEdit.events({
                     return false;
                 }
             }
-            $('.doc').parent().removeClass('active')
-            $(e.target).parent().addClass('active')
+            $('#ritem').html('')
             carga($(e.target).attr('name'))
         },
         'keyup input#filtrar': function filtarLista(e) {
@@ -386,20 +379,8 @@ Template.autoFormEdit.events({
             })
         },
         'click #ayudacampos': function mostrarAyudaColumnas() {
-                helpColumns()
-            }
-            /*, 'dblclick div.ace_content': function plegarSeccion() {
-                var line = editor.getCursorPosition().row + 1
-                if (myFold[editor.getSelectedText()] == true) {
-                    myFold[editor.getSelectedText()] = false
-                    editor.getSession().unfold(line)
-                } else {
-                    myFold[editor.getSelectedText()] = true
-                    editor.getSession().foldAll(line - 1)
-                }
-                colorificaYaml()
-            }
-            */
+            helpColumns()
+        }
     })
     //Inserta la lista dec ampos disponibles en el editor, para ayuda y referencia
 function helpColumns() {

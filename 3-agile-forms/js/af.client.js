@@ -882,7 +882,7 @@ setInitialRadioValues = function setInitialRadioValues() {
     //todo Asignar acciones a los botones en función del modo y en función de la validación
     //todo hacer funcion que devuelva el pattern apropiado para DNI, DOI o pasaporte.Quizas seria una buena idea hacer una colección de patterns ubicados en el mismo sitio. La colección tambien podría incluir mascaras de entrada.
     //idea Habilitar la posibilidad de poner una configuracion especifica por bloques, según el nombre del bloque.
-renderForm = function renderForm(options) {
+    /*renderForm = function renderForm(options) {
         dbg("optionsRF", options)
         autof = new AF(options.div, {
                 def: sanitizeObjectNameKeys(options.src.content || option.src),
@@ -900,6 +900,7 @@ renderForm = function renderForm(options) {
             }).html('<i class="fa fa-wrench"></i>').prependTo($('#' + options.div).parent())
         }
     }
+    */
     /*
     Convierte en Array los datos de un fromulario
     */
@@ -1134,13 +1135,5 @@ focusOnLabelClick = function focusOnLabelClick() {
     }
     //fixme Vaya, parece que no guarda las fechas como date
     //TODO Mostrar solo los botones de accín según se hay llamado al formulario
-    //---------------------
-    // function cargarItemInicial(nombreItem, callback) {
-    //         res = Autof.findOne(obj)
-    //         callback(res)
-    //     }
-    // cargarItemInicial(obj.name, function(res) {
-    //     if (res) {
-    //         renderForm(res, options)
-    //     }
-    // })
+    //fixme No se vacia el formulario despues de añadir, en @Chrome!!!
+    //fixme No se adapta el tamaño de los qtips en los formularios modales

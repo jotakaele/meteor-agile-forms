@@ -390,6 +390,7 @@ Se puede llamar a un formulario usando la función `cargaForm`
 ```javascript
 
     cargaForm({
+        src: {form: .... } //Opcional. src puede ser un objeto JSON de definicion del formulario, Si el parametro no existe, lo extraerá de la base de datos a partir de name (habitual)
         div: 'divname',  // Opcional. Default 'formdest' El id del div donde se va a renderizar el form
         mode: 'edit', // Opcional. Default 'new' [new,edit,delete,readonly]
         name: 'Personas', //Requerido. Nombre del formulario a cargar
