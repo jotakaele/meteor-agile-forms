@@ -1,7 +1,6 @@
 AF = function(element, options, formName) {
-        //        console.clear()
-        dbg('options', o2S(options))
-            //Comprobamos los modos delformulario
+        //console.clear()
+        //Comprobamos los modos delformulario
         var mode = (function() {
                 var mode = {
                     allowed: options.def.form.modes || {
@@ -14,7 +13,6 @@ AF = function(element, options, formName) {
                     current: options.mode
                 }
                 if (!_.has(mode.allowed, mode.current)) {
-                    dbg('errorInfo', errorInfo)
                     var errorInfo = {
                         "formName": options.name,
                         "allowed": mode.allowed,
@@ -25,10 +23,23 @@ AF = function(element, options, formName) {
                     });
                     return null
                 }
-                dbg('mode', mode)
                 return mode
             })()
-            //---------------------
+            /*  function getDoc(options, callback) {
+                      //Quizas debamos recuperar desde un metodo, porque no siempre estarán todos los registros en el cliente....
+                      var doc = cCols[options.def.form.collection].findOne(options.doc)
+                      callback(doc)
+                  }
+                  // if (_(['edit', 'readonly', 'delete']).indexOf(mode.current) >= 0) {
+                  //Si estamos en modo edit, delete o readonly vamos a recuperar el documento
+              getDoc(options, function(res) {
+                      if (res) {
+                          console.log("options.def.form.fields", options.def.form.fields)
+                          console.log("res", res)
+                          return res;
+                      }
+                  })*/
+            // }
         clonableRows = {}
         activateHooks = {}
         processSelectize = {}
@@ -868,25 +879,25 @@ setInitialRadioValues = function setInitialRadioValues() {
     //todo Asignar acciones a los botones en función del modo y en función de la validación
     //todo hacer funcion que devuelva el pattern apropiado para DNI, DOI o pasaporte.Quizas seria una buena idea hacer una colección de patterns ubicados en el mismo sitio. La colección tambien podría incluir mascaras de entrada.
     //idea Habilitar la posibilidad de poner una configuracion especifica por bloques, según el nombre del bloque.
-renderForm = function renderForm(objectSource, options) {
-        nx = objectSource
-        autof = new AF(options.divName, {
-                def: sanitizeObjectNameKeys(objectSource.content || objectSource),
-                name: objectSource.name,
+    /*renderForm = function renderForm(options) {
+
+        autof = new AF(options.div, {
+                def: sanitizeObjectNameKeys(options.src.content || option.src),
+                name: options.src.name,
                 mode: options.mode || 'new',
-                docId: options.docId || null
+                doc: options.id || null
             })
             //TODO Importante @security Poner una condicion que permita que solo los ususrios administradores puedan manejar la configuración
         if (1 == 1) {
             var theAdminLink = $('<a>', {
-                    class: 'admin admin-form',
-                    target: '_blank',
-                    href: '/backend/af/' + objectSource.name,
-                    title: t('Setup this form')
-                }).html('<i class="fa fa-wrench"></i>').prependTo($('#' + options.divName).parent())
-                // c.HTML.title.wrap('<a target = _blank class="admin" href="/backend/af/' + c.form.name + '" title="You are admin. Setup form">')
+                class: 'admin admin-form',
+                target: '_blank',
+                href: '/backend/af/' + options.name,
+                title: t('Setup this form')
+            }).html('<i class="fa fa-wrench"></i>').prependTo($('#' + options.div).parent())
         }
     }
+    */
     /*
     Convierte en Array los datos de un fromulario
     */
@@ -1121,3 +1132,5 @@ focusOnLabelClick = function focusOnLabelClick() {
     }
     //fixme Vaya, parece que no guarda las fechas como date
     //TODO Mostrar solo los botones de accín según se hay llamado al formulario
+    //fixme No se vacia el formulario despues de añadir, en @Chrome!!!
+    //fixme No se adapta el tamaño de los qtips en los formularios modales

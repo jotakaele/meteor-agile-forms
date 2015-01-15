@@ -2,7 +2,6 @@
    //Carga las traducciones desde  la base de datos
    translationsStrings = function translationsStrings(lang) {
        if (s('lang') != 'en') {
-           dbg('Recuperando traducciones de la bd en ' + lang)
            var qF = JSON.parse(JSON.stringify({
                "_tr_": {
                    $exists: true
@@ -149,26 +148,21 @@
        })
    }
    $(document).ready(function() {
-       //Si estamos en modo traduccion manual, activamos el evento para traducir al hacer click sobre cadenas
-       if (s('translating') == 'manual') {
-           console.info('Activando traducción manual')
-           $('label,option,span,div').on('click', function(ev) {
-               ev.preventDefault()
-               ev.stopPropagation()
-               var theText = $(this).text()
-               console.log(theText)
-               if (theText.length > 1) {
-                   translateSelection(theText)
-               }
-           })
-       }
-   })
-
-
-
-
-//Registro para usar en templates
-Template.registerHelper('tr', function(cadToTranslate){
-  return(t(cadToTranslate))
-
-});
+           //Si estamos en modo traduccion manual, activamos el evento para traducir al hacer click sobre cadenas
+           if (s('translating') == 'manual') {
+               console.info('Activando traducción manual')
+               $('label,option,span,div').on('click', function(ev) {
+                   ev.preventDefault()
+                   ev.stopPropagation()
+                   var theText = $(this).text()
+                   console.log(theText)
+                   if (theText.length > 1) {
+                       translateSelection(theText)
+                   }
+               })
+           }
+       })
+       //Registro para usar en templates
+   Template.registerHelper('tr', function(cadToTranslate) {
+       return (t(cadToTranslate))
+   });

@@ -1,0 +1,10 @@
+@import "../../../1-agile-main/scss/main";
+div#alf-template {
+    a[edit] {
+        display: block;
+        &:hover {
+            background-color: lighten($primary-color, 50);
+            color: text-contrast(lighten($primary-color, 50));
+        }
+    }
+}
