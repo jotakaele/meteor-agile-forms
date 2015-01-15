@@ -10,7 +10,7 @@ La función cargaForm espera un objeto tal que
 
 */
 cargaForm = function cargaForm(objOptions) {
-    //dbg("objOptions", objOptions) //dbug
+
     // creamos opciones por defecto
     defOptions = {
             div: 'formdest',
@@ -27,8 +27,8 @@ cargaForm = function cargaForm(objOptions) {
         //Si no existe objOptions.src es que estamos construyeno a apartir del nombre y vamos a coger el formualrio desde la bd
     if (!objOptions.src) {
         var obj = {
-            state: 'active',
-            name: objOptions.name
+            state: 'active',name: objOptions.name
+
         }
     }
     //recuperamos el af, solo si no estamos recibiendo  objOptions.src como un objeto
@@ -41,7 +41,7 @@ cargaForm = function cargaForm(objOptions) {
         })(options))
         //recuperamos el nombre de la coleccion a partir del resultado y extraemos el documento
         .then(function(res) {
-            dbg('optionsTHEN', options)
+
             if (!options.src) {
                 options.src = res
             } else {
@@ -50,7 +50,7 @@ cargaForm = function cargaForm(objOptions) {
                     content: objOptions.src
                 }
             }
-            dbg('options.src', options.src)
+
             var colName = options.src.content.form.collection
             if (_(['edit', 'readonly', 'delete']).indexOf(options.mode) >= 0) {
                 //Quizas debamos recuperar desde un metodo, porque no siempre estarán todos los registros en el cliente....
@@ -85,14 +85,14 @@ cargaForm = function cargaForm(objOptions) {
     return options
 }
 Template.formshow.rendered = function() {
-    dbg('this.data', this.data)
+
     var config = this.data
     Meteor.setTimeout(function() {
         cargaForm(config)
     }, 100)
 }
 Template.pageForm.rendered = function() {
-        dbg('this.data', this.data)
+
         var config = this.data
         Meteor.setTimeout(function() {
             cargaForm(config)

@@ -1,6 +1,5 @@
 AF = function(element, options, formName) {
         //console.clear()
-        //dbg('options', o2S(options))
         //Comprobamos los modos delformulario
         var mode = (function() {
                 var mode = {
@@ -14,7 +13,6 @@ AF = function(element, options, formName) {
                     current: options.mode
                 }
                 if (!_.has(mode.allowed, mode.current)) {
-                    dbg('errorInfo', errorInfo)
                     var errorInfo = {
                         "formName": options.name,
                         "allowed": mode.allowed,
@@ -25,7 +23,6 @@ AF = function(element, options, formName) {
                     });
                     return null
                 }
-                dbg('mode', mode)
                 return mode
             })()
             /*  function getDoc(options, callback) {
@@ -883,7 +880,7 @@ setInitialRadioValues = function setInitialRadioValues() {
     //todo hacer funcion que devuelva el pattern apropiado para DNI, DOI o pasaporte.Quizas seria una buena idea hacer una colección de patterns ubicados en el mismo sitio. La colección tambien podría incluir mascaras de entrada.
     //idea Habilitar la posibilidad de poner una configuracion especifica por bloques, según el nombre del bloque.
     /*renderForm = function renderForm(options) {
-        dbg("optionsRF", options)
+
         autof = new AF(options.div, {
                 def: sanitizeObjectNameKeys(options.src.content || option.src),
                 name: options.src.name,

@@ -14,6 +14,7 @@ aceOptions = {
 var initialYAML = ''
 var initiallNameText = ''
 var myFold = {}
+currentForm = {}
 editor_cambiado = false
 coloreaEtiquetas = function() {
     $('dd[collection]').each(function() {
@@ -24,6 +25,41 @@ coloreaEtiquetas = function() {
 var hacer = ''
 initialYAML = {}
 initiallNameText = ''
+guardarFormDef = function guardarFormDef() {
+    if (!editor_cambiado) {
+        return false;
+    }
+    var data = {}
+    data.name = currentForm.name
+    data._id = currentForm._id
+    if (confirm("Save the form definition \n[" + data.name + "]?")) {
+        if (data._id) {
+            //Guardamos el actual a traves de log 
+            Meteor.call('setLog', 'backup_af', currentForm)
+                //Si ha insertado en el log
+            Autof.remove(data._id)
+        }
+        data.theContent = jsyaml.load(editor.getValue())
+        var okInsert = Autof.insert({
+            name: data.name,
+            content: desanitizeObjectNameKeys(data.theContent),
+            create_date: new Date(),
+            update: new Date(),
+            state: "active"
+        })
+        if (okInsert) {
+            console.info('Se ha guardado el formulario ' + data.name)
+            editor_cambiado = false
+            $('li#guardar i').addClass('hide')
+            $("div#editor").removeClass("modificado")
+            $('.doc[name]').parent().removeClass('active')
+            $('.doc[name="' + data.name + '"]').parent().addClass('active')
+            currentForm._id = okInsert
+            currentForm.name = data.name
+            currentForm.content = data.theContent
+        }
+    }
+}
 
 function lanzarRenderizado() {
     if (hacer) {
@@ -35,14 +71,11 @@ function lanzarRenderizado() {
             $("#ritem").html('')
             devForm.src = jsyaml.load(editor.getValue())
             $('#ritem').fadeOut(200).fadeIn(300)
-            dbg('devForm', devForm)
             cargaForm(devForm)
         }
     }, 800)
 }
 editorCambiado = function editorCambiado() {
-        /*dbg("initialYAML", initialYAML)
-        dbg("editor.getValue()", editor.getValue())*/
         if (initialYAML != editor.getValue() || initiallNameText != $('li#guardar #nombre').text()) {
             editor_cambiado = true
             $('li#guardar i').removeClass('hide')
@@ -60,16 +93,15 @@ carga = function carga(nombreForm) {
     //1 Recuperamos la def del form
     var res = {}
     $.when((function(nombreForm) {
-            dbg(nombreForm)
             var res = Autof.findOne({
                 state: "active",
                 name: nombreForm
             })
+            currentForm = res
             return res
         })(nombreForm))
         //2 Ponemos yaml en editor
         .then(function(res) {
-            dbg('res', res)
             initialYAML = jsyaml.dump(sanitizeObjectNameKeys(res.content))
             editor.setValue(initialYAML)
             $('#ritem').html('')
@@ -186,24 +218,19 @@ Template.autoFormEdit.events({
             lanzarRenderizado()
         },
         'click #eliminar': function eliminarItem() {
-            var theNameToDelete = $("li#guardar #nombre").text()
-            var theIdToDelete = $("li#guardar #nombre").attr('itemid')
-            if (confirm("¿Eliminar este item? \n[" + theNameToDelete + "]")) {
-                if (theIdToDelete) {
-                    var okDelete = Autof.update({
-                        _id: theIdToDelete
-                    }, {
-                        $set: {
-                            state: 'deleted',
-                            update_date: new Date()
-                        }
-                    })
+            if (confirm("Delete the form \n[" + currentForm.name + "]?")) {
+                if (currentForm._id) {
+                    //Guardamos el actual a traves de log 
+                    Meteor.call('setLog', 'delete_af', currentForm)
+                        //Si ha insertado en el log
+                    Autof.remove(currentForm._id)
+                    console.info('Form ' + currentForm.name + ' deleted from database')
                 }
-                editor.setValue('')
-                editor.session.getUndoManager().reset()
-                editor_cambiado = false
-                $('li#guardar i').addClass('hide')
-                $("div#editor").removeClass("modificado")
+                //editor.setValue('')
+                // editor.session.getUndoManager().reset()
+                // editor_cambiado = false
+                // $('li#guardar i').addClass('hide')
+                // $("div#editor").removeClass("modificado")
             }
         },
         'click #idiomas': function() {
@@ -213,46 +240,13 @@ Template.autoFormEdit.events({
                 showTraductionsPanel()
             }
         },
-        'click #guardar i': function() {
-            var theNameToSave = $("li#guardar #nombre").text()
-            var theIdToSave = $("#nombre").attr('itemid')
-            if (!editor_cambiado) {
-                return false;
-            }
-            if (confirm("¿Guardar la definición del item \n[" + theNameToSave + "]")) {
-                if (theIdToSave) {
-                    var okUpdate = Autof.update({
-                        _id: theIdToSave
-                    }, {
-                        $set: {
-                            name: theNameToSave + moment().format('YYYYMMDD-HHmmss'),
-                            state: 'autobackup',
-                            update_date: new Date(),
-                        }
-                    })
-                }
-                var theContent = jsyaml.load(editor.getValue())
-                var okInsert = Autof.insert({
-                    name: theNameToSave,
-                    content: desanitizeObjectNameKeys(theContent),
-                    create_date: new Date(),
-                    update: new Date(),
-                    state: "active"
-                })
-                console.info('Se ha guardado el formulario ' + theNameToSave)
-                if (okInsert) {
-                    editor_cambiado = false
-                    $('li#guardar i').addClass('hide')
-                    $("div#editor").removeClass("modificado")
-                    $('.doc[name="' + theNameToSave + '"]').parent().addClass('active')
-                }
-            }
-        },
+        'click #guardar i': guardarFormDef,
         'input #editor': lanzarRenderizado,
         'click #crear': function crearDocumento(e) {
             if (editor_cambiado) {
                 if (confirm("¿El item se ha modificado, pero no se ha guardado aún. \nSe perderán los cambios!! \n\n¿Continuar?") == false) return false;
             }
+            currentForm = {}
             $("#ritem").html('')
             $("div#editor").removeClass("modificado")
             $("#nombre").removeAttr("itemid").text(makeId(8))
