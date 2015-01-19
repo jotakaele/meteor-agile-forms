@@ -632,6 +632,7 @@ fieldValue = function fieldValue(name) {
                 return $('.autof [name=' + theName + ']:checked').val()
                 break;
             case 'date':
+            case 'datetime':
                 var theDate = toDate(field.val())
                 return isNaN(theDate) == true ? null : theDate
                 break;

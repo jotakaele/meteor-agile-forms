@@ -103,38 +103,82 @@ Template.pageForm.rendered = function() {
     }
     //Inserta los datos del documento (si existe) como value en la definición de cada field
 insertDataValues = function insertDataValues(form, data) {
-    //primero quitamos los valores por defecto
-    _(form).each(function(value, key, form) {
-        delete value['value']
-    })
-    dbg('form', form)
-    dbg('data', o2S(data))
-    _(data).each(function(value, key, theR) {
-        if (form[key]) {
-            dbg(key, $.type(value))
-            switch ($.type(value)) {
-                case 'string':
-                    form[key].value = value
-                    break;
-                case 'date':
-                    switch (form[key].type) {
-                        case 'date':
-                            form[key].value = moment(value).format(s('default_date_format').moment)
-                            break;
-                        case 'datetime':
-                            form[key].value = moment(value).format(s('default_datetime_format').moment)
-                            break;
-                        case 'time':
-                            form[key].value = moment(value).format(s('default_time_format').moment)
-                            break;
-                        default:
-                            break;
+        var inBlock = false
+        _(form).each(function(value, key, form) {
+            //primero quitamos los valores por defecto
+            delete value['value']
+                //Despues marcamos los que pertenecen a un bloque, basandonos en su primer caracter
+            if (_.startsWith(key, '_')) {
+                inBlock = false
+                if (value.limit) {
+                    inBlock = key
+                }
+            } else {
+                if (inBlock) {
+                    value.block = inBlock
+                }
+            }
+        })
+        _(data).each(function(value, key, theR) {
+            if (form[key]) {
+                if (_.startsWith(key, '_')) {
+                    //Procesamos los objetos
+                    if (form[key].limit == 1) {
+                        //Soy un objeto simple
+                        //dbg(key, $.type(value))
+                        _(value).each(function(dataValue, dataKey) {
+                            // console.log(dataKey, dataValue)
+                            if (form[dataKey].block == key) {
+                                form[dataKey].value = bdToHtmlValue(dataValue, form[dataKey].type)
+                            }
+                        })
                     }
+                    if (form[key].limit > 1) {
+                        form[key].value = []
+                            //Soy un array. Puedo cargar los valores en form como un array, pero aún no puedo asignarlos directamente a cada field, porque se renderizan en html
+                        _(value).each(function(arrayValue, arrayKey) {
+                            _(arrayValue).each(function(arrayDatavalue, arrayDataKey) {
+                                    arrayDatavalue = bdToHtmlValue(arrayDatavalue, form[arrayDataKey].type)
+                                        //   dbg(arrayDataKey, arrayDatavalue)
+                                    arrayValue[arrayDataKey] = arrayDatavalue
+                                })
+                                // dbg(arrayKey, arrayValue)
+                            form[key].value.push(arrayValue)
+                        })
+                    }
+                } else {
+                    //Procesamos los campos simples
+                    form[key].value = bdToHtmlValue(value, form[key].type)
+                }
+            }
+        })
+        dbg('data', data)
+        dbg('form', form)
+    }
+    //Convierte valores de kl abase de datos en el indicado en tyeHTML
+bdToHtmlValue = function bdToHtmlValue(value, typeHTML) {
+    switch ($.type(value)) {
+        case 'string':
+            res = value
+            break;
+        case 'date':
+            switch (typeHTML) {
+                case 'date':
+                    res = moment(value).format(s('default_date_format').moment)
+                    break;
+                case 'datetime':
+                    res = moment(value).format(s('default_datetime_format').moment)
+                    break;
+                case 'time':
+                    res = moment(value).format(s('default_time_format').moment)
                     break;
                 default:
-                    form[key].value = value
                     break;
             }
-        }
-    })
+            break;
+        default:
+            res = value
+            break;
+    }
+    return res
 }

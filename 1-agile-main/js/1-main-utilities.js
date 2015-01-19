@@ -169,9 +169,10 @@ arrayProcess = function arrayProcess(theArray, theOperacion) {
     }
     //Devuelve un objeto fecha formateado a partir de un string en el pattern patern
 toDate = function toDate(formaDateString, pattern) {
+        dbg('formaDateString', formaDateString)
         pattern = pattern || s('default_date_format').datetimepicker.replace(/\//g, '').toLowerCase()
-        formaDateString = formaDateString.replace(/\//g, '-')
-        formaDateString = formaDateString.replace(/\./g, '-')
+        formaDateString = formaDateString.toString().replace(/\//g, '-')
+        formaDateString = formaDateString.toString().replace(/\./g, '-')
         var b = formaDateString.split('-')
         if (pattern == 'dmy') {
             var y = b[2]
