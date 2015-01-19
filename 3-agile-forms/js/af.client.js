@@ -1,45 +1,10 @@
-AF = function(element, options, formName) {
+AF = function(element, options) {
         //console.clear()
-        //Comprobamos los modos delformulario
-        var mode = (function() {
-                var mode = {
-                    allowed: options.def.form.modes || {
-                        //todo debemos habilitar permisos individuales para acceder a un modo determinado de un formularioo
-                        "edit": null,
-                        "update": null,
-                        "readonly": null,
-                        "new": null
-                    },
-                    current: options.mode
-                }
-                if (!_.has(mode.allowed, mode.current)) {
-                    var errorInfo = {
-                        "formName": options.name,
-                        "allowed": mode.allowed,
-                        "current": mode.current
-                    }
-                    Meteor.call('setLog', 'form_mode_not_allowed', errorInfo, function(error, result) {
-                        Meteor.Errors.throw(t('The mode') + ' ' + errorInfo.current + ' ' + t('is not allowed in this form'))
-                    });
-                    return null
-                }
-                return mode
-            })()
-            /*  function getDoc(options, callback) {
-                      //Quizas debamos recuperar desde un metodo, porque no siempre estarán todos los registros en el cliente....
-                      var doc = cCols[options.def.form.collection].findOne(options.doc)
-                      callback(doc)
-                  }
-                  // if (_(['edit', 'readonly', 'delete']).indexOf(mode.current) >= 0) {
-                  //Si estamos en modo edit, delete o readonly vamos a recuperar el documento
-              getDoc(options, function(res) {
-                      if (res) {
-                          console.log("options.def.form.fields", options.def.form.fields)
-                          console.log("res", res)
-                          return res;
-                      }
-                  })*/
-            // }
+        var mode = checkModes(options)
+        if (!mode) {
+            return false
+        }
+        // dbg('options', options)
         clonableRows = {}
         activateHooks = {}
         processSelectize = {}
@@ -1134,3 +1099,28 @@ focusOnLabelClick = function focusOnLabelClick() {
     //TODO Mostrar solo los botones de accín según se hay llamado al formulario
     //fixme No se vacia el formulario despues de añadir, en @Chrome!!!
     //fixme No se adapta el tamaño de los qtips en los formularios modales
+    //Comprobamos los modos delformulario
+checkModes = function checkModes(options) {
+    var mode = {
+        allowed: options.def.form.modes || {
+            //todo debemos habilitar permisos individuales para acceder a un modo determinado de un formularioo
+            "edit": null,
+            "update": null,
+            "readonly": null,
+            "new": null
+        },
+        current: options.mode
+    }
+    if (!_.has(mode.allowed, mode.current)) {
+        var errorInfo = {
+            "formName": options.name,
+            "allowed": mode.allowed,
+            "current": mode.current
+        }
+        Meteor.call('setLog', 'form_mode_not_allowed', errorInfo, function(error, result) {
+            Meteor.Errors.throw(t('The mode') + ' ' + errorInfo.current + ' ' + t('is not allowed in this form'))
+        });
+        return null
+    }
+    return mode
+}

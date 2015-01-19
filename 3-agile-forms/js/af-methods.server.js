@@ -1,6 +1,7 @@
 Meteor.methods({
-    //Guradar un registro desde af 
+    //Guardar un registro desde af 
     'saveAfRecord': function(formName, formResults) {
+        dbg('formName', formName)
         var theForm = Autof.findOne({
                 name: formName
             }).content.form

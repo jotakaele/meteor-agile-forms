@@ -26,11 +26,12 @@ var hacer = ''
 initialYAML = {}
 initiallNameText = ''
 guardarFormDef = function guardarFormDef() {
+    dbg('currentForm', currentForm)
     if (!editor_cambiado) {
         return false;
     }
     var data = {}
-    data.name = currentForm.name
+    data.name = $('span#nombre').text()
     data._id = currentForm._id
     if (confirm("Save the form definition \n[" + data.name + "]?")) {
         if (data._id) {
@@ -90,13 +91,15 @@ editorCambiado = function editorCambiado() {
     }
     //current Conntrolar el estad del editor, cambiado etc
 carga = function carga(nombreForm) {
-    //1 Recuperamos la def del form
+    dbg('nombreForm', nombreForm)
+        //1 Recuperamos la def del form
     var res = {}
     $.when((function(nombreForm) {
             var res = Autof.findOne({
                 state: "active",
                 name: nombreForm
             })
+            localStorage.setItem('lastFormAdminChargeName', nombreForm)
             currentForm = res
             return res
         })(nombreForm))
@@ -201,7 +204,7 @@ Template.autoFormEdit.helpers({
     cargarItemInicial: function() {
         //FIXME esto no deberia funcionar con setTimeout!!!
         Meteor.setTimeout(function() {
-            carga(this.vname)
+            carga(this.vname || localStorage.getItem('lastFormAdminChargeName'))
         }, 500)
     }
 });
