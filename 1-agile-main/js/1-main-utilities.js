@@ -47,12 +47,12 @@ s = function s(key, value, saveToBD) {
                             console.log('No se ha podido almacenar la variable en la base de datos')
                         }
                     }
+                    Meteor.call('setLog', 'session_variable_changed', {
+                        from: 'client',
+                        key: key,
+                        value: value
+                    })
                 }
-                Meteor.call('setLog', 'session_variable_changed', {
-                    from: 'client',
-                    key: key,
-                    value: value
-                })
             }
         }
         //server
@@ -75,13 +75,12 @@ s = function s(key, value, saveToBD) {
                             console.log('No se ha podido almacenar la variable en la base de datos')
                         }
                     }
+                    Meteor.call('setLog', 'session_variable_changed', {
+                        from: 'client',
+                        key: key,
+                        value: value
+                    })
                 }
-                //fixme Esto lo dejamos desactivado de momento, porque hace más inserciones en la base de datos de las esperadas
-                // Meteor.call('setLog', 'session_variable_changed', {
-                //     from: 'server',
-                //     key: key,
-                //     value: value
-                // })
             }
         }
     }

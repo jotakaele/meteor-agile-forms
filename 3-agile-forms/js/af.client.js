@@ -257,33 +257,33 @@ datetimeFieldProcess = function datetimeFieldProcess(renderedField, fieldSource)
     var dateTypeDefaults = {
             //        lazyInit: true,
             lang: ft("en").split('-')[0] || 'en',
-            dayOfWeekStart: 1,
-            format: 'd/m/Y',
+            dayOfWeekStart: s('dayOfWeekStart'),
+            format: s('default_date_format').datetimepicker,
             timepicker: false,
             weeks: true,
             mask: true,
-            formatDate: 'd/m/Y'
+            formatDate: s('default_date_format').datetimepicker
         }
         // Valor por defecto para los input[type=datetime]
     var dateTimeTypeDefaults = {
             //        lazyInit: true,
             lang: ft("en").split('-')[0] || 'en',
-            dayOfWeekStart: 1,
-            format: 'd/m/Y H:i',
+            dayOfWeekStart: s('dayOfWeekStart'),
+            format: s('default_datetime_format').datetimepicker,
             weeks: true,
             mask: true,
-            formatDate: 'd/m/Y',
-            formatTime: 'H:i'
+            formatDate: s('default_date_format').datetimepicker,
+            formatTime: s('default_time_format').datetimepicker
         }
         // Valor por defecto para los input[type=time]
     var timeTypeDefaults = {
         //        lazyInit: true,
         lang: ft("en").split('-')[0] || 'en',
-        dayOfWeekStart: 1,
-        format: 'H:i',
+        dayOfWeekStart: s('dayOfWeekStart'),
+        format: s('default_time_format').datetimepicker,
         mask: true,
         datepicker: false,
-        formatTime: 'H:i',
+        formatTime: s('default_time_format').datetimepicker,
         step: 30
     }
     var currentConfig = {}
