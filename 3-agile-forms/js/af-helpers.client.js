@@ -103,22 +103,38 @@ Template.pageForm.rendered = function() {
     }
     //Inserta los datos del documento (si existe) como value en la definición de cada field
 insertDataValues = function insertDataValues(form, data) {
-    dbg('data', data)
-    _(form).each(function(value, key, theR) {
-        dbg(key, $.type(data[key]))
-            // console.log(key)
-        if (data[key]) {
-            switch ($.type(data[key])) {
+    //primero quitamos los valores por defecto
+    _(form).each(function(value, key, form) {
+        delete value['value']
+    })
+    dbg('form', form)
+    dbg('data', o2S(data))
+    _(data).each(function(value, key, theR) {
+        if (form[key]) {
+            dbg(key, $.type(value))
+            switch ($.type(value)) {
                 case 'string':
-                    value['value'] = data[key]
+                    form[key].value = value
                     break;
                 case 'date':
-                    value['value'] = data[key]
+                    switch (form[key].type) {
+                        case 'date':
+                            form[key].value = moment(value).format(s('default_date_format').moment)
+                            break;
+                        case 'datetime':
+                            form[key].value = moment(value).format(s('default_datetime_format').moment)
+                            break;
+                        case 'time':
+                            form[key].value = moment(value).format(s('default_time_format').moment)
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 default:
+                    form[key].value = value
                     break;
             }
-            //current hay que devolver los values dependiendo del tipo de campo que sea, especialmente cuidado con los date, arrays y objetos
         }
     })
 }

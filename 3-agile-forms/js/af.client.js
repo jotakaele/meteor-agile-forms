@@ -163,25 +163,6 @@ createField = function createField(myname, fieldSource) {
         if (!fieldSource.required == false) {
             theRenderedControl.attr('required', true)
         }
-        /* if (fieldSource.help) {
-             theRenderedControl.qtip({
-                 content: theRenderedControl.closest('[help]').attr('help'),
-                 show: 'click focus',
-                 hide: 'blur',
-                 position: {
-                     my: 'bottom left',
-                     at: 'top left',
-                     target: $('label', theRenderedControl.parent()),
-                     adjust: {
-                         resize: true
-                     }
-                 },
-                 style: {
-                     classes: 'qtip-dark qtip-shadow',
-                     width: theRenderedControl.innerWidth()
-                 }
-             })
-         }*/
         //Anadimos los atributos html indicados en la configuracion
         $.each(fieldSource.html || {}, function(item, value) {
             fieldSource.control.attr(item, value)
@@ -645,9 +626,14 @@ fieldValue = function fieldValue(name) {
             var field = name
             theName = name.attr('name')
         }
+        dbg('field', field)
         switch (field.attr('type')) {
             case 'radio':
                 return $('.autof [name=' + theName + ']:checked').val()
+                break;
+            case 'date':
+                var theDate = toDate(field.val())
+                return isNaN(theDate) == true ? null : theDate
                 break;
             default:
                 return field.val() == "" ? null : field.val()
