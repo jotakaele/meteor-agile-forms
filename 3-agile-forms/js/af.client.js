@@ -1,45 +1,10 @@
-AF = function(element, options, formName) {
+AF = function(element, options) {
         //console.clear()
-        //Comprobamos los modos delformulario
-        var mode = (function() {
-                var mode = {
-                    allowed: options.def.form.modes || {
-                        //todo debemos habilitar permisos individuales para acceder a un modo determinado de un formularioo
-                        "edit": null,
-                        "update": null,
-                        "readonly": null,
-                        "new": null
-                    },
-                    current: options.mode
-                }
-                if (!_.has(mode.allowed, mode.current)) {
-                    var errorInfo = {
-                        "formName": options.name,
-                        "allowed": mode.allowed,
-                        "current": mode.current
-                    }
-                    Meteor.call('setLog', 'form_mode_not_allowed', errorInfo, function(error, result) {
-                        Meteor.Errors.throw(t('The mode') + ' ' + errorInfo.current + ' ' + t('is not allowed in this form'))
-                    });
-                    return null
-                }
-                return mode
-            })()
-            /*  function getDoc(options, callback) {
-                      //Quizas debamos recuperar desde un metodo, porque no siempre estarán todos los registros en el cliente....
-                      var doc = cCols[options.def.form.collection].findOne(options.doc)
-                      callback(doc)
-                  }
-                  // if (_(['edit', 'readonly', 'delete']).indexOf(mode.current) >= 0) {
-                  //Si estamos en modo edit, delete o readonly vamos a recuperar el documento
-              getDoc(options, function(res) {
-                      if (res) {
-                          console.log("options.def.form.fields", options.def.form.fields)
-                          console.log("res", res)
-                          return res;
-                      }
-                  })*/
-            // }
+        var mode = checkModes(options)
+        if (!mode) {
+            return false
+        }
+        // dbg('options', options)
         clonableRows = {}
         activateHooks = {}
         processSelectize = {}
@@ -106,6 +71,7 @@ AF = function(element, options, formName) {
         parseaDecimalFields()
         prepareMultiBlocks()
         prepareShadowClonableRows()
+        chargeValuesOnMultiBlocksArray()
         initSelectToSelectize()
         createButtonsActions()
         activateHooksTriggers()
@@ -198,25 +164,6 @@ createField = function createField(myname, fieldSource) {
         if (!fieldSource.required == false) {
             theRenderedControl.attr('required', true)
         }
-        /* if (fieldSource.help) {
-             theRenderedControl.qtip({
-                 content: theRenderedControl.closest('[help]').attr('help'),
-                 show: 'click focus',
-                 hide: 'blur',
-                 position: {
-                     my: 'bottom left',
-                     at: 'top left',
-                     target: $('label', theRenderedControl.parent()),
-                     adjust: {
-                         resize: true
-                     }
-                 },
-                 style: {
-                     classes: 'qtip-dark qtip-shadow',
-                     width: theRenderedControl.innerWidth()
-                 }
-             })
-         }*/
         //Anadimos los atributos html indicados en la configuracion
         $.each(fieldSource.html || {}, function(item, value) {
             fieldSource.control.attr(item, value)
@@ -292,33 +239,33 @@ datetimeFieldProcess = function datetimeFieldProcess(renderedField, fieldSource)
     var dateTypeDefaults = {
             //        lazyInit: true,
             lang: ft("en").split('-')[0] || 'en',
-            dayOfWeekStart: 1,
-            format: 'd/m/Y',
+            dayOfWeekStart: s('dayOfWeekStart'),
+            format: s('default_date_format').datetimepicker,
             timepicker: false,
             weeks: true,
             mask: true,
-            formatDate: 'd/m/Y'
+            formatDate: s('default_date_format').datetimepicker
         }
         // Valor por defecto para los input[type=datetime]
     var dateTimeTypeDefaults = {
             //        lazyInit: true,
             lang: ft("en").split('-')[0] || 'en',
-            dayOfWeekStart: 1,
-            format: 'd/m/Y H:i',
+            dayOfWeekStart: s('dayOfWeekStart'),
+            format: s('default_datetime_format').datetimepicker,
             weeks: true,
             mask: true,
-            formatDate: 'd/m/Y',
-            formatTime: 'H:i'
+            formatDate: s('default_date_format').datetimepicker,
+            formatTime: s('default_time_format').datetimepicker
         }
         // Valor por defecto para los input[type=time]
     var timeTypeDefaults = {
         //        lazyInit: true,
         lang: ft("en").split('-')[0] || 'en',
-        dayOfWeekStart: 1,
-        format: 'H:i',
+        dayOfWeekStart: s('dayOfWeekStart'),
+        format: s('default_time_format').datetimepicker,
         mask: true,
         datepicker: false,
-        formatTime: 'H:i',
+        formatTime: s('default_time_format').datetimepicker,
         step: 30
     }
     var currentConfig = {}
@@ -537,10 +484,11 @@ createButtons = function createButtons(mode) {
     return buttonsGroup
 }
 createButtonsActions = function createButtonsActions() {
-    $('#new-button').on('click', function() {
-        sendFormToMongo($(this).closest('form.autof'))
-    })
-}
+        $('#new-button').on('click', function() {
+            sendFormToMongo($(this).closest('form.autof'))
+        })
+    }
+    //Creamos los bloques con limit 1 o superior (objetos o arrays de objetos)
 prepareMultiBlocks = function prepareMultiBlocks() {
     $('.autof .block[limit]').each(function() {
         var block = $(this)
@@ -571,8 +519,8 @@ prepareMultiBlocks = function prepareMultiBlocks() {
                 initClonedRadioControls()
                 initSelectToSelectize()
                     // Activamos datetimepicker para los nuevos campos clonados de type date
-                $('input[type=date]', theNewClon).each(function() {
-                        datetimeFieldProcess($(this), c.fields[$(this).attr('id')])
+                $('input[type=date], input[type=datetime],input[type=time]', theNewClon).each(function() {
+                        setTimeout(datetimeFieldProcess($(this), c.fields[$(this).attr('name').split('-')[0]]), 1000)
                     })
                     //
                 $(this).addClass("disabled alert")
@@ -680,9 +628,15 @@ fieldValue = function fieldValue(name) {
             var field = name
             theName = name.attr('name')
         }
+        // dbg('field', field)
         switch (field.attr('type')) {
             case 'radio':
                 return $('.autof [name=' + theName + ']:checked').val()
+                break;
+            case 'date':
+            case 'datetime':
+                var theDate = toDate(field.val())
+                return isNaN(theDate) == true ? null : theDate
                 break;
             default:
                 return field.val() == "" ? null : field.val()
@@ -990,13 +944,41 @@ getBlocValues = function getBlocValues($object, intLimit) {
 sendFormToMongo = function sendFormToMongo($form) {
         //var dest = $form.attr('collection')
         var insertObj = formToJson($form)
+            // dbg("insertObj", insertObj)
         Meteor.call('saveAfRecord', c.form.name, insertObj, function(err, res) {
                 if (err) {
                     console.error(err)
                 }
                 if (res) {
-                    if (res.status == 'saved') {
-                        document.getElementById($form.attr('id')).reset();
+                    switch (res.status) {
+                        case 'saved':
+                            showToUser({
+                                    content: '<strong>' + t(res.status),
+                                    class: 'success',
+                                    time: 2,
+                                    image: 'fa-thumbs-o-up',
+                                    element: $form.parent().parent()
+                                })
+                                //todo ¿Que hacemos cuando enviamos correctamente un formulario
+                            var theDiv = $form.parent().attr('id')
+                            $form.parent().html('');
+                            cargaForm({
+                                name: c.form.name,
+                                mode: 'new',
+                                div: theDiv
+                            })
+                            break;
+                        case 'unvalid form':
+                            showToUser({
+                                content: '<strong>' + t(res.status) + '</strong>' + res.info.toString().replace(/,/g, ''),
+                                class: 'alert',
+                                //time: 4,
+                                image: 'fa-thumbs-o-down',
+                                element: $form
+                            })
+                            break;
+                        default:
+                            break;
                     }
                 }
             })
@@ -1134,3 +1116,50 @@ focusOnLabelClick = function focusOnLabelClick() {
     //TODO Mostrar solo los botones de accín según se hay llamado al formulario
     //fixme No se vacia el formulario despues de añadir, en @Chrome!!!
     //fixme No se adapta el tamaño de los qtips en los formularios modales
+    //Comprobamos los modos delformulario
+checkModes = function checkModes(options) {
+    var mode = {
+        allowed: options.def.form.modes || {
+            //todo debemos habilitar permisos individuales para acceder a un modo determinado de un formularioo
+            "edit": null,
+            "update": null,
+            "readonly": null,
+            "new": null
+        },
+        current: options.mode
+    }
+    if (!_.has(mode.allowed, mode.current)) {
+        var errorInfo = {
+            "formName": options.name,
+            "allowed": mode.allowed,
+            "current": mode.current
+        }
+        Meteor.call('setLog', 'form_mode_not_allowed', errorInfo, function(error, result) {
+            showToUser({
+                content: t('The mode') + ' <strong>' + errorInfo.current + '</strong> ' + t('is not allowed in this form'),
+                time: 2
+            })
+        });
+        return null
+    }
+    return mode
+}
+chargeValuesOnMultiBlocksArray = function chargeValuesOnMultiBlocksArray() {
+    $('.block[limit]').each(function() {
+        if ($(this).attr('limit') > 1) {
+            var block = $(this).attr('id')
+            var $block = $('#' + block)
+            var theValues = c.form.fields[block].values
+            for (var count = 1; count < theValues.length; count++) {
+                $('.addsubrow', $block).click()
+            }
+            $('.subrow', $block).each(function() {
+                var $theRow = $(this)
+                $('[name]', $theRow).each(function() {
+                    //setFieldValue($(this), theValues[$theRow.index() - 1][$(this).attr('id')])
+                    $(this).val(theValues[$theRow.index() - 1][$(this).attr('id')])
+                })
+            })
+        }
+    })
+}

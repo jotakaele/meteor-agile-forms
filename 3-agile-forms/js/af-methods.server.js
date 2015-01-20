@@ -1,6 +1,8 @@
 Meteor.methods({
-    //Guradar un registro desde af 
+    //Guardar un registro desde af 
     'saveAfRecord': function(formName, formResults) {
+        dbg('formName', formName)
+        dbg('formResults', formResults)
         var theForm = Autof.findOne({
                 name: formName
             }).content.form
@@ -34,8 +36,10 @@ Meteor.methods({
                 }
             }
         } else {
+            //dbg("theSave", theSave)
             return {
                 status: 'unvalid form',
+                info: theSave.info,
                 id: null
             }
         }
@@ -88,7 +92,7 @@ function validateRecord(theData, theForm) {
             // dbg(theRealKey, 'es requerido')
             if (!value || value == '') {
                 check.isValid = false
-                check.info.push('Field ' + key + ' required')
+                check.info.push('<div>Field ' + key + ' required</div>')
             }
         }
     })

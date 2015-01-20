@@ -1,6 +1,19 @@
 //Inicializamos la tabla _defaults, con los valores que necesitamos al inicio
 if (Defaults.find().count() === 0) {
     var objDef = {
+        default_date_format: {
+            datetimepicker: 'd/m/Y',
+            moment: 'DD/MM/YYYY'
+        },
+        default_time_format: {
+            datetimepicker: 'H:i',
+            moment: 'HH:mm'
+        },
+        default_datetime_format: {
+            datetimepicker: 'd/m/Y H:i',
+            moment: 'DD/MM/YYYY HH:mm'
+        },
+        dayOfWeekStart: 1,
         lang: 'en',
         translating: 'none', // auto|none|manual
         dbg: true, //true|false activa o desacctiva la salida dbg
@@ -23,7 +36,7 @@ if (Defaults.find().count() === 0) {
             }
         }
     }
-    dbg('Cargando tabla _defaults')
+    console.log('Cargando tabla _defaults')
     _.each(objDef, function(value, key) {
         Defaults.insert({
             _id: key,
