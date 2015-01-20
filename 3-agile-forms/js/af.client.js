@@ -483,10 +483,11 @@ createButtons = function createButtons(mode) {
     return buttonsGroup
 }
 createButtonsActions = function createButtonsActions() {
-    $('#new-button').on('click', function() {
-        sendFormToMongo($(this).closest('form.autof'))
-    })
-}
+        $('#new-button').on('click', function() {
+            sendFormToMongo($(this).closest('form.autof'))
+        })
+    }
+    //Creamos los bloques con limit 1 o superior (objetos o arrays de objetos)
 prepareMultiBlocks = function prepareMultiBlocks() {
     $('.autof .block[limit]').each(function() {
         var block = $(this)
@@ -517,8 +518,9 @@ prepareMultiBlocks = function prepareMultiBlocks() {
                 initClonedRadioControls()
                 initSelectToSelectize()
                     // Activamos datetimepicker para los nuevos campos clonados de type date
-                $('input[type=date]', theNewClon).each(function() {
-                        datetimeFieldProcess($(this), c.fields[$(this).attr('id')])
+                $('input[type=date], input[type=datetime],input[type=time]', theNewClon).each(function() {
+                        // datetimeFieldProcess($(this), c.fields[$(this).attr('name').split('-')[0]])
+                        datetimeFieldProcess($(this), 'datetime')
                     })
                     //
                 $(this).addClass("disabled alert")
