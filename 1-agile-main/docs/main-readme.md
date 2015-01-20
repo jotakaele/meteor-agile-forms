@@ -41,3 +41,40 @@ Las variables se manejan mediante la función `s`
 
 
 
+##Funcion showToUser 
+Para mostrar mensajes al cliente en pantalla
+
+```javascript
+
+function showToUser(options) {
+    var opt = {
+        class: //Opcional. ['alert*','success','secondary','....']
+        content: //Requerido. El html que se mostrará en el mensaje 
+        element: //Opcional. Default: $('body') El $elemento jQuery en que se mostará el mensaje 
+        time: //Opcional. El número de segundos en que se cerrará el mensaje automáticamente
+        modal: //Opcional. Si el mensaje se muestra en modal Default: false
+        log: //Opcional. Si ademas de mostrarse en el cliente se hace log del mensaje.       
+        image: //Opcional. la image de font-awesome que se mostrará. Default none
+    }
+
+``` 
+
+Ejemplo:
+
+showToUser(
+    {
+        class: 'success',
+        content: 'Hola, yo soy el html', //Es el único requerido
+        element: $('div#undiv'),
+        time: 5,
+        log: true,
+        image: 'fa-html5'
+    }
+    )
+
+
+
+
+
+
+

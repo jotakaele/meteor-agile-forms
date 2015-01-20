@@ -71,6 +71,7 @@ AF = function(element, options) {
         parseaDecimalFields()
         prepareMultiBlocks()
         prepareShadowClonableRows()
+        chargeValuesOnMultiBlocksArray()
         initSelectToSelectize()
         createButtonsActions()
         activateHooksTriggers()
@@ -519,8 +520,7 @@ prepareMultiBlocks = function prepareMultiBlocks() {
                 initSelectToSelectize()
                     // Activamos datetimepicker para los nuevos campos clonados de type date
                 $('input[type=date], input[type=datetime],input[type=time]', theNewClon).each(function() {
-                        // datetimeFieldProcess($(this), c.fields[$(this).attr('name').split('-')[0]])
-                        datetimeFieldProcess($(this), 'datetime')
+                        setTimeout(datetimeFieldProcess($(this), c.fields[$(this).attr('name').split('-')[0]]), 1000)
                     })
                     //
                 $(this).addClass("disabled alert")
@@ -628,7 +628,7 @@ fieldValue = function fieldValue(name) {
             var field = name
             theName = name.attr('name')
         }
-        dbg('field', field)
+        // dbg('field', field)
         switch (field.attr('type')) {
             case 'radio':
                 return $('.autof [name=' + theName + ']:checked').val()
@@ -944,13 +944,41 @@ getBlocValues = function getBlocValues($object, intLimit) {
 sendFormToMongo = function sendFormToMongo($form) {
         //var dest = $form.attr('collection')
         var insertObj = formToJson($form)
+            // dbg("insertObj", insertObj)
         Meteor.call('saveAfRecord', c.form.name, insertObj, function(err, res) {
                 if (err) {
                     console.error(err)
                 }
                 if (res) {
-                    if (res.status == 'saved') {
-                        document.getElementById($form.attr('id')).reset();
+                    switch (res.status) {
+                        case 'saved':
+                            showToUser({
+                                    content: '<strong>' + t(res.status),
+                                    class: 'success',
+                                    time: 2,
+                                    image: 'fa-thumbs-o-up',
+                                    element: $form.parent().parent()
+                                })
+                                //todo ¿Que hacemos cuando enviamos correctamente un formulario
+                            var theDiv = $form.parent().attr('id')
+                            $form.parent().html('');
+                            cargaForm({
+                                name: c.form.name,
+                                mode: 'new',
+                                div: theDiv
+                            })
+                            break;
+                        case 'unvalid form':
+                            showToUser({
+                                content: '<strong>' + t(res.status) + '</strong>' + res.info.toString().replace(/,/g, ''),
+                                class: 'alert',
+                                //time: 4,
+                                image: 'fa-thumbs-o-down',
+                                element: $form
+                            })
+                            break;
+                        default:
+                            break;
                     }
                 }
             })
@@ -1107,9 +1135,31 @@ checkModes = function checkModes(options) {
             "current": mode.current
         }
         Meteor.call('setLog', 'form_mode_not_allowed', errorInfo, function(error, result) {
-            Meteor.Errors.throw(t('The mode') + ' ' + errorInfo.current + ' ' + t('is not allowed in this form'))
+            showToUser({
+                content: t('The mode') + ' <strong>' + errorInfo.current + '</strong> ' + t('is not allowed in this form'),
+                time: 2
+            })
         });
         return null
     }
     return mode
+}
+chargeValuesOnMultiBlocksArray = function chargeValuesOnMultiBlocksArray() {
+    $('.block[limit]').each(function() {
+        if ($(this).attr('limit') > 1) {
+            var block = $(this).attr('id')
+            var $block = $('#' + block)
+            var theValues = c.form.fields[block].values
+            for (var count = 1; count < theValues.length; count++) {
+                $('.addsubrow', $block).click()
+            }
+            $('.subrow', $block).each(function() {
+                var $theRow = $(this)
+                $('[name]', $theRow).each(function() {
+                    //setFieldValue($(this), theValues[$theRow.index() - 1][$(this).attr('id')])
+                    $(this).val(theValues[$theRow.index() - 1][$(this).attr('id')])
+                })
+            })
+        }
+    })
 }

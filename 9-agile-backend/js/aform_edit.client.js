@@ -26,7 +26,7 @@ var hacer = ''
 initialYAML = {}
 initiallNameText = ''
 guardarFormDef = function guardarFormDef() {
-    dbg('currentForm', currentForm)
+    // dbg('currentForm', currentForm)
     if (!editor_cambiado) {
         return false;
     }
@@ -91,8 +91,8 @@ editorCambiado = function editorCambiado() {
     }
     //current Conntrolar el estad del editor, cambiado etc
 carga = function carga(nombreForm) {
-    dbg('nombreForm', nombreForm)
-        //1 Recuperamos la def del form
+    // dbg('nombreForm', nombreForm)
+    //1 Recuperamos la def del form
     var res = {}
     $.when((function(nombreForm) {
             var res = Autof.findOne({

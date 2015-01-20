@@ -169,7 +169,7 @@ arrayProcess = function arrayProcess(theArray, theOperacion) {
     }
     //Devuelve un objeto fecha formateado a partir de un string en el pattern patern
 toDate = function toDate(formaDateString, pattern) {
-        dbg('formaDateString', formaDateString)
+        //dbg('formaDateString', formaDateString)
         pattern = pattern || s('default_date_format').datetimepicker.replace(/\//g, '').toLowerCase()
         formaDateString = formaDateString.toString().replace(/\//g, '-')
         formaDateString = formaDateString.toString().replace(/\./g, '-')
@@ -200,3 +200,63 @@ toDate = function toDate(formaDateString, pattern) {
     //        })
     //    }
     //})
+showToUser = function showToUser(options) {
+    var opt = {
+        class: options.class || 'alert',
+        content: options.content,
+        element: options.element || $('body'),
+        time: options.time || null,
+        modal: options.modal || false,
+        log: options.log || false,
+        id: makeId(3),
+        image: options.image || null
+    }
+    var theDiv = $('<div>', {
+        class: 'showToUser alert-box ' + opt.class + (opt.modal ? ' reveal-modal-bg' : ''),
+        title: t('Click to close'),
+        style: 'display:none',
+        id: opt.id
+    }).html(opt.content).prependTo(opt.element).on('click', function() {
+        $d = $(this)
+        $d.slideUp(400, function() {
+            $d.remove()
+        })
+    }).slideDown(400)
+    if (opt.log) {
+        Meteor.call('setLog', 'user_show_message', _.omit(opt, 'element'))
+    }
+    if (opt.image) {
+        var theImage = $('<i>', {
+            class: 'right fa fa-2x ' + opt.image
+        }).prependTo(theDiv)
+    }
+    if (opt.time) {
+        var theCounter = $('<div>', {
+            class: 'counter'
+        }).appendTo(theDiv)
+        theCounter.animate({
+                width: '100%'
+            }, opt.time * 1000, 'linear', function() {
+                theDiv.slideUp(400, function() {
+                    theDiv.remove()
+                })
+            })
+            /* function closeDiv() {
+                vt = vt - 1000
+                var secs = vt / 1000
+                    // theCounter.text(secs == 0 ? 'bye' : secs)
+                var perc = 100 - ((secs * 100) / opt.time) + '%'
+                theCounter.animate({
+                    width: 100%,
+                }, opt.time*1000)
+                if (vt == 0) {
+                    theDiv.slideUp(400, function() {
+                        theDiv.remove()
+                    })
+                    clearInterval(interval)
+                }
+            }
+            var vt = opt.time * 1000
+            var interval = setInterval(closeDiv, 1000)*/
+    }
+}

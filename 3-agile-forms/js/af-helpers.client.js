@@ -54,7 +54,10 @@ cargaForm = function cargaForm(objOptions) {
                 //fixme ¿Quizas debamos recuperar desde un metodo, porque no siempre estarán todos los registros en el cliente....? OJO, ya hay un metodo hecho para ello
                 var myRes = cCols[colName].findOne(options.doc)
                 if (!myRes) {
-                    Meteor.Errors.throw(t('No such document') + ' [' + options.doc + '] ' + t('on collection') + '  [' + colName + '], or isn`t allowed for current user')
+                    showToUser({
+                        content: t('No such document') + ' <strong>' + options.doc + '</strong> ' + t('on collection') + '  <strong>' + colName + '</strong>, or isn`t allowed for current user',
+                        time: 3
+                    })
                     delete options.src
                 }
                 return myRes
@@ -120,40 +123,40 @@ insertDataValues = function insertDataValues(form, data) {
             }
         })
         _(data).each(function(value, key, theR) {
-            if (form[key]) {
-                if (_.startsWith(key, '_')) {
-                    //Procesamos los objetos
-                    if (form[key].limit == 1) {
-                        //Soy un objeto simple
-                        //dbg(key, $.type(value))
-                        _(value).each(function(dataValue, dataKey) {
-                            // console.log(dataKey, dataValue)
-                            if (form[dataKey].block == key) {
-                                form[dataKey].value = bdToHtmlValue(dataValue, form[dataKey].type)
-                            }
-                        })
+                if (form[key]) {
+                    if (_.startsWith(key, '_')) {
+                        //Procesamos los objetos
+                        if (form[key].limit == 1) {
+                            //Soy un objeto simple
+                            //dbg(key, $.type(value))
+                            _(value).each(function(dataValue, dataKey) {
+                                // console.log(dataKey, dataValue)
+                                if (form[dataKey].block == key) {
+                                    form[dataKey].value = bdToHtmlValue(dataValue, form[dataKey].type)
+                                }
+                            })
+                        }
+                        if (form[key].limit > 1) {
+                            form[key].value = []
+                                //Soy un array. Puedo cargar los valores en form como un array, pero aún no puedo asignarlos directamente a cada field, porque se renderizan en html
+                            _(value).each(function(arrayValue, arrayKey) {
+                                _(arrayValue).each(function(arrayDatavalue, arrayDataKey) {
+                                        arrayDatavalue = bdToHtmlValue(arrayDatavalue, form[arrayDataKey].type)
+                                            //   dbg(arrayDataKey, arrayDatavalue)
+                                        arrayValue[arrayDataKey] = arrayDatavalue
+                                    })
+                                    // dbg(arrayKey, arrayValue)
+                                form[key].value.push(arrayValue)
+                            })
+                        }
+                    } else {
+                        //Procesamos los campos simples
+                        form[key].value = bdToHtmlValue(value, form[key].type)
                     }
-                    if (form[key].limit > 1) {
-                        form[key].value = []
-                            //Soy un array. Puedo cargar los valores en form como un array, pero aún no puedo asignarlos directamente a cada field, porque se renderizan en html
-                        _(value).each(function(arrayValue, arrayKey) {
-                            _(arrayValue).each(function(arrayDatavalue, arrayDataKey) {
-                                    arrayDatavalue = bdToHtmlValue(arrayDatavalue, form[arrayDataKey].type)
-                                        //   dbg(arrayDataKey, arrayDatavalue)
-                                    arrayValue[arrayDataKey] = arrayDatavalue
-                                })
-                                // dbg(arrayKey, arrayValue)
-                            form[key].value.push(arrayValue)
-                        })
-                    }
-                } else {
-                    //Procesamos los campos simples
-                    form[key].value = bdToHtmlValue(value, form[key].type)
                 }
-            }
-        })
-        dbg('data', data)
-        dbg('form', form)
+            })
+            //dbg('data', data)
+            //dbg('form', form)
     }
     //Convierte valores de kl abase de datos en el indicado en tyeHTML
 bdToHtmlValue = function bdToHtmlValue(value, typeHTML) {
