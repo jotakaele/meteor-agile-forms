@@ -78,11 +78,9 @@ AF = function(element, options) {
         processEnumDependSelects()
         activateCustomValidation(c.HTML.form)
         alertFormChange(c.HTML.form)
-        setInitialRadioValues()
+        processSelectToRadioControls()
         activarTooltips()
         focusOnLabelClick()
-            //delete c
-            //delete options
     }
     // En esta funcion creamos o modificamos los aspectos comunes a todos los campos (titulo, determinamos el tipo, columnas)
 createField = function createField(myname, fieldSource) {
@@ -137,7 +135,8 @@ createField = function createField(myname, fieldSource) {
         fieldSource.class = "large-" + fieldSource.columns + " small-12 columns " + (fieldSource.class || '') //Para que encaje con foundation
         var row = $('<div>', {
             class: 'fieldrow' + ' ' + fieldSource.class,
-            id: 'div-' + fieldSource.id
+            id: 'div-' + fieldSource.id,
+            type: fieldSource.type
                 // ,        title: fieldSource.help
         })
         var label = $('<label>', {
@@ -192,6 +191,9 @@ createField = function createField(myname, fieldSource) {
     }
     //Procesamnos los campos que requieren select2 (tags o select)
 selectizeProcess = function selectizeProcess(renderedField, fieldSource) {
+    if (fieldSource.type == 'radio') {
+        return false
+    }
     if (fieldSource.type == 'tags') {
         var defaultTagsConfig = {
             plugins: ['remove_button'],
@@ -213,7 +215,8 @@ selectizeProcess = function selectizeProcess(renderedField, fieldSource) {
     if (fieldSource.controlType == 'select') {
         var defaultSelectConfig = {
             plugins: ['remove_button'],
-            copyClassesToDropdown: false
+            copyClassesToDropdown: false,
+            preLoad: 'true'
         }
         var effectiveSelectConfig = _.extend(defaultSelectConfig, fieldSource.selectize || {})
         processSelectize[renderedField.attr('name')] = renderedField.prop('effectiveSelectConfig', effectiveSelectConfig)
@@ -317,9 +320,6 @@ createSelect = function createSelect(name, fieldSource) {
     if ($.type(fieldSource.enum) == 'array' && $.type(fieldSource.enum[0]) == 'string') {
         fieldSource.enum = arrEnum2ObjArrEnum(fieldSource.enum)
     }
-    if (fieldSource.type == 'radio') {
-        return createRadioControl(name, fieldSource)
-    }
     var theSelect = $('<select>', {
         name: fieldSource.name,
         enum_depend: fieldSource.enum_depend || null
@@ -361,9 +361,37 @@ createSelect = function createSelect(name, fieldSource) {
         $("option[group='" + key + "']", theSelect).wrapAll('<optgroup label="' + key + '" slug="' + _.slugify(key) + '">')
     })
     fieldSource.value = fieldSource.value || selectedItems
+    if (fieldSource.type == 'radio') {
+        //return createRadioControl(name, theSelect)
+    }
     return theSelect
 }
-createRadioControl = function createRadioControl(name, fieldSource) {
+createRadioControl = function createRadioControl(name, $select) {
+    $select.hide()
+    var $nDiv = $('<div>', {
+        id: 'selectdiv-sel'
+    }).insertAfter($select)
+    $select.appendTo($nDiv)
+    $('option', $select).each(function() {
+        $opt = $(this)
+        var $nButton = $('<div>', {
+            value: $opt.attr('value')
+        }).text($opt.text()).prependTo($nDiv)
+        $nButton.on('click', function() {
+            $select.val($(this).attr('value'))
+            $('div', $nDiv).removeClass('selected')
+            $(this).addClass('selected')
+            $select.blur()
+        })
+        return $nDiv
+    })
+    $('div[value="' + $select.val() + '"]', $nDiv).addClass('selected')
+    $select.on('change', function() {
+        $('div', $nDiv).removeClass('selected')
+        $('div[value="' + $select.val() + '"]', $nDiv).addClass('selected')
+    })
+}
+createRadioControlDEPRECATED = function createRadioControlDEPRECATED(name, fieldSource) {
     var theFieldset = $('<ul >', {
             type: "radio",
             class: "button-group even-" + fieldSource.item_columns,
@@ -402,6 +430,9 @@ createRadioControl = function createRadioControl(name, fieldSource) {
         })
         //inicializamos la accion
     initRadioControl(theFieldset)
+    if (fieldSource.value) {
+        setFieldValue(name, fieldSource.value)
+    }
     return theFieldset
 }
 initRadioControl = function initRadioControl(element) {
@@ -516,7 +547,7 @@ prepareMultiBlocks = function prepareMultiBlocks() {
                 })
                 renumeraMultiBlockIndex()
                 $(this).removeClass("disabled alert")
-                initClonedRadioControls()
+                processSelectToRadioControls()
                 initSelectToSelectize()
                     // Activamos datetimepicker para los nuevos campos clonados de type date
                 $('input[type=date], input[type=datetime],input[type=time]', theNewClon).each(function() {
@@ -604,20 +635,49 @@ $show = function $show(obj) {
     //Establecemos el valor de un control
 setFieldValue = function setFieldValue(name, value) {
         if (typeof name == 'string') {
-            var field = $('.autof [name=' + name + ']')
+            var $field = $('.autof [name=' + name + ']')
             theName = name
         } else {
-            var field = name
-            theName = name.attr('name')
+            var $field = name
+            theName = $field.attr('name')
         }
-        switch (field.attr('type')) {
-            case 'radio':
-                $('.autof [name=' + theName + '][value=' + value + ']').prop('checked', 'checked')
+        //        dbg(theName, $field)
+        //Elegimos en funcion del tipo de etiqueta
+        switch ($field[0].tagName.toLowerCase()) {
+            case 'input':
+            case 'textarea':
+                switch ($field.attr('type')) {
+                    case 'radio':
+                        $('.autof [name=' + theName + '][value=' + value + ']').prop('checked', 'checked')
+                        break;
+                    default:
+                        $field.val(value)
+                        break;
+                }
                 break;
-            default:
-                field.val(value)
+            case 'select':
+                if ($field.hasClass('selectized')) {
+                    var theV = {
+                        value: value,
+                        text: value
+                    }
+                    $fs = $field[0].selectize
+                    $fs.addOption(theV)
+                    $fs.setValue(value)
+                } else {
+                    if ($('option[value="' + value + '"]', $field).length == 1) {
+                        $field.val(value)
+                    } else {
+                        $('<option>', {
+                            value: value,
+                            selected: 'selected'
+                        }).appendTo($field).text(value)
+                        $field.val(value)
+                    }
+                }
                 break;
         }
+        $field.change()
     }
     //extraemos el valor de un control
 fieldValue = function fieldValue(name) {
@@ -826,7 +886,7 @@ parseRootQueries = function parseRootQueries(obj) {
 setInitialRadioValues = function setInitialRadioValues() {
         _.each(c.fields, function(value, key) {
             if (!_.startsWith(key, '_') && value.type == 'radio') {
-                setFieldValue(key, value.value)
+                //setFieldValue(key, value.value)
             }
         })
     }
@@ -1118,48 +1178,84 @@ focusOnLabelClick = function focusOnLabelClick() {
     //fixme No se adapta el tamaño de los qtips en los formularios modales
     //Comprobamos los modos delformulario
 checkModes = function checkModes(options) {
-    var mode = {
-        allowed: options.def.form.modes || {
-            //todo debemos habilitar permisos individuales para acceder a un modo determinado de un formularioo
-            "edit": null,
-            "update": null,
-            "readonly": null,
-            "new": null
-        },
-        current: options.mode
-    }
-    if (!_.has(mode.allowed, mode.current)) {
-        var errorInfo = {
-            "formName": options.name,
-            "allowed": mode.allowed,
-            "current": mode.current
+        var mode = {
+            allowed: options.def.form.modes || {
+                //todo debemos habilitar permisos individuales para acceder a un modo determinado de un formularioo
+                "edit": null,
+                "update": null,
+                "readonly": null,
+                "new": null
+            },
+            current: options.mode
         }
-        Meteor.call('setLog', 'form_mode_not_allowed', errorInfo, function(error, result) {
-            showToUser({
-                content: t('The mode') + ' <strong>' + errorInfo.current + '</strong> ' + t('is not allowed in this form'),
-                time: 2
-            })
-        });
-        return null
-    }
-    return mode
-}
-chargeValuesOnMultiBlocksArray = function chargeValuesOnMultiBlocksArray() {
-    $('.block[limit]').each(function() {
-        if ($(this).attr('limit') > 1) {
-            var block = $(this).attr('id')
-            var $block = $('#' + block)
-            var theValues = c.form.fields[block].values
-            for (var count = 1; count < theValues.length; count++) {
-                $('.addsubrow', $block).click()
+        if (!_.has(mode.allowed, mode.current)) {
+            var errorInfo = {
+                "formName": options.name,
+                "allowed": mode.allowed,
+                "current": mode.current
             }
-            $('.subrow', $block).each(function() {
-                var $theRow = $(this)
-                $('[name]', $theRow).each(function() {
-                    //setFieldValue($(this), theValues[$theRow.index() - 1][$(this).attr('id')])
-                    $(this).val(theValues[$theRow.index() - 1][$(this).attr('id')])
+            Meteor.call('setLog', 'form_mode_not_allowed', errorInfo, function(error, result) {
+                showToUser({
+                    content: t('The mode') + ' <strong>' + errorInfo.current + '</strong> ' + t('is not allowed in this form'),
+                    time: 2
                 })
-            })
+            });
+            return null
         }
+        return mode
+    }
+    //Vamos a poner los valores en los bloques de arrays
+chargeValuesOnMultiBlocksArray = function chargeValuesOnMultiBlocksArray() {
+        $('.block[limit]').each(function() {
+            if ($(this).attr('limit') > 1) {
+                var block = $(this).attr('id')
+                var $block = $('#' + block)
+                if (c.form.fields[block].values) {
+                    var theValues = c.form.fields[block].values
+                        // dbg('theValues', o2S(theValues))
+                    for (var count = 1; count < theValues.length; count++) {
+                        $('.addsubrow', $block).click()
+                    }
+                    $('.subrow', $block).each(function() {
+                        var $theRow = $(this)
+                        $('[name]', $theRow).each(function() {
+                            setFieldValue($(this), theValues[$theRow.index() - 1][$(this).attr('id')])
+                        })
+                    })
+                }
+            }
+        })
+    }
+    //Convertimos los select type radio en nustro propio control, mas manejable
+processSelectToRadioControls = function processSelectToRadioControls($select) {
+    $('.autof div.fieldrow[type=radio] select:not(.isRadio)').each(function() {
+        var $select = $(this)
+        $select.addClass('isRadio')
+        $select.hide()
+        var theWidth = (100 / (c.fields[$select.attr('name').split('-')[0]].item_columns || 1)) + '%'
+        var $nDiv = $('<div>', {
+                class: 'selectdiv-sel'
+            }).insertBefore($select)
+            //$select.appendTo($nDiv)
+        $('option', $select).each(function() {
+            var $opt = $(this)
+            if ($opt.val()) {
+                $nButton = $('<div>', {
+                    value: $opt.attr('value'),
+                    style: 'width:' + theWidth
+                }).text($opt.text()).appendTo($nDiv)
+            }
+            $nButton.on('click', function() {
+                $select.val($(this).attr('value'))
+                $('div', $nDiv).removeClass('selected')
+                $(this).addClass('selected')
+                $select.blur()
+            })
+        })
+        $('div[value="' + $select.val() + '"]', $nDiv).addClass('selected')
+        $select.on('change', function() {
+            $('div', $nDiv).removeClass('selected')
+            $('div[value="' + $select.val() + '"]', $nDiv).addClass('selected')
+        })
     })
 }

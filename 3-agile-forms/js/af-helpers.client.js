@@ -105,12 +105,15 @@ Template.pageForm.rendered = function() {
         }, 500)
     }
     //Inserta los datos del documento (si existe) como value en la definición de cada field
+    //current Seguir haciendo pruebas cargando los values d campos simples y de arrays  
 insertDataValues = function insertDataValues(form, data) {
         var inBlock = false
         _(form).each(function(value, key, form) {
             //primero quitamos los valores por defecto
-            delete value['value']
-                //Despues marcamos los que pertenecen a un bloque, basandonos en su primer caracter
+            if (value.value) {
+                delete value['value']
+            }
+            //Despues marcamos los que pertenecen a un bloque, basandonos en su primer caracter
             if (_.startsWith(key, '_')) {
                 inBlock = false
                 if (value.limit) {
@@ -128,7 +131,7 @@ insertDataValues = function insertDataValues(form, data) {
                         //Procesamos los objetos
                         if (form[key].limit == 1) {
                             //Soy un objeto simple
-                            //dbg(key, $.type(value))
+                            // dbg(key, $.type(value))
                             _(value).each(function(dataValue, dataKey) {
                                 // console.log(dataKey, dataValue)
                                 if (form[dataKey].block == key) {
@@ -137,7 +140,7 @@ insertDataValues = function insertDataValues(form, data) {
                             })
                         }
                         if (form[key].limit > 1) {
-                            form[key].value = []
+                            form[key].values = []
                                 //Soy un array. Puedo cargar los valores en form como un array, pero aún no puedo asignarlos directamente a cada field, porque se renderizan en html
                             _(value).each(function(arrayValue, arrayKey) {
                                 _(arrayValue).each(function(arrayDatavalue, arrayDataKey) {
@@ -146,7 +149,7 @@ insertDataValues = function insertDataValues(form, data) {
                                         arrayValue[arrayDataKey] = arrayDatavalue
                                     })
                                     // dbg(arrayKey, arrayValue)
-                                form[key].value.push(arrayValue)
+                                form[key].values.push(arrayValue)
                             })
                         }
                     } else {

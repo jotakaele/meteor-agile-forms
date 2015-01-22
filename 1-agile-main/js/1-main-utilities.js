@@ -235,28 +235,11 @@ showToUser = function showToUser(options) {
             class: 'counter'
         }).appendTo(theDiv)
         theCounter.animate({
-                width: '100%'
-            }, opt.time * 1000, 'linear', function() {
-                theDiv.slideUp(400, function() {
-                    theDiv.remove()
-                })
+            width: '100%'
+        }, opt.time * 1000, 'linear', function() {
+            theDiv.slideUp(200, function() {
+                theDiv.remove()
             })
-            /* function closeDiv() {
-                vt = vt - 1000
-                var secs = vt / 1000
-                    // theCounter.text(secs == 0 ? 'bye' : secs)
-                var perc = 100 - ((secs * 100) / opt.time) + '%'
-                theCounter.animate({
-                    width: 100%,
-                }, opt.time*1000)
-                if (vt == 0) {
-                    theDiv.slideUp(400, function() {
-                        theDiv.remove()
-                    })
-                    clearInterval(interval)
-                }
-            }
-            var vt = opt.time * 1000
-            var interval = setInterval(closeDiv, 1000)*/
+        })
     }
 }

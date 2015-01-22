@@ -49,7 +49,12 @@ guardarFormDef = function guardarFormDef() {
             state: "active"
         })
         if (okInsert) {
-            console.info('Se ha guardado el formulario ' + data.name)
+            //console.info('Se ha guardado el formulario ' + data.name)
+            showToUser({
+                content: t('Saved form') + ' <b>' + data.name + '</b>',
+                class: 'success',
+                time: 1
+            })
             editor_cambiado = false
             $('li#guardar i').addClass('hide')
             $("div#editor").removeClass("modificado")
@@ -227,7 +232,12 @@ Template.autoFormEdit.events({
                     Meteor.call('setLog', 'delete_af', currentForm)
                         //Si ha insertado en el log
                     Autof.remove(currentForm._id)
-                    console.info('Form ' + currentForm.name + ' deleted from database')
+                    showToUser({
+                            content: t('Form') + ' ' + currentForm.name + ' ' + t('deleted from database'),
+                            class: 'secondary',
+                            time: 2
+                        })
+                        // console.info('Form ' + currentForm.name + ' deleted from database')
                 }
                 //editor.setValue('')
                 // editor.session.getUndoManager().reset()

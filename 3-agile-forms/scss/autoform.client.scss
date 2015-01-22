@@ -223,6 +223,38 @@ form.autof {
             }
         }
     }
+    .selectdiv-sel {
+        select {
+            display: none;
+        }
+        display: flex;
+        flex-direction: column;
+        flex-flow: wrap;
+        width: 100%;
+        outline: 1px solid #ccc;
+        justify-content: flex-start;
+        div {
+            transition-duration: .4s;
+            cursor: pointer;
+            &:hover {
+                background-color: #eee;
+            }
+            &:before {
+                font-weight: normal;
+                content: "\f10c";
+                font-family: FontAwesome;
+                margin-right: 2px;
+            }
+            &.selected {
+                background-color: lighten($primary-color, 20);
+                color: text-contrast(lighten($primary-color, 20))
+            }
+            &.selected:before {
+                content: "\f192";
+            }
+            padding: .2em 0 .2em 10px;
+        }
+    }
 }
 /*Formato para campos especiales*/
 
@@ -259,17 +291,17 @@ form.autof {
 $style-valid: 2px solid $success-color;
 $style-invalid: 2px solid red;
 .autof:not([novalidate]) {
-    input, select, textarea, ul[type=radio], .selectize-input {
+    input, select, textarea, ul[type=radio], .selectize-input, .selectdiv-sel {
         border-bottom-width: 2px;
     }
     div.focused {
         &[isvalid=true] {
-            input, select, textarea, ul[type=radio], .selectize-input {
+            input, select, textarea, ul[type=radio], .selectize-input, .selectdiv-sel {
                 border-bottom: $style-valid;
             }
         }
         &[isvalid=false] {
-            input, select, textarea, ul[type=radio], .selectize-input {
+            input, select, textarea, ul[type=radio], .selectize-input, .selectdiv-sel {
                 border-bottom: $style-invalid;
             }
         }
