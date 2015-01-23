@@ -1228,34 +1228,35 @@ chargeValuesOnMultiBlocksArray = function chargeValuesOnMultiBlocksArray() {
     }
     //Convertimos los select type radio en nustro propio control, mas manejable
 processSelectToRadioControls = function processSelectToRadioControls($select) {
-    $('.autof div.fieldrow[type=radio] select:not(.isRadio)').each(function() {
-        var $select = $(this)
-        $select.addClass('isRadio')
-        $select.hide()
-        var theWidth = (100 / (c.fields[$select.attr('name').split('-')[0]].item_columns || 1)) + '%'
-        var $nDiv = $('<div>', {
-                class: 'selectdiv-sel'
-            }).insertBefore($select)
-            //$select.appendTo($nDiv)
-        $('option', $select).each(function() {
-            var $opt = $(this)
-            if ($opt.val()) {
-                $nButton = $('<div>', {
-                    value: $opt.attr('value'),
-                    style: 'width:' + theWidth
-                }).text($opt.text()).appendTo($nDiv)
-            }
-            $nButton.on('click', function() {
-                $select.val($(this).attr('value'))
+        $('.autof div.fieldrow[type=radio] select:not(.isRadio)').each(function() {
+            var $select = $(this)
+            $select.addClass('isRadio')
+            $select.hide()
+            var theWidth = (100 / (c.fields[$select.attr('name').split('-')[0]].item_columns || 1)) + '%'
+            var $nDiv = $('<div>', {
+                    class: 'selectdiv-sel'
+                }).insertBefore($select)
+                //$select.appendTo($nDiv)
+            $('option', $select).each(function() {
+                var $opt = $(this)
+                if ($opt.val()) {
+                    $nButton = $('<div>', {
+                        value: $opt.attr('value'),
+                        style: 'width:' + theWidth
+                    }).text($opt.text()).appendTo($nDiv)
+                }
+                $nButton.on('click', function() {
+                    $select.val($(this).attr('value'))
+                    $('div', $nDiv).removeClass('selected')
+                    $(this).addClass('selected')
+                    $select.blur()
+                })
+            })
+            $('div[value="' + $select.val() + '"]', $nDiv).addClass('selected')
+            $select.on('change', function() {
                 $('div', $nDiv).removeClass('selected')
-                $(this).addClass('selected')
-                $select.blur()
+                $('div[value="' + $select.val() + '"]', $nDiv).addClass('selected')
             })
         })
-        $('div[value="' + $select.val() + '"]', $nDiv).addClass('selected')
-        $select.on('change', function() {
-            $('div', $nDiv).removeClass('selected')
-            $('div[value="' + $select.val() + '"]', $nDiv).addClass('selected')
-        })
-    })
-}
+    }
+    //todo crear un clave en form para incluir css en la página
