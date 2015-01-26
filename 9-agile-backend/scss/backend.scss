@@ -44,8 +44,9 @@ li[type=list] a {
         color: #555 !important;
     }
     &.fieldgroup {
-        background-color: darken($secondary-color, 40);
-        color: #fff !important;
+        //background-color: $primary-color !important;
+        color: $primary-color;
+        font-weight: bold;
     }
     &.level0 {
         background-color: $primary-color;
@@ -98,20 +99,32 @@ nav.backend {
     }
     .top-bar-section {
         li#guardar {
-            display: table-cell;
-            vertical-align: middle;
-            #nombre {
-                // color: darken($primary-color, 20);
-                background-color: lighten($primary-color, 20);
-                padding: 0px 6px;
-                margin: 0px 10px;
-                font-weight: normal;
-                min-width: 10em;
+            margin: 0px;
+            top: 0px;
+            //display: table-cell;
+            padding: 4px;
+            height: 35px;
+            i, input {
                 display: inline-block;
+                width: auto;
+                vertical-align: middle;
+                top: 0px;
+                margin: 0px;
+            }
+            i {
+                padding: 0px 1em;
+            }
+            &.modificado {
+                background-color: red !important;
+                border: 2px solid #fff;
+                padding: 2px;
+                i {
+                    color: #fff !important;
+                }
             }
         }
     }
-    select {
+    select, input {
         margin: 0px;
     }
 }

@@ -31,7 +31,7 @@ guardarFormDef = function guardarFormDef() {
         return false;
     }
     var data = {}
-    data.name = $('span#nombre').text()
+    data.name = $('input#nombre').val()
     data._id = currentForm._id
     if (confirm("Save the form definition \n[" + data.name + "]?")) {
         if (data._id) {
@@ -56,7 +56,7 @@ guardarFormDef = function guardarFormDef() {
                 time: 1
             })
             editor_cambiado = false
-            $('li#guardar i').addClass('hide')
+            $('li#guardar i').addClass('hide').parent().removeClass('modificado')
             $("div#editor").removeClass("modificado")
             $('.doc[name]').parent().removeClass('active')
             $('.doc[name="' + data.name + '"]').parent().addClass('active')
@@ -82,14 +82,14 @@ function lanzarRenderizado() {
     }, 800)
 }
 editorCambiado = function editorCambiado() {
-        if (initialYAML != editor.getValue() || initiallNameText != $('li#guardar #nombre').text()) {
+        if (initialYAML != editor.getValue() || initiallNameText != $('li#guardar #nombre').val()) {
             editor_cambiado = true
-            $('li#guardar i').removeClass('hide')
+            $('li#guardar i').removeClass('hide').parent().addClass('modificado')
             $("div#editor").addClass("modificado")
         } else {
             editor.session.getUndoManager().reset()
             editor_cambiado = false
-            $('li#guardar i').addClass('hide')
+            $('li#guardar i').addClass('hide').parent().removeClass('modificado')
             $("div#editor").removeClass("modificado")
         }
         colorificaYaml()
@@ -113,9 +113,9 @@ carga = function carga(nombreForm) {
             initialYAML = jsyaml.dump(sanitizeObjectNameKeys(res.content))
             editor.setValue(initialYAML)
             $('#ritem').html('')
-            $("#nombre").text(nombreForm)
+            $("#nombre").val(nombreForm)
             $(".doc[name]").parent().removeClass('active')
-            initiallNameText = $('li#guardar #nombre').text()
+            initiallNameText = $('li#guardar #nombre').val()
             editor.gotoLine(1)
             coloreaEtiquetas()
             colorificaYaml()
@@ -262,7 +262,7 @@ Template.autoFormEdit.events({
             currentForm = {}
             $("#ritem").html('')
             $("div#editor").removeClass("modificado")
-            $("#nombre").removeAttr("itemid").text(makeId(8))
+            $("#nombre").removeAttr("itemid").val(makeId(8))
             defaultForm = jsyaml.dump({
                     "form": {
                         "collection": "persons",
@@ -443,5 +443,12 @@ cargarIdes = function cargarIdes(coleccion) {
         if (res[0]) {
             $select.val(res[0]._id)
         }
+        $select.attr('title', coleccion)
+        showToUser({
+            content: coleccion,
+            class: 'success',
+            element: $('#form-doc-id').parent(),
+            time: 1
+        })
     })
 }
