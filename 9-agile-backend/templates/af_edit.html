@@ -17,19 +17,24 @@
                 <li class="button" id="eliminar"><i class="fa fa-remove"></i> </li>
                 <li class="button" id="idiomas" title="Show traductions panel"><i class="fa fa-language"></i> </li>
                 <li>
-                    <input list="modeList" type="text" placeholder="form mode [new|edit|readonly|delete]" id="form-mode" value="{{formdefaults._formDesignMode}}">
-                    <datalist id="modeList">
+                    <select id="form-mode">
+                        <option selected value="{{formdefaults._formDesignMode}}">{{formdefaults._formDesignMode}}</option>
                         <option>new</option>
                         <option>edit</option>
                         <option>readonly</option>
                         <option>delete</option>
-                    </datalist>
+                    </select>
 
 
                 </li>
 
                 <li>
-                    <input class="{{formdefaults._theClass}}" type="text" placeholder="document id" id="form-doc-id" value="{{formdefaults._formDesignDocId}}">
+                    <select class="{{formdefaults._theClass}}" type="text" placeholder="document id" id="form-doc-id" value="{{formdefaults._formDesignDocId}}">
+                        <!--   {{#each docs}}
+                        <option value="{{_id}}">{{_id}}</option>
+                        {{/each}} -->
+
+                    </select>
                 </li>
 
             </ul>

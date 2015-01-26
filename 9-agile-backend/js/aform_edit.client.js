@@ -215,14 +215,14 @@ Template.autoFormEdit.helpers({
 });
 //fixme Parece que no funciona correctamente al hacer update (muestra los antiguos) Revisar!!!
 Template.autoFormEdit.events({
-        'blur input#form-mode': function(event) {
-            s('_formDesignMode', $('input#form-mode').val())
-            devForm.mode = $('input#form-mode').val()
+        'change select#form-mode': function(event) {
+            s('_formDesignMode', $('select#form-mode').val())
+            devForm.mode = $('select#form-mode').val()
             lanzarRenderizado()
         },
-        'blur input#form-doc-id': function(event) {
-            s('_formDesignDocId', $('input#form-doc-id').val())
-            devForm.doc = $('input#form-doc-id').val()
+        'change select#form-doc-id': function(event) {
+            s('_formDesignDocId', $('select#form-doc-id').val())
+            devForm.doc = $('select#form-doc-id').val()
             lanzarRenderizado()
         },
         'click #eliminar': function eliminarItem() {
@@ -373,7 +373,7 @@ Template.autoFormEdit.events({
                 }
             }
             $('#ritem').html('')
-            carga($(e.target).attr('name'))
+            $.when(cargarIdes($(e.target).parent().attr('collection'))).then(s('_formDesignDocId', $('select#form-doc-id option:first').text())).done(carga($(e.target).attr('name')))
         },
         'keyup input#filtrar': function filtarLista(e) {
             tx = $(e.target).val()
@@ -425,3 +425,23 @@ function helpColumns() {
     //todo Documentar el proceso de eliminar , update  y borrado lógico
     //todo Arreglar las ayudas para que vuelque la estructura de los campos complejos
     // fixme LOs enlaces a backend llevan a la version localhost:3000
+    //Cargamos los ides de la collecion oportuna
+cargarIdes = function cargarIdes(coleccion) {
+    $.when(cCols[coleccion].find({}, {
+        fields: {
+            _id: true
+        },
+        sort: {
+            autodate: -1
+        }
+    }).fetch()).done(function(res) {
+        var $select = $('select#form-doc-id')
+        $('option', $select).remove()
+        res.forEach(function(value, key) {
+            $option = $('<option>').text(value._id).appendTo($select)
+        })
+        if (res[0]) {
+            $select.val(res[0]._id)
+        }
+    })
+}
