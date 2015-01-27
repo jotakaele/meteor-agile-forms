@@ -1,6 +1,7 @@
 {
     "public": {
-        "app-name": "Agile-form-master",
-        "admin-email": "juan.chamizo@gmail.com"
+        "appName": "Agile-form-master",
+        "adminEmail": "juan.chamizo@gmail.com",
+        "appMode": "develop"
     }
 }

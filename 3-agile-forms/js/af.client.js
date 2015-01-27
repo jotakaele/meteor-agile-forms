@@ -397,50 +397,6 @@ createRadioControl = function createRadioControl(name, $select) {
         $('div[value="' + $select.val() + '"]', $nDiv).addClass('selected')
     })
 }
-createRadioControlDEPRECATED = function createRadioControlDEPRECATED(name, fieldSource) {
-    var theFieldset = $('<ul >', {
-            type: "radio",
-            class: "button-group even-" + fieldSource.item_columns,
-            required: fieldSource.required,
-            id: fieldSource.id
-        })
-        //var theLegend = $('<legend>').text(fieldSource.title).appendTo(theFieldset)
-    _.each(fieldSource.enum, function(theradioItem) {
-            //traducimos si hay enum_i18n
-            var rv = (fieldSource.enum_i18n || null) == 'all' ? t(theradioItem.value) : theradioItem.value
-            var rl = (['label', 'all'].indexOf(fieldSource.enum_i18n || null) >= 0 ? t(_.humanize(theradioItem.label)) : _.humanize(theradioItem.label)) || rv
-            var theValue = rv
-            var theValueId = "RadioValue" + makeId(4)
-            var theLi = $('<li>', {
-                class: "button small secondary radiovalueblock"
-            })
-            var theLabel = $('<label>', {
-                // class: "",
-            })
-            var theOption = $('<input>', {
-                type: "radio",
-                name: name,
-                required: fieldSource.required,
-                id: theValueId,
-                value: rv
-            }).appendTo(theLabel)
-            if (theradioItem.selected) {
-                theOption.prop('checked', 'checked')
-                theLi.addClass('checked')
-            }
-            var theLabelText = $('<span>', {
-                class: "radiolabeltext"
-            }).text(rl).appendTo(theLabel)
-            theLabel.appendTo(theLi)
-            theLi.appendTo(theFieldset)
-        })
-        //inicializamos la accion
-    initRadioControl(theFieldset)
-    if (fieldSource.value) {
-        setFieldValue(name, fieldSource.value)
-    }
-    return theFieldset
-}
 initRadioControl = function initRadioControl(element) {
     $('input', element).on('change', function() {
         $('*', element).removeClass('checked')
@@ -858,10 +814,12 @@ alertFormChange = function alertFormChange($form) {
                 })
             }
         })
-        //RELEASE Descomentar para pasar a produccion, para trabajar es un rollo
-        // window.onbeforeunload = function(e) {
-        //     return 'El formulario se ha modificado, pero no se han guardado los cambios. \\n¿Quiere abandonar esta página?, ';
-        // };
+        //RELEASE Importante cambiar en config.json la clave public.appMode a production
+    if (Meteor.settings.public.appMode == 'production') {
+        window.onbeforeunload = function(e) {
+            return 'El formulario se ha modificado, pero no se han guardado los cambios. \\n¿Quiere abandonar esta página?, ';
+        };
+    }
 }
 activateCustomValidation = function activateCustomValidation($jqueryObject) {
     $('input,textarea,select', $jqueryObject).on('blur change', function() {
@@ -914,26 +872,6 @@ setInitialRadioValues = function setInitialRadioValues() {
     }
     //todo Asignar acciones a los botones en función del modo y en función de la validación
     //todo hacer funcion que devuelva el pattern apropiado para DNI, DOI o pasaporte.Quizas seria una buena idea hacer una colección de patterns ubicados en el mismo sitio. La colección tambien podría incluir mascaras de entrada.
-    //idea Habilitar la posibilidad de poner una configuracion especifica por bloques, según el nombre del bloque.
-    /*renderForm = function renderForm(options) {
-
-        autof = new AF(options.div, {
-                def: sanitizeObjectNameKeys(options.src.content || option.src),
-                name: options.src.name,
-                mode: options.mode || 'new',
-                doc: options.id || null
-            })
-            //TODO Importante @security Poner una condicion que permita que solo los ususrios administradores puedan manejar la configuración
-        if (1 == 1) {
-            var theAdminLink = $('<a>', {
-                class: 'admin admin-form',
-                target: '_blank',
-                href: '/backend/af/' + options.name,
-                title: t('Setup this form')
-            }).html('<i class="fa fa-wrench"></i>').prependTo($('#' + options.div).parent())
-        }
-    }
-    */
     /*
     Convierte en Array los datos de un fromulario
     */
@@ -1341,7 +1279,8 @@ processSelectToRadioControls = function processSelectToRadioControls($select) {
                 if ($opt.val()) {
                     $nButton = $('<div>', {
                         value: $opt.attr('value'),
-                        style: 'width:' + theWidth
+                        style: 'width:' + theWidth,
+                        tabindex: 0
                     }).text($opt.text()).appendTo($nDiv)
                 }
                 $nButton.on('click', function() {
@@ -1356,6 +1295,11 @@ processSelectToRadioControls = function processSelectToRadioControls($select) {
                 $('div', $nDiv).removeClass('selected')
                 $('div[value="' + $select.val() + '"]', $nDiv).addClass('selected')
             })
+            $('div', $nDiv).on('keydown', function(tecla) {
+                if (tecla.keyCode == 32) {
+                    $(this).click()
+                }
+            });
         })
     }
     //Creamos un clave en form para incluir css en la página. Importante, las claves dentro de css: deben estar rodeadas de comillas dobles, y los valores que lo requieran, ( por incluir espacios o caracteres especiales, deben ir entre comillas simples)
