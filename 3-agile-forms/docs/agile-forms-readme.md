@@ -426,7 +426,7 @@ Se puede llamar a un formulario usando la función `cargaForm`
 
 ```html
   
-    {{> formshow name="torneos" mode="edit" docId="kjhklgh876ggf5c"}}
+    {{> formshow name="torneos" mode="edit" doc="kjhklgh876ggf5c"}}
 
 
     {{> formshow name="Personas"}}

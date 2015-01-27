@@ -310,3 +310,9 @@ $style-invalid: 2px solid red;
         }
     }
 }
+.showToUser.changed_notice {
+    background-color: transparent;
+    color: $alert-color;
+    font-size: 1em;
+    border: 1px solid $alert-color;
+}

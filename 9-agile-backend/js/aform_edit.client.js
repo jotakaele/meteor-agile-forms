@@ -188,7 +188,6 @@ Template.autoFormEdit.rendered = function() {
     editor = ace.edit('editor');
     editor.setOptions(aceOptions)
     editor.on('input', editorCambiado)
-    $('li#form-list select').selectize()
 };
 Template.autoFormEdit.helpers({
     formdefaults: function() {
@@ -387,8 +386,17 @@ Template.autoFormEdit.events({
             })
         },
         'click #ayudacampos': function mostrarAyudaColumnas() {
-            helpColumns()
-        }
+                helpColumns()
+            }
+            /*'change select#form-doc-id': function(ev) {
+                $this = $(ev.target)
+                showToUser({
+                    content: $this.val(),
+                    element: $this.parent(),
+                    close: 'mouseleave',
+                    class: 'secondary'
+                })
+            }*/
     })
     //Inserta la lista dec ampos disponibles en el editor, para ayuda y referencia
 function helpColumns() {

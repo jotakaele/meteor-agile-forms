@@ -37,11 +37,13 @@ AF = function(element, options) {
             mode: mode.current
         })
         c.HTML.maindiv = $('<div>', {
-            class: "row mainFieldsDiv"
-        })
-        $('<div>', {
-            id: "form_notices"
-        }).appendTo(c.HTML.maindiv).text(c.form.change_notice || ft("Form changed"))
+                class: "row mainFieldsDiv"
+            })
+            /*
+            $('<div>', {
+                id: "form_notices"
+            }).appendTo(c.HTML.maindiv).text(c.form.change_notice || ft("Form changed"))
+            */
         c.HTML.title = $('<span>', {
                 class: "form_title"
             }).text(c.form.title).prependTo(c.HTML.maindiv)
@@ -847,6 +849,14 @@ processEnumDependSelects = function processEnumDependSelects() {
 alertFormChange = function alertFormChange($form) {
     $('input,textarea,select', $form).on('change', function() {
             $form.addClass('changed')
+            if ($('.changed_notice', $form.parent()).length === 0) {
+                showToUser({
+                    content: ft("Form changed"),
+                    element: $form.parent(),
+                    class: 'changed_notice',
+                    image: 'fa-exclamation-triangle'
+                })
+            }
         })
         //RELEASE Descomentar para pasar a produccion, para trabajar es un rollo
         // window.onbeforeunload = function(e) {
@@ -1355,7 +1365,6 @@ processCssKey = function processCssKey($element) {
     _(c.css).each(function(value, key) {
         newCss['#' + $element.attr('id') + ' ' + key] = value
     })
-    dbg("newCss", newCss)
     newCss = JSON.stringify(newCss, 0).replace(/"/g, '').replace(/:{/g, '{').replace(/,/g, '').replace(/{/, '').replace(/}$/, '')
     $('<style>', {
         class: 'def-form'
