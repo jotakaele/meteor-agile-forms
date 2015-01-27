@@ -11,25 +11,30 @@
         <section class="top-bar-section">
             <!-- Right Nav Section -->
             <ul class="left">
-                <li class="button" id="guardar"> <i class="fa fa-save  hide"></i><span contenteditable="true" id="nombre"></span> </li>
+
+                <li class="button" id="guardar"> <i class="fa fa-save  hide"></i>
+                    <input type="text" id="nombre">
+                </li>
                 <li class="button" id="crear" title="Añadir un nuevo item"><i class="fa fa-plus"></i> </li>
                 <li class="button" id="ayudacampos" title="Insertar la lista de campos de la colección en el editor"><i class="fa fa-database "></i> </li>
                 <li class="button" id="eliminar"><i class="fa fa-remove"></i> </li>
                 <li class="button" id="idiomas" title="Show traductions panel"><i class="fa fa-language"></i> </li>
                 <li>
-                    <input list="modeList" type="text" placeholder="form mode [new|edit|readonly|delete]" id="form-mode" value="{{formdefaults._formDesignMode}}">
-                    <datalist id="modeList">
+                    <select id="form-mode">
+                        <option selected value="{{formdefaults._formDesignMode}}">{{formdefaults._formDesignMode}}</option>
                         <option>new</option>
                         <option>edit</option>
                         <option>readonly</option>
                         <option>delete</option>
-                    </datalist>
-
-
+                    </select>
                 </li>
 
                 <li>
-                    <input class="{{formdefaults._theClass}}" type="text" placeholder="document id" id="form-doc-id" value="{{formdefaults._formDesignDocId}}">
+                    <select class="{{formdefaults._theClass}}" type="text" placeholder="document id" id="form-doc-id" value="{{formdefaults._formDesignDocId}}">
+                        <!--   {{#each docs}}
+                        <option value="{{_id}}">{{_id}}</option>
+                        {{/each}} -->
+                    </select>
                 </li>
 
             </ul>

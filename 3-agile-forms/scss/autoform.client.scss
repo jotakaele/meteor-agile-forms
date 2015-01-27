@@ -35,6 +35,9 @@ form.autof {
         font-weight: 600;
         font-size: 120%;
     }
+    label.action {
+        display: none;
+    }
     label.field {
         color: #555;
         font-weight: 700;
@@ -306,4 +309,10 @@ $style-invalid: 2px solid red;
             }
         }
     }
+}
+.showToUser.changed_notice {
+    background-color: transparent;
+    color: $alert-color;
+    font-size: 1em;
+    border: 1px solid $alert-color;
 }

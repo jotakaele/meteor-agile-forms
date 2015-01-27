@@ -209,14 +209,15 @@ showToUser = function showToUser(options) {
         modal: options.modal || false,
         log: options.log || false,
         id: makeId(3),
-        image: options.image || null
+        image: options.image || null,
+        close: options.close || 'click'
     }
     var theDiv = $('<div>', {
         class: 'showToUser alert-box ' + opt.class + (opt.modal ? ' reveal-modal-bg' : ''),
-        title: t('Click to close'),
+        title: t(opt.close + ' to close'),
         style: 'display:none',
         id: opt.id
-    }).html(opt.content).prependTo(opt.element).on('click', function() {
+    }).html(opt.content).prependTo(opt.element).on(opt.close, function() {
         $d = $(this)
         $d.slideUp(400, function() {
             $d.remove()

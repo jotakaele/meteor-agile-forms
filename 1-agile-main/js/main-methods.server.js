@@ -2,7 +2,7 @@ Meteor.methods({
     //Guardamos información en el log, lo que necesitemos
     'setLog': function(theType, objContent) {
         if (s('log') == true) {
-            Logs.insert({
+            return Logs.insert({
                 autouser: Meteor.userId || 'unuser',
                 autodate: new Date(),
                 type: theType,

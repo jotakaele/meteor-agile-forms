@@ -54,7 +54,8 @@ function showToUser(options) {
         time: //Opcional. El número de segundos en que se cerrará el mensaje automáticamente
         modal: //Opcional. Si el mensaje se muestra en modal Default: false
         log: //Opcional. Si ademas de mostrarse en el cliente se hace log del mensaje.       
-        image: //Opcional. la image de font-awesome que se mostrará. Default none
+        image: //Opcional. la image de font-awesome que se mostrará. Default none:
+        close: //Opcional. evento con el que se cerrará el mensaje. Default. Clik (Solo si no se ha definido time)
     }
 
 ``` 

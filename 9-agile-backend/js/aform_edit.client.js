@@ -31,7 +31,7 @@ guardarFormDef = function guardarFormDef() {
         return false;
     }
     var data = {}
-    data.name = $('span#nombre').text()
+    data.name = $('input#nombre').val()
     data._id = currentForm._id
     if (confirm("Save the form definition \n[" + data.name + "]?")) {
         if (data._id) {
@@ -56,7 +56,7 @@ guardarFormDef = function guardarFormDef() {
                 time: 1
             })
             editor_cambiado = false
-            $('li#guardar i').addClass('hide')
+            $('li#guardar i').addClass('hide').parent().removeClass('modificado')
             $("div#editor").removeClass("modificado")
             $('.doc[name]').parent().removeClass('active')
             $('.doc[name="' + data.name + '"]').parent().addClass('active')
@@ -82,14 +82,14 @@ function lanzarRenderizado() {
     }, 800)
 }
 editorCambiado = function editorCambiado() {
-        if (initialYAML != editor.getValue() || initiallNameText != $('li#guardar #nombre').text()) {
+        if (initialYAML != editor.getValue() || initiallNameText != $('li#guardar #nombre').val()) {
             editor_cambiado = true
-            $('li#guardar i').removeClass('hide')
+            $('li#guardar i').removeClass('hide').parent().addClass('modificado')
             $("div#editor").addClass("modificado")
         } else {
             editor.session.getUndoManager().reset()
             editor_cambiado = false
-            $('li#guardar i').addClass('hide')
+            $('li#guardar i').addClass('hide').parent().removeClass('modificado')
             $("div#editor").removeClass("modificado")
         }
         colorificaYaml()
@@ -113,9 +113,9 @@ carga = function carga(nombreForm) {
             initialYAML = jsyaml.dump(sanitizeObjectNameKeys(res.content))
             editor.setValue(initialYAML)
             $('#ritem').html('')
-            $("#nombre").text(nombreForm)
+            $("#nombre").val(nombreForm)
             $(".doc[name]").parent().removeClass('active')
-            initiallNameText = $('li#guardar #nombre').text()
+            initiallNameText = $('li#guardar #nombre').val()
             editor.gotoLine(1)
             coloreaEtiquetas()
             colorificaYaml()
@@ -151,7 +151,7 @@ colorificaYaml = function colorificaYaml() {
     setTimeout(function() {
         coloreaEtiquetas()
         tag2Color(['fields', 'common', 'sources', 'options'], 'level1')
-        tag2Color(['form', 'list', 'helpers', 'queries'], 'level0')
+        tag2Color(['form', 'list', 'helpers', 'queries', 'css'], 'level0')
         tag2Color(['selectize', 'html', 'enum', 'datetimepicker'], 'collapsible')
         $('div.ace_text-layer .ace_tag:contains(fields)').addClass('level1')
         if (jsyaml.load(editor.getValue()).form) {
@@ -215,14 +215,14 @@ Template.autoFormEdit.helpers({
 });
 //fixme Parece que no funciona correctamente al hacer update (muestra los antiguos) Revisar!!!
 Template.autoFormEdit.events({
-        'blur input#form-mode': function(event) {
-            s('_formDesignMode', $('input#form-mode').val())
-            devForm.mode = $('input#form-mode').val()
+        'change select#form-mode': function(event) {
+            s('_formDesignMode', $('select#form-mode').val())
+            devForm.mode = $('select#form-mode').val()
             lanzarRenderizado()
         },
-        'blur input#form-doc-id': function(event) {
-            s('_formDesignDocId', $('input#form-doc-id').val())
-            devForm.doc = $('input#form-doc-id').val()
+        'change select#form-doc-id': function(event) {
+            s('_formDesignDocId', $('select#form-doc-id').val())
+            devForm.doc = $('select#form-doc-id').val()
             lanzarRenderizado()
         },
         'click #eliminar': function eliminarItem() {
@@ -262,7 +262,7 @@ Template.autoFormEdit.events({
             currentForm = {}
             $("#ritem").html('')
             $("div#editor").removeClass("modificado")
-            $("#nombre").removeAttr("itemid").text(makeId(8))
+            $("#nombre").removeAttr("itemid").val(makeId(8))
             defaultForm = jsyaml.dump({
                     "form": {
                         "collection": "persons",
@@ -373,7 +373,7 @@ Template.autoFormEdit.events({
                 }
             }
             $('#ritem').html('')
-            carga($(e.target).attr('name'))
+            $.when(cargarIdes($(e.target).parent().attr('collection'))).then(s('_formDesignDocId', $('select#form-doc-id option:first').text())).done(carga($(e.target).attr('name')))
         },
         'keyup input#filtrar': function filtarLista(e) {
             tx = $(e.target).val()
@@ -386,8 +386,17 @@ Template.autoFormEdit.events({
             })
         },
         'click #ayudacampos': function mostrarAyudaColumnas() {
-            helpColumns()
-        }
+                helpColumns()
+            }
+            /*'change select#form-doc-id': function(ev) {
+                $this = $(ev.target)
+                showToUser({
+                    content: $this.val(),
+                    element: $this.parent(),
+                    close: 'mouseleave',
+                    class: 'secondary'
+                })
+            }*/
     })
     //Inserta la lista dec ampos disponibles en el editor, para ayuda y referencia
 function helpColumns() {
@@ -425,3 +434,30 @@ function helpColumns() {
     //todo Documentar el proceso de eliminar , update  y borrado lógico
     //todo Arreglar las ayudas para que vuelque la estructura de los campos complejos
     // fixme LOs enlaces a backend llevan a la version localhost:3000
+    //Cargamos los ides de la collecion oportuna
+cargarIdes = function cargarIdes(coleccion) {
+    $.when(cCols[coleccion].find({}, {
+        fields: {
+            _id: true
+        },
+        sort: {
+            autodate: -1
+        }
+    }).fetch()).done(function(res) {
+        var $select = $('select#form-doc-id')
+        $('option', $select).remove()
+        res.forEach(function(value, key) {
+            $option = $('<option>').text(value._id).appendTo($select)
+        })
+        if (res[0]) {
+            $select.val(res[0]._id)
+        }
+        $select.attr('title', coleccion)
+        showToUser({
+            content: coleccion,
+            class: 'success',
+            element: $('#form-doc-id').parent(),
+            time: 1
+        })
+    })
+}

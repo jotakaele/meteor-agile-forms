@@ -15,9 +15,11 @@ AF = function(element, options) {
         parseRootQueries(options)
         c = {} //Creamos un objeto que va a contener la configuración general
         c.form = options.def.form || {}
+        c.css = options.def.css || {}
         c.form.name = options.name
         c.fields = options.def.form.fields || {}
         c.element = $('#' + element)
+        processCssKey(c.element)
         c.common = c.form.common || {}
         c.common.control = c.common.control || {}
         c.common.type = c.common.type || {}
@@ -31,14 +33,17 @@ AF = function(element, options) {
             id: c.form.id,
             name: _.slugify(c.form.title),
             collection: c.form.collection,
-            style: c.form.style
+            style: c.form.style,
+            mode: mode.current
         })
         c.HTML.maindiv = $('<div>', {
-            class: "row mainFieldsDiv"
-        })
-        $('<div>', {
-            id: "form_notices"
-        }).appendTo(c.HTML.maindiv).text(c.form.change_notice || ft("Form changed"))
+                class: "row mainFieldsDiv"
+            })
+            /*
+            $('<div>', {
+                id: "form_notices"
+            }).appendTo(c.HTML.maindiv).text(c.form.change_notice || ft("Form changed"))
+            */
         c.HTML.title = $('<span>', {
                 class: "form_title"
             }).text(c.form.title).prependTo(c.HTML.maindiv)
@@ -284,6 +289,7 @@ datetimeFieldProcess = function datetimeFieldProcess(renderedField, fieldSource)
         _.extend(currentConfig, fieldSource.datetimepicker)
     }
     $(renderedField).datetimepicker(currentConfig)
+    $(renderedField).attr('type', 'text') //quitamos el atributo date, para que no utilize los controles por defecto de chrome, opera, etc...
 }
 createInput = function createInput(name, fieldSource) {
     var theInput = $('<input>', {
@@ -516,7 +522,15 @@ createButtons = function createButtons(mode) {
 }
 createButtonsActions = function createButtonsActions() {
         $('#new-button').on('click', function() {
-            sendFormToMongo($(this).closest('form.autof'))
+            addFormToMongo($(this).closest('form.autof'))
+        })
+        $('#save-button').on('click', function() {
+            updateFormToMongo($(this).closest('form.autof'))
+        })
+        $('#delete-button').on('click', function() {
+            if (confirm(t('Are you sure you want to delete this record?'))) {
+                deleteFormMongo($(this).closest('form.autof'))
+            }
         })
     }
     //Creamos los bloques con limit 1 o superior (objetos o arrays de objetos)
@@ -835,6 +849,14 @@ processEnumDependSelects = function processEnumDependSelects() {
 alertFormChange = function alertFormChange($form) {
     $('input,textarea,select', $form).on('change', function() {
             $form.addClass('changed')
+            if ($('.changed_notice', $form.parent()).length === 0) {
+                showToUser({
+                    content: ft("Form changed"),
+                    element: $form.parent(),
+                    class: 'changed_notice',
+                    image: 'fa-exclamation-triangle'
+                })
+            }
         })
         //RELEASE Descomentar para pasar a produccion, para trabajar es un rollo
         // window.onbeforeunload = function(e) {
@@ -1001,37 +1023,116 @@ getBlocValues = function getBlocValues($object, intLimit) {
         return resBV
     }
     //TODO Añadir metodos para update y delete, desde el server
-sendFormToMongo = function sendFormToMongo($form) {
+addFormToMongo = function addFormToMongo($form) {
+    //var dest = $form.attr('collection')
+    var insertObj = formToJson($form)
+        // dbg("insertObj", insertObj)
+    Meteor.call('addAfRecord', c.form.name, insertObj, function(err, res) {
+            if (err) {
+                console.error(err)
+            }
+            if (res) {
+                switch (res.status) {
+                    case 'saved':
+                        $('.unvalidform', $form).remove()
+                        showToUser({
+                                content: '<strong>' + t(res.status),
+                                class: 'success',
+                                time: 2,
+                                image: 'fa-thumbs-o-up',
+                                element: $form.parent().parent()
+                            })
+                            //todo ¿Que hacemos cuando enviamos correctamente un formulario
+                        var theDiv = $form.parent().attr('id')
+                        $form.parent().html('');
+                        cargaForm({
+                            name: c.form.name,
+                            mode: 'new',
+                            div: theDiv
+                        })
+                        break;
+                    case 'unvalid form':
+                        $('.unvalidform', $form).slideUp().remove()
+                        showToUser({
+                            content: '<strong>' + t(res.status) + '</strong>' + res.info.toString().replace(/,/g, ''),
+                            class: 'alert unvalidform',
+                            //time: 4,
+                            image: 'fa-thumbs-o-down',
+                            element: $form
+                        })
+                        break;
+                    default:
+                        break;
+                }
+            }
+        })
+        //var insert = cCols[dest].insert(insertObj)
+        //return insert
+}
+updateFormToMongo = function updateFormToMongo($form) {
+    //var dest = $form.attr('collection')
+    var updateObj = formToJson($form)
+    updateObj.docId = options.doc //fixme Extraer de aqui el Id ¿será poco seguro?
+    dbg("updateObj", updateObj)
+    Meteor.call('updateAfRecord', c.form.name, updateObj, function(err, res) {
+            if (err) {
+                console.error(err)
+            }
+            if (res) {
+                switch (res.status) {
+                    case 'updated':
+                        $('.unvalidform', $form).remove()
+                        showToUser({
+                            content: '<strong>' + t(res.status),
+                            class: 'success',
+                            time: 2,
+                            image: 'fa-thumbs-o-up',
+                            element: $form.parent().parent()
+                        })
+                        break;
+                    case 'unvalid form':
+                        $('.unvalidform', $form).slideUp().remove()
+                        showToUser({
+                            content: '<strong>' + t(res.status) + '</strong>' + res.info.toString().replace(/,/g, ''),
+                            class: 'alert unvalidform',
+                            //time: 4,
+                            image: 'fa-thumbs-o-down',
+                            element: $form
+                        })
+                        break;
+                    default:
+                        break;
+                }
+            }
+        })
+        //var insert = cCols[dest].insert(insertObj)
+        //return insert
+}
+deleteFormMongo = function deleteFormMongo($form) {
         //var dest = $form.attr('collection')
-        var insertObj = formToJson($form)
-            // dbg("insertObj", insertObj)
-        Meteor.call('saveAfRecord', c.form.name, insertObj, function(err, res) {
+        deleteObj = {}
+        deleteObj.docId = options.doc //fixme Extraer de aqui el Id ¿será poco seguro?
+        Meteor.call('deleteAfRecord', c.form.name, deleteObj, function(err, res) {
                 if (err) {
                     console.error(err)
                 }
                 if (res) {
                     switch (res.status) {
-                        case 'saved':
+                        case 'deleted':
+                            $('.showToUser', $form).remove()
                             showToUser({
-                                    content: '<strong>' + t(res.status),
-                                    class: 'success',
-                                    time: 2,
-                                    image: 'fa-thumbs-o-up',
-                                    element: $form.parent().parent()
-                                })
-                                //todo ¿Que hacemos cuando enviamos correctamente un formulario
-                            var theDiv = $form.parent().attr('id')
-                            $form.parent().html('');
-                            cargaForm({
-                                name: c.form.name,
-                                mode: 'new',
-                                div: theDiv
+                                content: '<strong>' + t(res.status),
+                                class: 'deleted',
+                                time: 2,
+                                image: 'fa-thumbs-o-up',
+                                element: $form.parent().parent()
                             })
+                            $form.fadeOut(2000)
                             break;
-                        case 'unvalid form':
+                        case 'not_deleted':
                             showToUser({
                                 content: '<strong>' + t(res.status) + '</strong>' + res.info.toString().replace(/,/g, ''),
-                                class: 'alert',
+                                class: 'alert undeleteform',
                                 //time: 4,
                                 image: 'fa-thumbs-o-down',
                                 element: $form
@@ -1172,9 +1273,7 @@ focusOnLabelClick = function focusOnLabelClick() {
             })
         })
     }
-    //fixme Vaya, parece que no guarda las fechas como date
     //TODO Mostrar solo los botones de accín según se hay llamado al formulario
-    //fixme No se vacia el formulario despues de añadir, en @Chrome!!!
     //fixme No se adapta el tamaño de los qtips en los formularios modales
     //Comprobamos los modos delformulario
 checkModes = function checkModes(options) {
@@ -1228,34 +1327,46 @@ chargeValuesOnMultiBlocksArray = function chargeValuesOnMultiBlocksArray() {
     }
     //Convertimos los select type radio en nustro propio control, mas manejable
 processSelectToRadioControls = function processSelectToRadioControls($select) {
-    $('.autof div.fieldrow[type=radio] select:not(.isRadio)').each(function() {
-        var $select = $(this)
-        $select.addClass('isRadio')
-        $select.hide()
-        var theWidth = (100 / (c.fields[$select.attr('name').split('-')[0]].item_columns || 1)) + '%'
-        var $nDiv = $('<div>', {
-                class: 'selectdiv-sel'
-            }).insertBefore($select)
-            //$select.appendTo($nDiv)
-        $('option', $select).each(function() {
-            var $opt = $(this)
-            if ($opt.val()) {
-                $nButton = $('<div>', {
-                    value: $opt.attr('value'),
-                    style: 'width:' + theWidth
-                }).text($opt.text()).appendTo($nDiv)
-            }
-            $nButton.on('click', function() {
-                $select.val($(this).attr('value'))
+        $('.autof div.fieldrow[type=radio] select:not(.isRadio)').each(function() {
+            var $select = $(this)
+            $select.addClass('isRadio')
+            $select.hide()
+            var theWidth = (100 / (c.fields[$select.attr('name').split('-')[0]].item_columns || 1)) + '%'
+            var $nDiv = $('<div>', {
+                    class: 'selectdiv-sel'
+                }).insertBefore($select)
+                //$select.appendTo($nDiv)
+            $('option', $select).each(function() {
+                var $opt = $(this)
+                if ($opt.val()) {
+                    $nButton = $('<div>', {
+                        value: $opt.attr('value'),
+                        style: 'width:' + theWidth
+                    }).text($opt.text()).appendTo($nDiv)
+                }
+                $nButton.on('click', function() {
+                    $select.val($(this).attr('value'))
+                    $('div', $nDiv).removeClass('selected')
+                    $(this).addClass('selected')
+                    $select.blur()
+                })
+            })
+            $('div[value="' + $select.val() + '"]', $nDiv).addClass('selected')
+            $select.on('change', function() {
                 $('div', $nDiv).removeClass('selected')
-                $(this).addClass('selected')
-                $select.blur()
+                $('div[value="' + $select.val() + '"]', $nDiv).addClass('selected')
             })
         })
-        $('div[value="' + $select.val() + '"]', $nDiv).addClass('selected')
-        $select.on('change', function() {
-            $('div', $nDiv).removeClass('selected')
-            $('div[value="' + $select.val() + '"]', $nDiv).addClass('selected')
-        })
+    }
+    //Creamos un clave en form para incluir css en la página. Importante, las claves dentro de css: deben estar rodeadas de comillas dobles, y los valores que lo requieran, ( por incluir espacios o caracteres especiales, deben ir entre comillas simples)
+processCssKey = function processCssKey($element) {
+    //dbg("$element", $element)
+    var newCss = {}
+    _(c.css).each(function(value, key) {
+        newCss['#' + $element.attr('id') + ' ' + key] = value
     })
+    newCss = JSON.stringify(newCss, 0).replace(/"/g, '').replace(/:{/g, '{').replace(/,/g, '').replace(/{/, '').replace(/}$/, '')
+    $('<style>', {
+        class: 'def-form'
+    }).text(newCss).appendTo($element)
 }
