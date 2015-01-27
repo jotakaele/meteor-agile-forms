@@ -15,9 +15,11 @@ AF = function(element, options) {
         parseRootQueries(options)
         c = {} //Creamos un objeto que va a contener la configuración general
         c.form = options.def.form || {}
+        c.css = options.def.css || {}
         c.form.name = options.name
         c.fields = options.def.form.fields || {}
         c.element = $('#' + element)
+        processCssKey(c.element)
         c.common = c.form.common || {}
         c.common.control = c.common.control || {}
         c.common.type = c.common.type || {}
@@ -31,7 +33,8 @@ AF = function(element, options) {
             id: c.form.id,
             name: _.slugify(c.form.title),
             collection: c.form.collection,
-            style: c.form.style
+            style: c.form.style,
+            mode: mode.current
         })
         c.HTML.maindiv = $('<div>', {
             class: "row mainFieldsDiv"
@@ -1345,4 +1348,16 @@ processSelectToRadioControls = function processSelectToRadioControls($select) {
             })
         })
     }
-    //todo crear un clave en form para incluir css en la página
+    //Creamos un clave en form para incluir css en la página. Importante, las claves dentro de css: deben estar rodeadas de comillas dobles, y los valores que lo requieran, ( por incluir espacios o caracteres especiales, deben ir entre comillas simples)
+processCssKey = function processCssKey($element) {
+    //dbg("$element", $element)
+    var newCss = {}
+    _(c.css).each(function(value, key) {
+        newCss['#' + $element.attr('id') + ' ' + key] = value
+    })
+    dbg("newCss", newCss)
+    newCss = JSON.stringify(newCss, 0).replace(/"/g, '').replace(/:{/g, '{').replace(/,/g, '').replace(/{/, '').replace(/}$/, '')
+    $('<style>', {
+        class: 'def-form'
+    }).text(newCss).appendTo($element)
+}

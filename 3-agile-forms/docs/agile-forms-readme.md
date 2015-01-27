@@ -379,6 +379,28 @@ queries:
     optgroup: "[sexo]" #Opcional. El valor por el que agruparemos, Es pasado por eval, y los campos que utiliza deben encerrarse entre corchetes.
  ```
 
+## css 
+Esta clave permite definir el **css** que se aplicará al **div contenedor** del formulario. 
+- No permite anidamiento, porque es tratado directamente como css
+- Las claves deben estar encerradas entre **comillas dobles**
+- Los valores que lo requieran (por incluir espacios o caracteres especiales) deben ir entre **comillas simples**
+
+
+```yaml
+form:
+    ......
+css:
+  "[mode=new] #_bloque_1":
+    background-color: "#FEFFAF;"
+  "#_bloque_1 label":
+    background-color: transparent;
+    border: 1px solid red;
+  "form *":
+    font-size: 8px;
+  "form:after":
+    content: attr(class);
+    display: block;
+```
 
 
 ## Cargar un formulario
@@ -414,3 +436,7 @@ Se puede llamar a un formulario usando la función `cargaForm`
 
 
 ```
+
+
+
+

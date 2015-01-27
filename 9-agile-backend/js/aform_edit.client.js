@@ -151,7 +151,7 @@ colorificaYaml = function colorificaYaml() {
     setTimeout(function() {
         coloreaEtiquetas()
         tag2Color(['fields', 'common', 'sources', 'options'], 'level1')
-        tag2Color(['form', 'list', 'helpers', 'queries'], 'level0')
+        tag2Color(['form', 'list', 'helpers', 'queries', 'css'], 'level0')
         tag2Color(['selectize', 'html', 'enum', 'datetimepicker'], 'collapsible')
         $('div.ace_text-layer .ace_tag:contains(fields)').addClass('level1')
         if (jsyaml.load(editor.getValue()).form) {
@@ -188,6 +188,7 @@ Template.autoFormEdit.rendered = function() {
     editor = ace.edit('editor');
     editor.setOptions(aceOptions)
     editor.on('input', editorCambiado)
+    $('li#form-list select').selectize()
 };
 Template.autoFormEdit.helpers({
     formdefaults: function() {

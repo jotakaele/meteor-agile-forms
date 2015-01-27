@@ -127,4 +127,14 @@ nav.backend {
     select, input {
         margin: 0px;
     }
+    li#form-list {
+        .selectize-control {
+            border-radius: 0px;
+            min-width: 140px;
+            height: 35px;
+            .selectize-input {
+                padding: 7px;
+            }
+        }
+    }
 }
