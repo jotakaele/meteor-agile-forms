@@ -107,7 +107,6 @@ Template.pageForm.rendered = function() {
         }, 500)
     }
     //Inserta los datos del documento (si existe) como value en la definición de cada field
-    //current Seguir haciendo pruebas cargando los values d campos simples y de arrays  
 insertDataValues = function insertDataValues(form, data) {
         var inBlock = false // Ccreamos variable
         _(form).each(function(value, key, form) {
