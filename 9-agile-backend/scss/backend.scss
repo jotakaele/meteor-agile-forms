@@ -63,15 +63,15 @@ input#filtrar {
     height: 2em;
 }
 a.admin {
-    border-radius: 50%;
     border: 1px solid darken($admin-bg, 20);
-    padding: 2px;
-    top: 0px;
+    bottom: 0px;
     display: inline-block;
     width: auto !important;
+    min-width: 3em;
+    text-align: center;
     position: absolute;
-    font-size: .95em;
-    right: calc(.95em + 3px);
+    font-size: .80em;
+    right: 0px;
     background-color: $admin-bg;
     color: text-contrast($admin-bg) !important;
     padding: 0 3px;

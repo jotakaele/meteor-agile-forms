@@ -1211,7 +1211,6 @@ focusOnLabelClick = function focusOnLabelClick() {
             })
         })
     }
-    //TODO Mostrar solo los botones de accín según se hay llamado al formulario
     //fixme No se adapta el tamaño de los qtips en los formularios modales
     //Comprobamos los modos delformulario
 checkModes = function checkModes(options) {

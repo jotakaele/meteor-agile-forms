@@ -207,6 +207,7 @@ form.autof {
         .selectize-input {
             //background: $control-background;
             padding: 0px 3px !important;
+            height: auto !important;
         }
         &.single {
             .selectize-input {
@@ -326,4 +327,46 @@ $style-invalid: 2px solid red;
     color: $alert-color;
     font-size: 1em;
     border: 1px solid $alert-color;
+}
+/*MODO READ ONLY DE LOS FORMS*/
+
+//todo completar el css del modo readonly
+.autof[mode=readonly] {
+    border: none !important;
+    *, *:focus {
+        color: #000 !important;
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none;
+        font-weight: normal !important;
+    }
+    .fieldrow {
+        width: 33% !important;
+    }
+    .fieldrow * {
+        background-color: transparent !important;
+    }
+    .block:not(#startBlock) {
+        border: 1px solid #555 !important;
+        background-color: #eee !important;
+    }
+    label {
+        border-bottom: 1px solid #000 !important;
+    }
+    .remove, .showToUser {
+        display: none !important;
+    }
+    .selectdiv-sel {
+        border-width: 0px !important;
+        div {
+            display: none !important;
+        }
+        div.selected {
+            display: block !important;
+            border: none !important;
+        }
+    }
+    input, select, .selectize-input, .selectdiv-sel div {
+        font-weight: bold !important;
+    }
 }
