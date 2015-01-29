@@ -140,7 +140,7 @@ createField = function createField(myname, fieldSource) {
         fieldSource.type = fieldSource.type || 'text'
         fieldSource.class = "large-" + fieldSource.columns + " small-12 columns " + (fieldSource.class || '') //Para que encaje con foundation
         var row = $('<div>', {
-            class: 'name-field fieldrow' + ' ' + fieldSource.class,
+            class: 'left fieldrow' + ' ' + fieldSource.class,
             id: 'div-' + fieldSource.id,
             type: fieldSource.type
                 // ,        title: fieldSource.help
@@ -1342,10 +1342,15 @@ processCssKey = function processCssKey($element) {
     }
     //Mostramos el valor de los campos range en la etiqueta
 processRangeType = function processRangeType() {
-    $('.autof input[type=range]').each(function() {
-        $(this).prev().attr('value', $(this).val())
-    })
-    $('.autof input[type=range]').on('keydown change', function() {
-        $(this).prev().attr('value', $(this).val())
-    })
-}
+        $('.autof input[type=range]').each(function() {
+            $(this).prev().attr('value', $(this).val())
+        })
+        $('.autof input[type=range]').on('keydown change', function() {
+            $(this).prev().attr('value', $(this).val())
+        })
+    }
+    //todo eliminar form changed cuando envias el formulario
+    //todo arreglar problema de css con campos selectize
+    //fixed alinear campos date al createRadioControl
+    //todo mostrar min y max en range
+    //fixed alinear fieldrow a la izquierda

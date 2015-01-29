@@ -35,13 +35,6 @@ form.autof {
         font-weight: 600;
         font-size: 120%;
     }
-    label.action {
-        display: none;
-    }
-    label.field {
-        color: #555;
-        font-weight: 700;
-    }
     div.block.collapse .blockname i {
         transform: rotate(-90deg);
     }
@@ -144,33 +137,93 @@ form.autof {
         }
     }
 }
-/*dimensiones  normales del formulario*/
+/*CONTROLANDO LA DISPOSICION DE LOC CAMPOS*/
 
+$fieldrow-height: 4em;
+$fieldrow-padding: 0px 10px;
+$label-height: 16px;
 $control-color: #000;
+$field-border: 1px solid #ddd;
+$columns-space: 10px;
 $control-height: 30px;
 $control-background: rgba($primary-color, .05);
 $control-item-background: lighten($primary-color, 40);
 form.autof {
-    div.fieldrow {
-        padding-top: 6px;
-        margin: inherit 1em;
-    }
-    input, select, .selectize-input, .my-radio-button div {
-        height: $control-height !important;
-        padding: inherit 2px !important;
-        box-shadow: none;
-        margin: 0px;
-        &:focus, &.focus {
-            background: $control-background;
+    .fieldrow {
+        padding: $fieldrow-padding;
+        min-height: $fieldrow-height !important;
+        height: auto;
+        label {
+            height: $label-height;
+            display: block;
+            margin-bottom: 0px;
+            &.action {
+                display: none;
+            }
+            &.field {
+                color: #555;
+                font-weight: 700;
+            }
+        }
+        input, select, textarea, .my-radio-button, .selectice-control {
+            margin: 0px;
+            box-shadow: none !important;
+            border: $field-border;
+            min-height: $control-height !important;
+        }
+        //Radio customize
+        .my-radio-button {
+            select {
+                display: none;
+            }
+            display: flex;
+            flex-direction: column;
+            flex-flow: wrap;
+            width: 100%;
+            justify-content: flex-start;
+            div {
+                transition-duration: .4s;
+                cursor: pointer;
+                opacity: .5;
+                &:hover {
+                    background-color: #eee;
+                }
+                &:before {
+                    font-weight: normal;
+                    content: "\f10c";
+                    font-family: FontAwesome;
+                    margin-right: 2px;
+                }
+                &.selected {
+                    text-shadow: 1px 0px 1px #fff, -1px 0px 1px #fff;
+                    font-weight: bolder;
+                    opacity: 1;
+                }
+                &.selected:before {
+                    content: "\f192";
+                }
+                padding: .2em 0 .2em 10px;
+            }
         }
     }
-    // Selectize customization
     .selectize-control {
         padding: 0px;
+        border: $field-border;
         .selectize-input {
-            //background: $control-background;
+            border: none;
             padding: 0px 3px !important;
-            height: auto !important;
+            text-align: left;
+            height: $control-height !important;
+            background-color: #fff;
+            background-image: none;
+            // input {
+            //     border: none;
+            //     min-height: $control-height !important;
+            // }
+        }
+        .items {
+            border: none;
+            width: 100%;
         }
         &.single {
             .selectize-input {
@@ -199,55 +252,29 @@ form.autof {
             }
         }
     }
-    //El control para los nuevos radio divs
-    .my-radio-button {
-        select {
-            display: none;
-        }
-        display: flex;
-        flex-direction: column;
-        flex-flow: wrap;
-        width: 100%;
-        outline: 1px solid #ccc;
-        justify-content: flex-start;
-        div {
-            transition-duration: .4s;
-            cursor: pointer;
-            opacity: .5;
-            &:hover {
-                background-color: #eee;
-            }
-            &:before {
-                font-weight: normal;
-                content: "\f10c";
-                font-family: FontAwesome;
-                margin-right: 2px;
-            }
-            &.selected {
-                // background-color: lighten($primary-color, 20);
-                // color: text-contrast(lighten($primary-color, 20));
-                text-shadow: 1px 0px 1px #fff, -1px 0px 1px #fff;
-                font-weight: bolder;
-                opacity: 1;
-            }
-            &.selected:before {
-                content: "\f192";
-            }
-            padding: .2em 0 .2em 10px;
-        }
-    }
 }
 /*Formato para campos especiales*/
 
 $icon-color: darken($primary-color, 30);
 form.autof {
+    div[type=date], div[type=datetime], div[type=time] {
+        input {
+            text-align: center;
+        }
+    }
     label:after {
-        display: inline-block;
+        //display: none;
         text-align: center;
         font-family: FontAwesome;
         color: $icon-color;
+        // position: absolute;
+        // right: 0px;
         float: right;
+        padding: 0px;
+        margin: 0px;
         font-weight: normal;
+        margin: 0px;
+        font-size: .8em;
     }
     label[format=currency]:after {
         content: "\f153";
@@ -281,7 +308,7 @@ $style-invalid: 2px solid red;
             opacity: .2;
         }
         input, select, textarea, ul[type=radio], .selectize-input, .my-radio-button {
-            border-bottom-width: 2px;
+            //  border-bottom-width: 2px;
         }
         div.focused {
             &[isvalid=true] {
