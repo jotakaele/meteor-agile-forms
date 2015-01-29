@@ -22,7 +22,6 @@ cargaForm = function cargaForm(objOptions) {
     //Creamos options y le ponemos los valores por defecto más los que hemos recibido como argumentos
     options = _.extend({}, defOptions, objOptions)
         //console.clear()
-    dbg("options", o2S(options))
         //Creamo objItem para conectar a la base de datos
     var objItem = {} //cremaos el objeto temporal
         //Si no existe objOptions.src es que estamos construyeno a apartir del nombre y vamos a coger el formualrio desde la bd
@@ -134,7 +133,6 @@ insertDataValues = function insertDataValues(form, data) {
                     //Procesamos los objetos
                     if (form[key].limit == 1) {
                         //Soy un objeto simple
-                        // dbg(key, $.type(value))
                         _(value).each(function(dataValue, dataKey) {
                             // console.log(dataKey, dataValue)
                             if (form[dataKey].block == key) {
@@ -146,7 +144,6 @@ insertDataValues = function insertDataValues(form, data) {
                         form[key].values = [] //Eliminino los valores existentes
                             //Soy un array. Puedo cargar los valores en form como un array, pero aún no puedo asignarlos directamente a cada field, porque se renderizan en html
                         _(value).each(function(arrayValue, arrayKey) { //..por cada elemento del array 
-                            //dbg('arrayValue', arrayValue)
                             _(arrayValue).each(function(arrayDataValue, arrayDataKey) { //..recorro sus elementos
                                 if (form[arrayDataKey]) {
                                     var theFormType = (form[arrayDataKey] || {}).type

@@ -4,7 +4,6 @@ AF = function(element, options) {
         if (!mode) {
             return false
         }
-        // dbg('options', options)
         clonableRows = {}
         activateHooks = {}
         processSelectize = {}
@@ -34,7 +33,8 @@ AF = function(element, options) {
             name: _.slugify(c.form.title),
             collection: c.form.collection,
             style: c.form.style,
-            mode: mode.current
+            mode: mode.current,
+            'data-abide': ''
         })
         c.HTML.maindiv = $('<div>', {
                 class: "row mainFieldsDiv"
@@ -78,14 +78,15 @@ AF = function(element, options) {
         prepareShadowClonableRows()
         chargeValuesOnMultiBlocksArray()
         initSelectToSelectize()
-        createButtonsActions()
+        createButtonsActions(c.HTML.form)
         activateHooksTriggers()
         processEnumDependSelects()
+        processSelectToRadioControls()
         activateCustomValidation(c.HTML.form)
         alertFormChange(c.HTML.form)
-        processSelectToRadioControls()
         activarTooltips()
         focusOnLabelClick()
+        processRangeType()
     }
     // En esta funcion creamos o modificamos los aspectos comunes a todos los campos (titulo, determinamos el tipo, columnas)
 createField = function createField(myname, fieldSource) {
@@ -139,7 +140,7 @@ createField = function createField(myname, fieldSource) {
         fieldSource.type = fieldSource.type || 'text'
         fieldSource.class = "large-" + fieldSource.columns + " small-12 columns " + (fieldSource.class || '') //Para que encaje con foundation
         var row = $('<div>', {
-            class: 'fieldrow' + ' ' + fieldSource.class,
+            class: 'name-field fieldrow' + ' ' + fieldSource.class,
             id: 'div-' + fieldSource.id,
             type: fieldSource.type
                 // ,        title: fieldSource.help
@@ -164,6 +165,9 @@ createField = function createField(myname, fieldSource) {
             default:
         }
         var theRenderedControl = $(fieldSource.control).appendTo(row)
+        var $theValidation = $('<span>', {
+                class: 'validation-info'
+            }).appendTo(row)
             //Activamos (o no) el atributo required
         if (!fieldSource.required == false) {
             theRenderedControl.attr('required', true)
@@ -375,7 +379,7 @@ createSelect = function createSelect(name, fieldSource) {
 createRadioControl = function createRadioControl(name, $select) {
     $select.hide()
     var $nDiv = $('<div>', {
-        id: 'selectdiv-sel'
+        id: 'my-radio-button'
     }).insertAfter($select)
     $select.appendTo($nDiv)
     $('option', $select).each(function() {
@@ -476,12 +480,20 @@ createButtons = function createButtons(mode) {
     }
     return buttonsGroup
 }
-createButtonsActions = function createButtonsActions() {
+createButtonsActions = function createButtonsActions($form) {
         $('#new-button').on('click', function() {
-            addFormToMongo($(this).closest('form.autof'))
+            if ($form[0].checkValidity()) {
+                addFormToMongo($form)
+            } else {
+                $('input, select,textarea', $form).blur()
+            }
         })
         $('#save-button').on('click', function() {
-            updateFormToMongo($(this).closest('form.autof'))
+            if ($form[0].checkValidity()) {
+                updateFormToMongo($form)
+            } else {
+                $('input, select,textarea', $form).blur()
+            }
         })
         $('#delete-button').on('click', function() {
             if (confirm(t('Are you sure you want to delete this record?'))) {
@@ -611,7 +623,6 @@ setFieldValue = function setFieldValue(name, value) {
             var $field = name
             theName = $field.attr('name')
         }
-        //        dbg(theName, $field)
         //Elegimos en funcion del tipo de etiqueta
         switch ($field[0].tagName.toLowerCase()) {
             case 'input':
@@ -658,7 +669,6 @@ fieldValue = function fieldValue(name) {
             var field = name
             theName = name.attr('name')
         }
-        // dbg('field', field)
         switch (field.attr('type')) {
             case 'radio':
                 return $('.autof [name=' + theName + ']:checked').val()
@@ -805,12 +815,12 @@ processEnumDependSelects = function processEnumDependSelects() {
 alertFormChange = function alertFormChange($form) {
     $('input,textarea,select', $form).on('change', function() {
             $form.addClass('changed')
-            if ($('.changed_notice', $form.parent()).length === 0) {
+            if ($('.changed_notice', $form).length === 0) {
                 showToUser({
                     content: ft("Form changed"),
-                    element: $form.parent(),
+                    element: $form,
                     class: 'changed_notice',
-                    image: 'fa-exclamation-triangle'
+                    // image: 'fa-exclamation-triangle'
                 })
             }
         })
@@ -822,17 +832,31 @@ alertFormChange = function alertFormChange($form) {
     }
 }
 activateCustomValidation = function activateCustomValidation($jqueryObject) {
+    //Definimos la acción a realizar
+    function fieldsValidateActions($control) {
+            $control.closest('div[id]').attr('isvalid', $control[0].validity.valid).addClass('focused')
+            $('.validation-info', $control.closest('.fieldrow')).text($control[0].validationMessage)
+            checkFormValidity($jqueryObject.closest('form.autof'))
+        }
+        //Llamamos a la función de validación al salir o cambiar el valor de los campos convencionales
     $('input,textarea,select', $jqueryObject).on('blur change', function() {
-        var control = $(this)
-            // control.addClass('focused')
-        control.closest('div[id]').attr('isvalid', control[0].validity.valid).addClass('focused')
-        checkFormValidity($jqueryObject.closest('form.autof'))
+            fieldsValidateActions($(this))
+        })
+        //Llamamos a la validación de los constroles tipo radio (Cuando hacemos click)
+    $('.my-radio-button div', $jqueryObject).on('click', function() {
+            fieldsValidateActions($(this).siblings('select.isRadio'))
+        })
+        //Llamamos a la validación de los constroles tipo radio (Cuando hacemos el ultimo elemento pierde el foco)
+    $('.my-radio-button div:last', $jqueryObject).on('focusout', function() {
+        fieldsValidateActions($(this).siblings('select.isRadio'))
     })
 }
 checkFormValidity = function checkFormValidity($form) {
         if ($form[0].checkValidity()) {
+            $form.addClass('form-valid')
             $("#add-button", $form).removeClass('disabled').attr("title", "Formulario validado. Pulse para guardar los datos.")
         } else {
+            $form.removeClass('form-valid')
             $("#add-button", $form).addClass('disabled').attr("title", "Formulario no validado")
         }
     }
@@ -964,7 +988,6 @@ getBlocValues = function getBlocValues($object, intLimit) {
 addFormToMongo = function addFormToMongo($form) {
     //var dest = $form.attr('collection')
     var insertObj = formToJson($form)
-        // dbg("insertObj", insertObj)
     Meteor.call('addAfRecord', c.form.name, insertObj, function(err, res) {
             if (err) {
                 console.error(err)
@@ -1011,7 +1034,6 @@ updateFormToMongo = function updateFormToMongo($form) {
     //var dest = $form.attr('collection')
     var updateObj = formToJson($form)
     updateObj.docId = options.doc //fixme Extraer de aqui el Id ¿será poco seguro?
-    dbg("updateObj", updateObj)
     Meteor.call('updateAfRecord', c.form.name, updateObj, function(err, res) {
             if (err) {
                 console.error(err)
@@ -1248,7 +1270,6 @@ chargeValuesOnMultiBlocksArray = function chargeValuesOnMultiBlocksArray() {
                 var $block = $('#' + block)
                 if (c.form.fields[block].values) {
                     var theValues = c.form.fields[block].values
-                        // dbg('theValues', o2S(theValues))
                     for (var count = 1; count < theValues.length; count++) {
                         $('.addsubrow', $block).click()
                     }
@@ -1270,9 +1291,9 @@ processSelectToRadioControls = function processSelectToRadioControls($select) {
             $select.hide()
             var theWidth = (100 / (c.fields[$select.attr('name').split('-')[0]].item_columns || 1)) + '%'
             var $nDiv = $('<div>', {
-                    class: 'selectdiv-sel'
+                    class: 'my-radio-button'
                 }).insertBefore($select)
-                //$select.appendTo($nDiv)
+                // $select.appendTo($nDiv)
             $('option', $select).each(function() {
                 var $opt = $(this)
                 if ($opt.val()) {
@@ -1289,6 +1310,7 @@ processSelectToRadioControls = function processSelectToRadioControls($select) {
                     $select.blur()
                 })
             })
+            $select.appendTo($nDiv)
             $('div[value="' + $select.val() + '"]', $nDiv).addClass('selected')
             $select.on('change', function() {
                 $('div', $nDiv).removeClass('selected')
@@ -1298,18 +1320,32 @@ processSelectToRadioControls = function processSelectToRadioControls($select) {
                 if (tecla.keyCode == 32) {
                     $(this).click()
                 }
+                if (tecla.keyCode == 39) {
+                    $(this).next().focus()
+                }
+                if (tecla.keyCode == 37) {
+                    $(this).prev().focus()
+                }
             });
         })
     }
     //Creamos un clave en form para incluir css en la página. Importante, las claves dentro de css: deben estar rodeadas de comillas dobles, y los valores que lo requieran, ( por incluir espacios o caracteres especiales, deben ir entre comillas simples)
 processCssKey = function processCssKey($element) {
-    //dbg("$element", $element)
-    var newCss = {}
-    _(c.css).each(function(value, key) {
-        newCss['#' + $element.attr('id') + ' ' + key] = value
+        var newCss = {}
+        _(c.css).each(function(value, key) {
+            newCss['#' + $element.attr('id') + ' ' + key] = value
+        })
+        newCss = JSON.stringify(newCss, 0).replace(/"/g, '').replace(/:{/g, '{').replace(/,/g, '').replace(/{/, '').replace(/}$/, '')
+        $('<style>', {
+            class: 'def-form'
+        }).text(newCss).appendTo($element)
+    }
+    //Mostramos el valor de los campos range en la etiqueta
+processRangeType = function processRangeType() {
+    $('.autof input[type=range]').each(function() {
+        $(this).prev().attr('value', $(this).val())
     })
-    newCss = JSON.stringify(newCss, 0).replace(/"/g, '').replace(/:{/g, '{').replace(/,/g, '').replace(/{/, '').replace(/}$/, '')
-    $('<style>', {
-        class: 'def-form'
-    }).text(newCss).appendTo($element)
+    $('.autof input[type=range]').on('keydown change', function() {
+        $(this).prev().attr('value', $(this).val())
+    })
 }

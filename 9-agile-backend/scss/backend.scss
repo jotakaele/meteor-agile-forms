@@ -81,60 +81,100 @@ a.admin {
     }
 }
 nav.backend {
-    background-color: $primary-color !important;
-    li {
-        &.name a {
-            font-weight: bold !important;
+    &, > *, ul, li, h1, i, select, input {
+        top: 0px !important;
+        height: 32px !important;
+        box-shadow: none;
+    }
+    li.name {
+        display: table !important;
+        h1 {
+            display: table-cell !important;
+            font-weight: bold;
+            padding: 0px 1em;
+            color: #fff;
+            font-size: 1.4em;
+            vertical-align: middle;
         }
-        &:hover {
-            background-color: lighten($primary-color, 20) !important;
+    }
+    li#guardar {
+        i, input {
+            display: inline-block !important;
+            border: none;
         }
-        background-color: $primary-color !important;
+        input {
+            width: auto;
+        }
         i {
-            color: text-contrast($primary-color);
-        }
-        input#form-mode {
-            width: 6em;
-        }
-    }
-    .top-bar-section {
-        li#guardar {
-            margin: 0px;
-            top: 0px;
-            //display: table-cell;
-            padding: 4px;
-            height: 35px;
-            i, input {
-                display: inline-block;
-                width: auto;
-                vertical-align: middle;
-                top: 0px;
-                margin: 0px;
+            padding: 0px 1em;
+            cursor: pointer;
+            &:hover {
+                text-shadow: 0px 0px 3px;
             }
+        }
+        &.modificado {
+            background-color: $alert-color !important;
+            // border: 2px solid #fff;
             i {
-                padding: 0px 1em;
-            }
-            &.modificado {
-                background-color: red !important;
-                border: 2px solid #fff;
-                padding: 2px;
-                i {
-                    color: #fff !important;
-                }
-            }
-        }
-    }
-    select, input {
-        margin: 0px;
-    }
-    li#form-list {
-        .selectize-control {
-            border-radius: 0px;
-            min-width: 140px;
-            height: 35px;
-            .selectize-input {
-                padding: 7px;
+                color: #fff !important;
             }
         }
     }
 }
+// nav.backend {
+//     > * {
+//         height: $topbar-height;
+//         margin: 0px;
+//         top: 0px !important;
+//     }
+//     height: $topbar-height;
+//     ul {
+//         padding: 0px;
+//         height: $topbar-height;
+//         margin: 0px;
+//     }
+//     // position: fixed;
+//     // bottom: 0px;
+//     // left: 0px;
+//     // width: 100%;
+//     background-color: $primary-color !important;
+//     li {
+//         margin: 0px;
+//         padding: 0px inherit !important;
+//         &.name a {
+//             font-weight: bold !important;
+//         }
+//         &:hover {
+//             background-color: lighten($primary-color, 20) !important;
+//         }
+//         background-color: $primary-color !important;
+//         i {
+//             color: text-contrast($primary-color);
+//         }
+//         input#form-mode {
+//             width: 6em;
+//         }
+//     }
+//     .top-bar-section {
+//         li#guardar {
+//             i {
+//                 // padding: 0px 1em;
+//             }
+//             &.modificado {
+//                 background-color: red !important;
+//                 // border: 2px solid #fff;
+//                 i {
+//                     color: #fff !important;
+//                 }
+//             }
+//         }
+//     }
+//     select, input {
+//         margin: 0px !important;
+//         height: $topbar-height;
+//     }
+// }
+// div#MongoInspector {
+//     position: fixed !important;
+//     rigth: 0px !important;
+// }
