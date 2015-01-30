@@ -143,11 +143,17 @@ $fieldrow-height: 4em;
 $fieldrow-padding: 0px 10px;
 $label-height: 16px;
 $control-color: #000;
-$field-border: 1px solid #ddd;
-$columns-space: 10px;
+$control-border-color: #ccc;
+$control-border: 1px solid $control-border-color;
+$control-border-radius: 0px;
+$control-font-size: 1em;
 $control-height: 30px;
-$control-background: rgba($primary-color, .05);
+$control-bg: rgba($primary-color, .05);
+$control-focus-bg: #efefef;
+$control-focus-border-color: darken($control-border-color, 15);
+$control-box-shadow: 0px 0px 2px $control-border-color;
 $control-item-background: lighten($primary-color, 40);
+$columns-space: 10px;
 form.autof {
     .fieldrow {
         padding: $fieldrow-padding;
@@ -165,11 +171,17 @@ form.autof {
                 font-weight: 700;
             }
         }
-        input, select, textarea, .my-radio-button, .selectice-control {
+        input, select, textarea, .my-radio-button, .selectize-control {
             margin: 0px;
-            box-shadow: none !important;
-            border: $field-border;
+            box-shadow: $control-box-shadow !important;
+            border-radius: $control-border-radius !important;
+            border: $control-border;
             min-height: $control-height !important;
+            font-size: $control-font-size !important;
+            &:focus, *:focus {
+                background-color: $control-focus-bg !important;
+                border-color: $control-focus-border-color;
+            }
         }
         //Radio customize
         .my-radio-button {
@@ -207,9 +219,10 @@ form.autof {
         }
     }
     .selectize-control {
-        padding: 0px;
-        border: $field-border;
+        padding: 0px !important;
+        border: $control-border;
         .selectize-input {
+            box-shadow: none;
             border: none;
             padding: 0px 3px !important;
             text-align: left;
@@ -246,7 +259,7 @@ form.autof {
                     padding: 0px !important;
                     &:hover {
                         background: $primary-color;
-                        color: $control-background;
+                        color: $control-bg;
                     }
                 }
             }
@@ -307,12 +320,12 @@ $style-invalid: 2px solid red;
         .button-group {
             opacity: .2;
         }
-        input, select, textarea, ul[type=radio], .selectize-input, .my-radio-button {
+        input, select, textarea, ul[type=radio], .selectize-control, .my-radio-button {
             //  border-bottom-width: 2px;
         }
         div.focused {
             &[isvalid=true] {
-                input, select, textarea, ul[type=radio], .selectize-input, .my-radio-button {
+                input, select, textarea, ul[type=radio], .selectize-control, .my-radio-button {
                     border-bottom: $style-valid;
                 }
             }

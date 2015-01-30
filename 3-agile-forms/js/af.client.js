@@ -140,7 +140,7 @@ createField = function createField(myname, fieldSource) {
         fieldSource.type = fieldSource.type || 'text'
         fieldSource.class = "large-" + fieldSource.columns + " small-12 columns " + (fieldSource.class || '') //Para que encaje con foundation
         var row = $('<div>', {
-            class: 'left fieldrow' + ' ' + fieldSource.class,
+            class: 'fieldrow' + ' ' + fieldSource.class,
             id: 'div-' + fieldSource.id,
             type: fieldSource.type
                 // ,        title: fieldSource.help
@@ -814,22 +814,21 @@ processEnumDependSelects = function processEnumDependSelects() {
     // Añade la clase "changed" al formulario cuando se cambia algún valor
 alertFormChange = function alertFormChange($form) {
     $('input,textarea,select', $form).on('change', function() {
-            $form.addClass('changed')
-            if ($('.changed_notice', $form).length === 0) {
-                showToUser({
-                    content: ft("Form changed"),
-                    element: $form,
-                    class: 'changed_notice',
-                    // image: 'fa-exclamation-triangle'
-                })
-            }
-        })
-        //RELEASE Importante cambiar en config.json la clave public.appMode a production
-    if (Meteor.settings.public.appMode == 'production') {
-        window.onbeforeunload = function(e) {
-            return 'El formulario se ha modificado, pero no se han guardado los cambios. \\n¿Quiere abandonar esta página?, ';
-        };
-    }
+        $form.addClass('changed')
+        if ($('.changed_notice', $form).length === 0) {
+            showToUser({
+                content: ft("Form changed"),
+                element: $form,
+                class: 'changed_notice',
+                // image: 'fa-exclamation-triangle'
+            })
+        }
+        if (s('appMode') == 'production') {
+            window.onbeforeunload = function(e) {
+                return 'El formulario se ha modificado, pero no se han guardado los cambios. \\n¿Quiere abandonar esta página?, ';
+            };
+        }
+    })
 }
 activateCustomValidation = function activateCustomValidation($jqueryObject) {
     //Definimos la acción a realizar
@@ -894,8 +893,7 @@ setInitialRadioValues = function setInitialRadioValues() {
             }
         })
     }
-    //todo Asignar acciones a los botones en función del modo y en función de la validación
-    //todo hacer funcion que devuelva el pattern apropiado para DNI, DOI o pasaporte.Quizas seria una buena idea hacer una colección de patterns ubicados en el mismo sitio. La colección tambien podría incluir mascaras de entrada.
+    //idea hacer funcion que devuelva el pattern apropiado para DNI, DOI o pasaporte.Quizas seria una buena idea hacer una colección de patterns ubicados en el mismo sitio. La colección tambien podría incluir mascaras de entrada.
     /*
     Convierte en Array los datos de un fromulario
     */
@@ -953,38 +951,37 @@ formToJson = function formToJson(objForm) {
     Procesa los valores de un bloque de varios campos convirtiendolo en un array
     */
 getBlocValues = function getBlocValues($object, intLimit) {
-        var theBlock = $object
-        var index = 0
-        var theBlockName = theBlock.attr('id')
-        var resBV = {}
-        var arrRow = []
-        var curIndex = '0'
-        var nObj = {}
-        $('.subObject[name]', theBlock).each(function() {
-                var theControl = $(this)
-                var theControlName = theControl.attr('name')
-                var vName = _.strLeftBack(theControlName, '-')
-                var vIndex = _.strRightBack(theControlName, '-')
-                var vValue = fieldValue(theControl)
-                if ($object.attr('limit') == 1) {
-                    nObj[vName] = vValue
-                } else {
-                    nObj[vIndex] = nObj[vIndex] || {}
-                    nObj[vIndex][vName] = vValue
-                }
-            })
-            //Si limit=1 solo devolvemos un objeto
-        if ($object.attr('limit') == 1) {
-            resBV[theBlockName] = nObj
-        } else {
-            _.each(nObj, function(val) {
-                arrRow.push(val)
-            })
-            resBV[theBlockName] = arrRow
-        }
-        return resBV
+    var theBlock = $object
+    var index = 0
+    var theBlockName = theBlock.attr('id')
+    var resBV = {}
+    var arrRow = []
+    var curIndex = '0'
+    var nObj = {}
+    $('.subObject[name]', theBlock).each(function() {
+            var theControl = $(this)
+            var theControlName = theControl.attr('name')
+            var vName = _.strLeftBack(theControlName, '-')
+            var vIndex = _.strRightBack(theControlName, '-')
+            var vValue = fieldValue(theControl)
+            if ($object.attr('limit') == 1) {
+                nObj[vName] = vValue
+            } else {
+                nObj[vIndex] = nObj[vIndex] || {}
+                nObj[vIndex][vName] = vValue
+            }
+        })
+        //Si limit=1 solo devolvemos un objeto
+    if ($object.attr('limit') == 1) {
+        resBV[theBlockName] = nObj
+    } else {
+        _.each(nObj, function(val) {
+            arrRow.push(val)
+        })
+        resBV[theBlockName] = arrRow
     }
-    //TODO Añadir metodos para update y delete, desde el server
+    return resBV
+}
 addFormToMongo = function addFormToMongo($form) {
     //var dest = $form.attr('collection')
     var insertObj = formToJson($form)
@@ -996,16 +993,18 @@ addFormToMongo = function addFormToMongo($form) {
                 switch (res.status) {
                     case 'saved':
                         $('.unvalidform', $form).remove()
+                        $form.hide()
                         showToUser({
-                                content: '<strong>' + t(res.status),
-                                class: 'success',
-                                time: 2,
-                                image: 'fa-thumbs-o-up',
-                                element: $form.parent().parent()
-                            })
+                            content: '<strong>' + t(res.status),
+                            class: 'success',
+                            time: 1.5,
+                            image: 'fa-thumbs-o-up',
+                            element: $form.closest('div')
+                        })
+                        window.onbeforeunload = false
                             //todo ¿Que hacemos cuando enviamos correctamente un formulario
                         var theDiv = $form.parent().attr('id')
-                        $form.parent().html('');
+                        $form.remove();
                         cargaForm({
                             name: c.form.name,
                             mode: 'new',
@@ -1017,9 +1016,8 @@ addFormToMongo = function addFormToMongo($form) {
                         showToUser({
                             content: '<strong>' + t(res.status) + '</strong>' + res.info.toString().replace(/,/g, ''),
                             class: 'alert unvalidform',
-                            //time: 4,
                             image: 'fa-thumbs-o-down',
-                            element: $form
+                            element: $form.closest('div')
                         })
                         break;
                     default:
@@ -1042,13 +1040,15 @@ updateFormToMongo = function updateFormToMongo($form) {
                 switch (res.status) {
                     case 'updated':
                         $('.unvalidform', $form).remove()
+                        $('.showToUser', $form.closest('div')).remove()
                         showToUser({
                             content: '<strong>' + t(res.status),
                             class: 'success',
                             time: 2,
                             image: 'fa-thumbs-o-up',
-                            element: $form.parent().parent()
+                            element: $form.closest('div')
                         })
+                        window.onbeforeunload = false
                         break;
                     case 'unvalid form':
                         $('.unvalidform', $form).slideUp().remove()
@@ -1057,7 +1057,7 @@ updateFormToMongo = function updateFormToMongo($form) {
                             class: 'alert unvalidform',
                             //time: 4,
                             image: 'fa-thumbs-o-down',
-                            element: $form
+                            element: $form.closest('div')
                         })
                         break;
                     default:
@@ -1085,7 +1085,7 @@ deleteFormMongo = function deleteFormMongo($form) {
                                 class: 'deleted',
                                 time: 2,
                                 image: 'fa-thumbs-o-up',
-                                element: $form.parent().parent()
+                                element: $form.closest('div')
                             })
                             $form.fadeOut(2000)
                             break;
@@ -1095,7 +1095,7 @@ deleteFormMongo = function deleteFormMongo($form) {
                                 class: 'alert undeleteform',
                                 //time: 4,
                                 image: 'fa-thumbs-o-down',
-                                element: $form
+                                element: $form.closest('div')
                             })
                             break;
                         default:
@@ -1349,8 +1349,6 @@ processRangeType = function processRangeType() {
             $(this).prev().attr('value', $(this).val())
         })
     }
-    //todo eliminar form changed cuando envias el formulario
-    //todo arreglar problema de css con campos selectize
-    //fixed alinear campos date al createRadioControl
-    //todo mostrar min y max en range
-    //fixed alinear fieldrow a la izquierda
+    //idea mostrar min y max en range
+    //Los campos tag, no informacn correctamente de la validación
+    //todo @esencial injectar los valores fijos que queremos que se inserten en los formularios al llamarlos..... y ver si se muestran en modo hidden o static
