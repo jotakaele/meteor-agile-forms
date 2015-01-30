@@ -78,7 +78,8 @@ cargaForm = function cargaForm(objOptions) {
                         def: sanitizeObjectNameKeys(options.src.content || option.src),
                         name: options.name,
                         mode: options.mode || 'new',
-                        doc: options.id || null
+                        doc: options.id || null,
+                        values: options.values
                     })
                     //TODO Importante @security Poner una condicion que permita que solo los ususrios administradores puedan manejar la configuración
                 if (1 == 1) {

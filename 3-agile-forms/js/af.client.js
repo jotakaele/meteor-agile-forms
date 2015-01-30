@@ -1,5 +1,6 @@
 AF = function(element, options) {
         //console.clear()
+        dbg('options', o2S(_.omit(options, 'src')))
         var mode = checkModes(options)
         if (!mode) {
             return false
@@ -17,6 +18,20 @@ AF = function(element, options) {
         c.css = options.def.css || {}
         c.form.name = options.name
         c.fields = options.def.form.fields || {}
+            // Si hemos recibido valores con la petición los "inyectamos" para que se guarden, aunque no formen parte de la definicion del formulario
+        if (_.has(options, 'values')) {
+            _(options.values).each(function(value, key) {
+                c.fields[key] = {
+                    value: value,
+                    type: 'text',
+                    class: 'disable inject',
+                    html: {
+                        disabled: true
+                    }
+                }
+            })
+        }
+        dbg('c.fields', o2S(c.fields))
         c.element = $('#' + element)
         processCssKey(c.element)
         c.common = c.form.common || {}
@@ -128,7 +143,7 @@ createField = function createField(myname, fieldSource) {
             if (fieldSource.type == 'textarea') {
                 fieldSource.controlType = 'textarea'
             }
-            var inputTypes = ['button', 'color', 'date', 'datetime', 'datetime-local', 'email', 'file', 'hidden', 'image', 'month', 'number', 'password', 'range', 'reset', 'search', 'submit', 'tel', 'text', 'time', 'url', 'week', 'decimal', 'currency', 'tags']
+            var inputTypes = ['button', 'color', 'date', 'datetime', 'datetime-local', 'email', 'file', 'hidden', 'image', 'month', 'number', 'password', 'range', 'reset', 'search', 'submit', 'tel', 'text', 'time', 'url', 'week', 'decimal', 'currency', 'tags', 'static']
                 //Lista de campos que son evaluados como input
             if (inputTypes.indexOf(fieldSource.type) >= 0) {
                 fieldSource.controlType = 'input'
