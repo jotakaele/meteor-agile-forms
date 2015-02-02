@@ -1,0 +1,23 @@
+# Meteor packages used by this project, one per line.
+#
+# 'meteor add' and 'meteor remove' will edit this file for you,
+# but you can also edit it by hand.
+
+multiply:iron-router-progress
+standard-app-packages
+matthew:foundation5-sass
+fourseven:scss
+mandrill:ace
+mrt:underscore-string-latest
+pfafman:font-awesome-4
+meteorhacks:zones
+momentjs:moment
+iron:router
+jeremy:selectize
+vsivsi:numeral
+mquandalle:bower
+msavin:mongoinspector
+acemtp:csm
+#meteorhacks:kadira
+
+insecure

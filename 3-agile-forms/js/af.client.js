@@ -1,6 +1,5 @@
 AF = function(element, options) {
         //console.clear()
-        dbg('options', o2S(_.omit(options, 'src')))
         var mode = checkModes(options)
         if (!mode) {
             return false
@@ -18,20 +17,37 @@ AF = function(element, options) {
         c.css = options.def.css || {}
         c.form.name = options.name
         c.fields = options.def.form.fields || {}
+            //NOTE Solo permitimos mostrar aquellos campos injectados que están previstos en la configuración form > allowed_inject_fields, o bien injectamos el valor de los campos que incluyen la clave "injectable: true" de todos modos tambie se hace la comprobación en el método correspondiente.
+        c.form.allow_inject = c.form.allow_inject || []
+        _.each(c.fields, function(value, key) {
+                if (_(value).has('injectable')) {
+                    if (value.injectable) {
+                        c.form.allow_inject.push(key)
+                    }
+                }
+            })
             // Si hemos recibido valores con la petición los "inyectamos" para que se guarden, aunque no formen parte de la definicion del formulario
         if (_.has(options, 'values')) {
-            _(options.values).each(function(value, key) {
-                c.fields[key] = {
-                    value: value,
-                    type: 'text',
-                    class: 'disable inject',
-                    html: {
+            var allowedInjectValues = _.pick(options.values, c.form.allow_inject)
+            _(allowedInjectValues).each(function(value, key) {
+                if (_(c.fields).has(key)) {
+                    c.fields[key].value = value
+                    c.fields[key].html = {
                         disabled: true
+                    }
+                    c.fields[key].class += ' disable inject'
+                } else {
+                    c.fields[key] = {
+                        value: value,
+                        type: 'text',
+                        class: 'disable inject',
+                        html: {
+                            disabled: true
+                        }
                     }
                 }
             })
         }
-        dbg('c.fields', o2S(c.fields))
         c.element = $('#' + element)
         processCssKey(c.element)
         c.common = c.form.common || {}
@@ -308,7 +324,7 @@ datetimeFieldProcess = function datetimeFieldProcess(renderedField, fieldSource)
         _.extend(currentConfig, fieldSource.datetimepicker)
     }
     $(renderedField).datetimepicker(currentConfig)
-    $(renderedField).attr('type', 'text') //quitamos el atributo date, para que no utilize los controles por defecto de chrome, opera, etc...
+    $(renderedField).attr('datatype', $(renderedField).attr('type')).attr('type', 'text') // quitamos el atributo date, para que no utilize los controles por defecto de chrome, opera, etc... Y indicamos expresamente que queremos que se guarde como date
 }
 createInput = function createInput(name, fieldSource) {
     var theInput = $('<input>', {
@@ -923,7 +939,7 @@ formToJson = function formToJson(objForm) {
         fields.each(function(index, value) {
             if (_.indexOf(numberTypes, $('#' + this.name, f).attr('type')) >= 0) {
                 this.save_as = $('#' + this.name, f).attr('save_as') || 'number'
-            } else if (_.indexOf(dateTypes, $('#' + this.name, f).attr('type')) >= 0) {
+            } else if (_.indexOf(dateTypes, $('#' + this.name, f).attr('datatype')) >= 0) {
                 this.save_as = 'date'
             } else {
                 this.save_as = $('#' + this.name, f).attr('save_as') || 'string'
@@ -942,9 +958,9 @@ formToJson = function formToJson(objForm) {
             //procesemos los date
             //Los campos date los procesamos como date
             if (this.save_as == 'date') {
-                if ($(value).attr("type") == 'date' || $(value).attr("type") == 'datetime') {
+                if ($(value).attr("datatype") == 'date' || $(value).attr("datatype") == 'datetime') {
                     theValue = toDate(theValue)
-                } else if ($(value).attr("type") == 'time') {
+                } else if ($(value).attr("datatype") == 'time') {
                     theValue = toDate('00-00-0000' + ' ' + theValue)
                 }
                 theValue = isNaN(theValue) ? null : theValue
