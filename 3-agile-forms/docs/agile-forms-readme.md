@@ -440,6 +440,7 @@ Se puede llamar a un formulario usando la función `cargaForm`
         mode: 'edit', // Opcional. Default 'new' [new,edit,delete,readonly]
         name: 'Personas', //Requerido. Nombre del formulario a cargar
         doc: 'kjhklgh876ggf5c' // Requerido si 'mode' es 'edit' o 'readonly'. Id del documento a cargar enel formulario
+        values: {nombre: ‘Pedro’,apellidos: ‘Sanchez garcia’, ...} //Opcional. JSON con los valores que serán injectados en el formulario (los campos deben estar previamente habilitados con injectable: true o bien nombrados en la clave form > allow_inject 
     })
 
 ```

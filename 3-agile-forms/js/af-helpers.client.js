@@ -21,6 +21,7 @@ cargaForm = function cargaForm(objOptions) {
     }
     //Creamos options y le ponemos los valores por defecto más los que hemos recibido como argumentos
     options = _.extend({}, defOptions, objOptions)
+    dbg('options', o2S(options))
         //console.clear()
         //Creamo objItem para conectar a la base de datos
     var objItem = {} //cremaos el objeto temporal

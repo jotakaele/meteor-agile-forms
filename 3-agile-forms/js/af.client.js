@@ -1383,3 +1383,4 @@ processRangeType = function processRangeType() {
     //idea mostrar min y max en range
     //Los campos tag, no informacn correctamente de la validación
     //todo @esencial injectar los valores fijos que queremos que se inserten en los formularios al llamarlos..... y ver si se muestran en modo hidden o static
+    //current Ver como pasamos los parametros a los formularios en una url (habra que hacer algo que sirva par todo lo demas, lo mejor seria codificar la cadena que pasamos, en base a una semilla propia el usuario) y luego la decodificamos al recogerla. Ver cuanto penaliza.

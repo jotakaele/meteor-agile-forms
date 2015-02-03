@@ -201,46 +201,66 @@ toDate = function toDate(formaDateString, pattern) {
     //    }
     //})
 showToUser = function showToUser(options) {
-    var opt = {
-        class: options.class || 'alert',
-        content: options.content,
-        element: options.element || $('body'),
-        time: options.time || null,
-        modal: options.modal || false,
-        log: options.log || false,
-        id: makeId(3),
-        image: options.image || null,
-        close: options.close || 'click'
-    }
-    var theDiv = $('<div>', {
-        class: 'showToUser alert-box ' + opt.class + (opt.modal ? ' reveal-modal-bg' : ''),
-        title: t(opt.close + ' to close'),
-        style: 'display:none',
-        id: opt.id
-    }).html(opt.content).prependTo(opt.element).on(opt.close, function() {
-        $d = $(this)
-        $d.slideUp(400, function() {
-            $d.remove()
-        })
-    }).slideDown(400)
-    if (opt.log) {
-        Meteor.call('setLog', 'user_show_message', _.omit(opt, 'element'))
-    }
-    if (opt.image) {
-        var theImage = $('<i>', {
-            class: 'right fa fa-2x ' + opt.image
-        }).prependTo(theDiv)
-    }
-    if (opt.time) {
-        var theCounter = $('<div>', {
-            class: 'counter'
-        }).appendTo(theDiv)
-        theCounter.animate({
-            width: '100%'
-        }, opt.time * 1000, 'linear', function() {
-            theDiv.slideUp(200, function() {
-                theDiv.remove()
+        var opt = {
+            class: options.class || 'alert',
+            content: options.content,
+            element: options.element || $('body'),
+            time: options.time || null,
+            modal: options.modal || false,
+            log: options.log || false,
+            id: makeId(3),
+            image: options.image || null,
+            close: options.close || 'click'
+        }
+        var theDiv = $('<div>', {
+            class: 'showToUser alert-box ' + opt.class + (opt.modal ? ' reveal-modal-bg' : ''),
+            title: t(opt.close + ' to close'),
+            style: 'display:none',
+            id: opt.id
+        }).html(opt.content).prependTo(opt.element).on(opt.close, function() {
+            $d = $(this)
+            $d.slideUp(400, function() {
+                $d.remove()
             })
-        })
+        }).slideDown(400)
+        if (opt.log) {
+            Meteor.call('setLog', 'user_show_message', _.omit(opt, 'element'))
+        }
+        if (opt.image) {
+            var theImage = $('<i>', {
+                class: 'right fa fa-2x ' + opt.image
+            }).prependTo(theDiv)
+        }
+        if (opt.time) {
+            var theCounter = $('<div>', {
+                class: 'counter'
+            }).appendTo(theDiv)
+            theCounter.animate({
+                width: '100%'
+            }, opt.time * 1000, 'linear', function() {
+                theDiv.slideUp(200, function() {
+                    theDiv.remove()
+                })
+            })
+        }
     }
+    //Todo Ver que modo de encriptado usamos aqui
+    //Codifica objOrString mediante (escape de momento), para poder usarlo donde haga falta,por ejemplo en una url
+o2secure = function o2secure(obj) {
+        if (typeof obj == 'object') {
+            var a = EJSON.stringify(obj)
+        } else {
+            var a = obj
+        }
+        var rawStr = a;
+        var wordArray = CryptoJS.enc.Utf8.parse(rawStr);
+        var base64 = CryptoJS.enc.Base64.stringify(wordArray);
+        return base64
+    }
+    //Pasa unescape de momento, 
+secure2o = function secure2o(cad) {
+    var parsedWordArray = CryptoJS.enc.Base64.parse(cad);
+    var parsedStr = parsedWordArray.toString(CryptoJS.enc.Utf8);
+    //console.log("parsed:",parsedStr);
+    return parsedStr
 }
