@@ -21,6 +21,7 @@ cargaForm = function cargaForm(objOptions) {
     }
     //Creamos options y le ponemos los valores por defecto más los que hemos recibido como argumentos
     options = _.extend({}, defOptions, objOptions)
+    dbg('options', o2S(options))
         //console.clear()
         //Creamo objItem para conectar a la base de datos
     var objItem = {} //cremaos el objeto temporal
@@ -78,7 +79,8 @@ cargaForm = function cargaForm(objOptions) {
                         def: sanitizeObjectNameKeys(options.src.content || option.src),
                         name: options.name,
                         mode: options.mode || 'new',
-                        doc: options.id || null
+                        doc: options.id || null,
+                        values: options.values
                     })
                     //TODO Importante @security Poner una condicion que permita que solo los ususrios administradores puedan manejar la configuración
                 if (1 == 1) {

@@ -28,7 +28,10 @@ La definicion de cada formulario, se guarda en MongoDb en la colección `_af`, q
     + Etiquetas de los campos (incluidos los bloques)
     + Título del Formulario
     + Mensajes del formulario
-    
+
+### allow_inject:
+- Opcional. Array con los nombre de los campos **no incluidos en la clave fields** que podráns ser injectados en una llamada al formulario. 
+- Los campos incluidos en la clave fields, se habilitan para ser inyectados, mediante el atributo **injectable: true**
 
 ### classes:
 - Opcional. Clases que se añadirán al formulario. Siempre se añade la clase `autof`.
@@ -41,7 +44,9 @@ form:
     modes: "add, read, delete"
     permissions: #pendiente
     classes: my-own-class
+    allow_inject: [name, id_empleado]
     fields:
+
         #.....
 common:
     #.....
@@ -121,6 +126,24 @@ save_as:
 
 ###### noprocess
 Se aplica a los campos que son transformados despues de su creación, para evitar su transformación (`select`,`textarea`,`date`,`datetime`,`time`)
+
+######injectable
+Se utiliza para indicar que el valor de un campo puede ser "***inyectado***" desde la funcion o plantilla que lo llama. En ese caso, el campo queda **disabled** con el valor que se le ha pasado, pero con su tipo y formato correspondiente.
+
+```yaml
+form:
+    #....
+    fields:
+        sample_fiels:
+            type: date
+            injectable: true
+common:
+    #.....
+queries:
+    #.....
+```
+
+
 ###### html
 Son los `atributos` que serán incluidos automáticamente en todos los campos, independientemenbte de su tipo. Es válido todo lo que sea permitido por html5 en cada caso.
 ```yaml
@@ -417,6 +440,7 @@ Se puede llamar a un formulario usando la función `cargaForm`
         mode: 'edit', // Opcional. Default 'new' [new,edit,delete,readonly]
         name: 'Personas', //Requerido. Nombre del formulario a cargar
         doc: 'kjhklgh876ggf5c' // Requerido si 'mode' es 'edit' o 'readonly'. Id del documento a cargar enel formulario
+        values: {nombre: ‘Pedro’,apellidos: ‘Sanchez garcia’, ...} //Opcional. JSON con los valores que serán injectados en el formulario (los campos deben estar previamente habilitados con injectable: true o bien nombrados en la clave form > allow_inject 
     })
 
 ```

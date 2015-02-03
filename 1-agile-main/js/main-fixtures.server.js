@@ -18,6 +18,7 @@ if (Defaults.find().count() === 0) {
         },
         dayOfWeekStart: 1,
         lang: 'en',
+        _passphrase: 'unacadena aleatoria', //La cadena que se usara como frase de paso en la operaciones de encriptado/desencriptado
         translating: 'none', // auto|none|manual
         dbg: true, //true|false activa o desacctiva la salida dbg
         log: true, // activa o desactiva la grabación de logs en el servidor

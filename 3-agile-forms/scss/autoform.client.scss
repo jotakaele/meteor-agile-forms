@@ -404,3 +404,13 @@ $style-invalid: 2px solid red;
         font-weight: bold !important;
     }
 }
+//Reglas especiales que deben aplicarse al final
+form.autof {
+    input.inject {
+        // border: none !important;
+        // background-color: #fff !important;
+        // box-shadow: none !important;
+        // font-weight: bold;
+        // height: auto !important;
+    }
+}
