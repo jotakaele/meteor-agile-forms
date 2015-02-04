@@ -171,7 +171,7 @@ createField = function createField(myname, fieldSource) {
         fieldSource.type = fieldSource.type || 'text'
         fieldSource.class = "large-" + fieldSource.columns + " small-12 columns " + (fieldSource.class || '') //Para que encaje con foundation
         var row = $('<div>', {
-            class: 'fieldrow' + ' ' + fieldSource.class,
+            class: 'left fieldrow' + ' ' + fieldSource.class,
             id: 'div-' + fieldSource.id,
             type: fieldSource.type
                 // ,        title: fieldSource.help
@@ -1028,7 +1028,7 @@ addFormToMongo = function addFormToMongo($form) {
                         showToUser({
                             content: '<strong>' + t(res.status),
                             class: 'success',
-                            time: 1.5,
+                            time: 1,
                             image: 'fa-thumbs-o-up',
                             element: $form.closest('div')
                         })
@@ -1075,7 +1075,7 @@ updateFormToMongo = function updateFormToMongo($form) {
                         showToUser({
                             content: '<strong>' + t(res.status),
                             class: 'success',
-                            time: 2,
+                            time: 1,
                             image: 'fa-thumbs-o-up',
                             element: $form.closest('div')
                         })

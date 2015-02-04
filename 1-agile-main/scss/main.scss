@@ -39,3 +39,17 @@ div.showToUser {
         height: 100%;
     }
 }
+div.in-place {
+    i.close {
+        cursor: pointer;
+        color: $alert-color;
+    }
+    border: 1px solid #777;
+    background-color: #fff;
+    padding: .2em;
+    position: absolute;
+    min-height: 200px;
+    width: auto;
+    z-index: 999;
+    box-shadow: 0px 0px 10px #000;
+}
