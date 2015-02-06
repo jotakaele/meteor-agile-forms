@@ -464,3 +464,26 @@ Se puede llamar a un formulario usando la función `cargaForm`
 
 
 
+### activateFormLinks()
+Esta función busca en la página todos los elementos de la clase **.form2div** y les asigna un evento para que al hacer click cargue un formulario. El elemento (enlace, span, div, etc) debe ser tal que: 
+```html
+
+    <a mode="new" div="in-place" name="contratos" class="form2div">Añadir un contrato</a>
+
+    <a inject="doi,tipo_contrato" tipo_contrato="indefinido" nombre="Luis" doi="APK9ldeX" mode="new" div="in-place" name="contratos" class="form2div"> Añadir contrato (con injeccion de datos)</a>
+
+    <a mode="edit" div="in-place" doc= "9ubybh98yp8h" name="contratos" class="form2div">Modificar contrato</a>
+
+```
+
+Los atributos del enlace son:
+- **mode**:  Requerido. [new,edit,delete,readonly] modo en que queremos abrir el formulario 
+- **div**: Requerido. [in-place, modal, 'nombre_div']. El div o lugar en que se cargará el formulario:
+    + **in-place** Se crea un div, no modal (mediante la función ***onl.createDivInPlace()*** ) que se posiciona exactamente en la esquina inferior izquierza del elemento.
+    + **modal** Se carga en una ventana modal, segun Foundation Zurb.
+    + **nombre_div** Se carga en un div especifico posicionado en la página, en este caso hay que indicar el *id* unico del div.
+-  **name**: Requerido. El nombre del formulario a cargar.
+-  **class**: Requerido. Ha de ser ***form2div***
+-  **doc**: Requerido si el modo es edit,delete,o readonly. El id del elemento a cargar.
+-  **inject**: Opcional, si se quieren injectar datos en el formulario, hay que indicar el nombre de los campos,(separados por comas). En este caso hay que añadir un atributo por cada campo a injectar, con el valor del mismo (como en el ejemplo2)
+La llamada a la función ***activateFormLinks*** se hace en el caso de autol (autolist) despues de renderizar los mismos. En el caso de otros escenarios, (en formularios, o en cualquier lugar fuera de autol, hay que ehjecutar la función por otros medios).

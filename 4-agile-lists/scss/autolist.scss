@@ -38,4 +38,10 @@ table.autol {
         padding: 0px;
         margin: 0px;
     }
+    tr {
+        &:hover td {
+            text-decoration: underline;
+
+        }
+    }
 }

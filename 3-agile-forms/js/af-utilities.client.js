@@ -10,13 +10,12 @@ activateFormLinks = function activateFormLinks() {
                         'data-reveal': ''
                     }).appendTo($('body'))
                 }
-                //$(this).attr('data-reveal-id', 'modalDiv')
             }
             $(this).addClass('form2div-init') //Indicamos que el enlace ya ha sido inicializado para excluirlo de las siguientes llamadas
             $(this).on('click', function() {
                 switch ($(this).attr('div')) {
                     case 'in-place':
-                        var destDivName = onl.createDivInPlace($(this), 'columns')
+                        var destDivName = onl.createDivInPlace($(this), $(this).attr('in-place-class'))
                         break;
                     case 'modal':
                         var destDivName = 'modalDiv'
@@ -28,9 +27,11 @@ activateFormLinks = function activateFormLinks() {
                 var obj = {}
                 obj.values = {}
                 $link = $(this)
-                $(this).attr('inject').split(',').forEach(function(val) {
-                    obj.values[val] = $link.attr(val)
-                })
+                if ($(this).attr('inject')) {
+                    $(this).attr('inject').split(',').forEach(function(val) {
+                        obj.values[val] = $link.attr(val)
+                    })
+                }
                 obj.name = $link.attr('name')
                 obj.mode = $link.attr('mode')
                 obj.div = destDivName

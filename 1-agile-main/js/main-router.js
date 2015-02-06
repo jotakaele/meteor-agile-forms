@@ -1,5 +1,3 @@
-
-
 //Elementos comunes para todas las rutas
 BaseController = RouteController.extend({
     // specify stuff that every controller should have
@@ -22,4 +20,8 @@ BaseController = RouteController.extend({
             this.render('Loading');
         }
     }
+});
+//Definimos una plantilla global para todas las rutas
+Router.configure({
+    layoutTemplate: 'main'
 });

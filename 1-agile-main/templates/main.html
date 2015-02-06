@@ -1,0 +1,18 @@
+<template name="main">
+    <header>
+        {{>menu}}
+    </header>
+
+    <aside>
+        {{> yield "aside"}}
+    </aside>
+
+    <article>
+        {{> yield}}
+    </article>
+
+    <footer>
+        {{> yield "footer"}}
+    </footer>
+
+</template>

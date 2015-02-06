@@ -46,7 +46,7 @@ onl = {
         var pos = $el.position()
         pos.top += $el.innerHeight()
         var divId = makeId(4)
-        console.log(pos)
+            //console.log(pos)
         var $theFrameDiv = $('<div>', {
             class: 'in-place ' + className || '',
             style: 'top:' + pos.top + 'px;left:' + pos.left + 'px;min-width:' + $el.innerWidth() + 'px;'

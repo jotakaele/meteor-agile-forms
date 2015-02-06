@@ -195,7 +195,7 @@ AL = function(element, options) {
     //Refactorizar autol, incluyendo el uso de _.extend para posibilitar relaciones oneToOne directamente. Ver si usandolo en el resto mejoramos el rendimiento
     //TODO HAcer compatible el sistema de grid con bootstrap y otros....
 renderList = function renderList(objectSource, divDestName) {
-    dbg("objectSource", objectSource)
+    // dbg("objectSource", objectSource)
     autol = new AL(divDestName, {
             def: sanitizeObjectNameKeys(objectSource.content || objectSource),
             name: objectSource.name

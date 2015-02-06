@@ -22,7 +22,9 @@ cargaList = function cargaList(options, destDivName) {
     }
     cargarItemInicial(obj.name, function(res) {
         if (res) {
-            renderList(res, destDivName)
+            $.when(renderList(res, destDivName)).done(function() {
+                activateFormLinks()
+            })
         }
     })
 }

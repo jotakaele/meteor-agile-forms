@@ -41,7 +41,7 @@ Las variables se manejan mediante la función `s`
 
 
 
-##Funcion showToUser 
+##Funcion showToUser()
 Para mostrar mensajes al cliente en pantalla
 
 ```javascript
@@ -72,10 +72,16 @@ showToUser(
         image: 'fa-html5'
     }
     )
+```
 
+##Función onl.createDivInPlace($el, class)
+Esta función crea un div (no modal) y lo posiciona exactamente el *bottom left*de *$el*. Devuelve el **id** del div creado.
+Parametros:
+ - **$el**: Requerido. El elemento $jQuery en el que posicionarse.
+ - **class**: Opcional. El nombre de la clase (o clases seeparadas por espacio) que se añadirán al div recien creado. La clase **in-place** se crea automáticamente.
+```javascript
+    onl.createDivInPlace($('a.mienlace'),'mi_clase1 mi_clase2')
 
-
-
-
+```
 
 
