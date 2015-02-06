@@ -3,6 +3,7 @@ AL = function(element, options) {
         this.element = document.getElementById(element)
         this.options = options
         this.list = this.options.def.list
+        listCss = options.def.css || {}
         list = this.list
         _.keys(list.sources).forEach(function(iSource) {
             if (iSource != 'main') {
@@ -182,12 +183,10 @@ AL = function(element, options) {
                     orderCols[key] = dSources.main[0][key] || 1
                 })
                 dSources.main[0] = orderCols
+                    //dbg("listCss", listCss)
                 json2TableList(dSources.main, element, parseEvalObjects(list.options) || {})
+                processListCssKey($('#' + element), listCss)
             }
-            /*else {
-                dbg('diciendo no', $('#' + element))
-                $(this.element).html('<span class="alert">La tabla no devuelve ningún resultado :\'(</span>')
-            }*/
         })
     }
     //RELEASE quitar las comas de la lista de clases en tableClass (libreria json2TableList)
@@ -195,19 +194,32 @@ AL = function(element, options) {
     //Refactorizar autol, incluyendo el uso de _.extend para posibilitar relaciones oneToOne directamente. Ver si usandolo en el resto mejoramos el rendimiento
     //TODO HAcer compatible el sistema de grid con bootstrap y otros....
 renderList = function renderList(objectSource, divDestName) {
-    // dbg("objectSource", objectSource)
-    autol = new AL(divDestName, {
-            def: sanitizeObjectNameKeys(objectSource.content || objectSource),
-            name: objectSource.name
-        })
-        //TODO Importante @security Poner una condicion que permita que solo los ususrios administradores puedan manejar la configuración
-    if (1 == 1) {
-        var theAdminLink = $('<a>', {
-                class: 'admin admin-list',
-                target: '_blank',
-                href: '/backend/al/' + objectSource.name,
-                title: t('Setup this list')
-            }).html('<i class="fa fa-wrench"></i>').prependTo($('#' + divDestName).parent())
-            // c.HTML.title.wrap('<a target = _blank class="admin" href="/backend/af/' + c.form.name + '" title="You are admin. Setup form">')
+        // dbg("objectSource", objectSource)
+        autol = new AL(divDestName, {
+                def: sanitizeObjectNameKeys(objectSource.content || objectSource),
+                name: objectSource.name
+            })
+            //TODO Importante @security Poner una condicion que permita que solo los ususrios administradores puedan manejar la configuración
+        if (1 == 1) {
+            var theAdminLink = $('<a>', {
+                    class: 'admin admin-list',
+                    target: '_blank',
+                    href: '/backend/al/' + objectSource.name,
+                    title: t('Setup this list')
+                }).html('<i class="fa fa-wrench"></i>').prependTo($('#' + divDestName).parent())
+                // c.HTML.title.wrap('<a target = _blank class="admin" href="/backend/af/' + c.form.name + '" title="You are admin. Setup form">')
+        }
     }
+    //Creamos un clave en listado para incluir css en la página. Importante, las claves dentro de css: deben estar rodeadas de comillas dobles, y los valores que lo requieran, ( por incluir espacios o caracteres especiales, deben ir entre comillas simples)
+processListCssKey = function processListCssKey($element, listCss) {
+    var newCss = {}
+    _(listCss).each(function(value, key) {
+        newCss['#' + $element.attr('id') + ' ' + key] = value
+    })
+    newCss = JSON.stringify(newCss, 0).replace(/"/g, '').replace(/:{/g, '{').replace(/,/g, '').replace(/{/, '').replace(/}$/, '')
+    var $style = $('<style>', {
+        class: 'def-list'
+    }).text(newCss).prependTo($element)
+    dbg("newCss", $style)
+    dbg("element", $element)
 }

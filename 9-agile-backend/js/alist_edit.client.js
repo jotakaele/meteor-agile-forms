@@ -106,7 +106,7 @@ var colorificaYaml = function colorificaYaml() {
     setTimeout(function() {
         coloreaEtiquetas()
         tag2Color(['fields', 'common', 'sources', 'options'], 'level1')
-        tag2Color(['form', 'list', 'helpers', 'queries'], 'level0')
+        tag2Color(['css', 'list', 'helpers', 'queries'], 'level0')
         tag2Color(['selectize', 'html', 'enum', 'datetimepicker'], 'collapsible')
         $('div.ace_text-layer .ace_tag:contains(fields)').addClass('level1')
         if (jsyaml.load(editor.getValue()).list) {
