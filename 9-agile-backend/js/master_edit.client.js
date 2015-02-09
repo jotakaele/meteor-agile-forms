@@ -2,7 +2,7 @@
 var modConfig = {
     title: 'list', //El nombre del modulo
     dbConnection: Autol, //La conexion a mongo
-    templateName: 'autoListEdit', //El nombre de la plantilla
+    templateName: 'masterEdit', //El nombre de la plantilla
     renderFromEditor: function() {
         renderList(jsyaml.load(editor.getValue()), 'ritem')
             //El comando que se lanzará cuando queramos renderizar el list/etc depues d emodificarlo ene le editor
