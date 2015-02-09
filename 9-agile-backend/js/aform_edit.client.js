@@ -1,4 +1,4 @@
-//modo en que estamos trabajando en diseño
+//Modo en que estamos trabajando en diseño
 aceOptions = {
     maxLines: Infinity,
     enableBasicAutocompletion: true,
