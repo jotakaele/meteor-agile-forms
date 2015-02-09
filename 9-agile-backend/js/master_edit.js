@@ -1,22 +1,35 @@
-//Both
-//Configuracion del modulo para que sirva para futuras implementaciones
+//both
+//...............................................................................................
+//Configuracion del modulo para que sirva para futuras implementaciones..........................
+var theModName = 'html'
+var theModCollection = '_' + theModName
+var editorMode = 'html'
+    //...............................................................................................
+    //...............................................................................................
+    //...............................................................................................
 modConfig = {
-    title: 'templates', //El nombre del modulo
-    dbConnection: new Meteor.Collection('_templates', {}), //La conexion a mongo
-    //collectionName: this.dbConnection._name,
+    dbConnection: new Meteor.Collection(theModCollection, {}), //La conexion a mongo    //collectionName: this.dbConnection._name,
     templateName: 'masterEdit', //El nombre de la plantilla
     renderFromEditor: function() {
         //   renderList(jsyaml.load(editor.getValue()), 'ritem')
-        //El comando que se lanzará cuando queramos renderizar el list/etc depues d emodificarlo ene le editor
+        //   El comando que se lanzará cuando queramos renderizar el list/etc depues d emodificarlo ene le editor
     },
     renderFromDatabase: function(src) {
-        //renderList(src, 'ritem') //El comando que se lanzará cuando queramos renderizar el list/etc directamente desde la configuración de la base d edatos
+        //renderList(src, 'ritem') //El comando que se lanzará cuando queramos renderizar el list/etc directamente desde la configuración de la base de datos
     },
-    valueToSave: function() {
-        return editor.getValue() //Esto es lo que ahcemnos con el valor antes de filtrarlo 
-            // Si es YAML2JSON seria return jsyaml.load(editor.getValue())
+    //Transformaciones que hacemos al valor recuperado del editor antes de guardarlo en la base de datos.
+    editorToSave: function() {
+        return editor.getValue()
+            // Si estamos recuperando JSON y vamos a trabajar en YAML ....
+            //return jsyaml.load(editor.getValue())
     },
-    lastItemLocalStorageName: 'lastTemplatesChargeName', //la plantilla de los nuevos elementos
+    //Transformaciones que hacemos al valor recuperado de la base de datos antes de volcarlo en el editor
+    savedToEditor: function(src) {
+        editor.setValue(sanitizeObjectNameKeys(src) || null)
+            //Si estamos almacenando JSON...
+            //editor.setValue = jsyaml.dump(sanitizeObjectNameKeys(src))
+    },
+    lastItemLocalStorageName: 'last_' + theModName + '_ChargeName', //la plantilla de los nuevos elementos
     cargarItemInicial: false, //
     defaultItem: "body {color: green;}",
     aceOptions: {
@@ -27,14 +40,14 @@ modConfig = {
         highlightGutterLine: true,
         theme: "ace/theme/textmate",
         highlightActiveLine: true,
-        mode: "ace/mode/jade",
+        mode: "ace/mode/" + editorMode,
         wrap: true,
         tabSize: 2
     }
 }
 Router.map(function() {
         this.route('masterEdit', {
-            path: '/backend/' + modConfig.title + '/:itemname?',
+            path: '/backend/' + theModName + '/:itemname?',
             data: function() {
                 vname = this.params.itemname || localStorage.getItem(modConfig.lastItemLocalStorageName)
                 datos = {
@@ -54,8 +67,8 @@ if (Meteor.isServer) {
 }
 //Client
 if (Meteor.isClient) {
-    Meteor.subscribe('_css')
-    var initialYAML = ''
+    Meteor.subscribe(theModCollection)
+    var initialEditorValue = ''
     var initiallNameText = ''
     var currentItem = {}
     var editor_cambiado = false
@@ -66,7 +79,7 @@ if (Meteor.isClient) {
         })
     }
     var hacer = ''
-    initialYAML = {}
+    initialEditorValue = {}
     initiallNameText = ''
         //Esta funcíón guarda la configuración del item 
     var guardarItemDef = function guardarItemDef() {
@@ -76,15 +89,14 @@ if (Meteor.isClient) {
         var data = {}
         data.name = $('input#nombre').val()
         data._id = currentItem._id
-        if (confirm("Save the " + modConfig.title + " definition \n[" + data.name + "]?")) {
+        if (confirm("Save the " + theModName + " definition \n[" + data.name + "]?")) {
             if (data._id) {
                 //Guardamos el actual a traves de log 
-                Meteor.call('setLog', 'backup_' + modConfig.title, currentItem)
+                Meteor.call('setLog', 'backup_' + theModName, currentItem)
                     //Si ha insertado en el log
                 modConfig.dbConnection.remove(data._id)
             }
-            //data.theContent = jsyaml.load(editor.getValue())
-            data.theContent = modConfig.valueToSave()
+            data.theContent = modConfig.editorToSave()
             var okInsert = modConfig.dbConnection.insert({
                 name: data.name,
                 content: desanitizeObjectNameKeys(data.theContent),
@@ -95,7 +107,7 @@ if (Meteor.isClient) {
             if (okInsert) {
                 //console.info('Se ha guardado el formulario ' + data.name)
                 showToUser({
-                    content: t('Saved  ' + modConfig.title) + ' <b>' + data.name + '</b>',
+                    content: t('Saved  ' + theModName) + ' <b>' + data.name + '</b>',
                     class: 'success',
                     time: 1
                 })
@@ -126,7 +138,7 @@ if (Meteor.isClient) {
         }, 800)
     }
     var editorCambiado = function editorCambiado() {
-        if (initialYAML != editor.getValue() || initiallNameText != $('li#guardar #nombre').val()) {
+        if (initialEditorValue != editor.getValue() || initiallNameText != $('li#guardar #nombre').val()) {
             editor_cambiado = true
             $('li#guardar i').removeClass('hide').parent().addClass('modificado')
             $("div#editor").addClass("modificado")
@@ -152,9 +164,8 @@ if (Meteor.isClient) {
             })(itemName))
             //2 Ponemos yaml en editor
             .then(function(res) {
-                dbg('res', res)
-                initialYAML = jsyaml.dump(sanitizeObjectNameKeys(res.content))
-                editor.setValue(initialYAML)
+                initialEditorValue = res.content
+                modConfig.savedToEditor(initialEditorValue)
                 $('#ritem').html('')
                 $("#nombre").val(itemName)
                 $(".doc[name]").parent().removeClass('active')
@@ -174,7 +185,8 @@ if (Meteor.isClient) {
         editor.on('input', editorCambiado)
     };
     Template[modConfig.templateName].helpers({
-        title: modConfig.title.toUpperCase(),
+        title: theModName.toUpperCase(),
+        format: editorMode,
         items: function() {
             return modConfig.dbConnection.find({}, {
                 content: {
@@ -193,98 +205,59 @@ if (Meteor.isClient) {
     });
     //fixme Parece que no funciona correctamente al hacer update (muestra los antiguos) Revisar!!!
     Template[modConfig.templateName].events({
-            'click #eliminar': function eliminarItem() {
-                if (confirm("Delete the " + modConfig.title + " \n[" + currentItem.name + "]?")) {
-                    if (currentItem._id) {
-                        //Guardamos el actual a traves de log 
-                        Meteor.call('setLog', 'delete_af', currentItem)
-                            //Si ha insertado en el log
-                        modConfig.dbConnection.remove(currentItem._id)
-                        showToUser({
-                            content: t('Form') + ' ' + currentItem.name + ' ' + t('deleted from database'),
-                            class: 'secondary',
-                            time: 2
-                        })
-                    }
+        'click #eliminar': function eliminarItem() {
+            if (confirm("Delete the " + theModName + " \n[" + currentItem.name + "]?")) {
+                if (currentItem._id) {
+                    //Guardamos el actual a traves de log 
+                    Meteor.call('setLog', 'delete_af', currentItem)
+                        //Si ha insertado en el log
+                    modConfig.dbConnection.remove(currentItem._id)
+                    showToUser({
+                        content: t('Form') + ' ' + currentItem.name + ' ' + t('deleted from database'),
+                        class: 'secondary',
+                        time: 2
+                    })
                 }
-            },
-            'click #idiomas': function() {
-                if ($('#translatablewords').length >= 1) {
-                    $('#translatablewords').toggle()
+            }
+        },
+        'click #idiomas': function() {
+            if ($('#translatablewords').length >= 1) {
+                $('#translatablewords').toggle()
+            } else {
+                showTraductionsPanel()
+            }
+        },
+        'click #guardar i': guardarItemDef,
+        'input #editor': lanzarRenderizado,
+        'click #crear': function crearDocumento(e) {
+            if (editor_cambiado) {
+                if (confirm("¿El item se ha modificado, pero no se ha guardado aún. \nSe perderán los cambios!! \n\n¿Continuar?") == false) return false;
+            }
+            currentItem = {}
+            $("#ritem").html('')
+            $("div#editor").removeClass("modificado")
+            $("#nombre").removeAttr("itemid").val(makeId(8))
+            editor.setValue('')
+            modConfig.renderFromEditor()
+        },
+        'click #items_existentes .doc[id]': function seleccionarDocumento(e) {
+            if (editor_cambiado) {
+                if (confirm("¿El item se ha modificado, pero no se ha guardado aún. \nSe perderán los cambios!! \n\n¿Continuar?") == false) {
+                    return false;
+                }
+            }
+            $('#ritem').html('')
+            itemCharge($(e.target).attr('name'))
+        },
+        'keyup input#filtrar': function filtarLista(e) {
+            tx = $(e.target).val()
+            $("#items_existentes dd[name]").each(function() {
+                if ($(this).text().toUpperCase().indexOf(tx.toUpperCase()) == -1) {
+                    $(this).hide(100)
                 } else {
-                    showTraductionsPanel()
+                    $(this).show(100)
                 }
-            },
-            'click #guardar i': guardarItemDef,
-            'input #editor': lanzarRenderizado,
-            'click #crear': function crearDocumento(e) {
-                if (editor_cambiado) {
-                    if (confirm("¿El item se ha modificado, pero no se ha guardado aún. \nSe perderán los cambios!! \n\n¿Continuar?") == false) return false;
-                }
-                currentItem = {}
-                $("#ritem").html('')
-                $("div#editor").removeClass("modificado")
-                $("#nombre").removeAttr("itemid").val(makeId(8))
-                editor.setValue(jsyaml.dump(modConfig.defaultItem))
-                modConfig.renderFromEditor()
-            },
-            'click #items_existentes .doc[id]': function seleccionarDocumento(e) {
-                if (editor_cambiado) {
-                    if (confirm("¿El item se ha modificado, pero no se ha guardado aún. \nSe perderán los cambios!! \n\n¿Continuar?") == false) {
-                        return false;
-                    }
-                }
-                $('#ritem').html('')
-                itemCharge($(e.target).attr('name'))
-            },
-            'keyup input#filtrar': function filtarLista(e) {
-                tx = $(e.target).val()
-                $("#items_existentes dd[name]").each(function() {
-                    if ($(this).text().toUpperCase().indexOf(tx.toUpperCase()) == -1) {
-                        $(this).hide(100)
-                    } else {
-                        $(this).show(100)
-                    }
-                })
-            },
-            'click #ayudacampos': function mostrarAyudaColumnas() {
-                helpColumns()
-            }
-        })
-        //Inserta la lista dec ampos disponibles en el editor, para ayuda y referencia
-    function helpColumns() {
-            var src = jsyaml.load(editor.getValue())
-            var col = []
-            if (src.list) {
-                col.push(src.list.sources.main.collection)
-                try {
-                    $.each(src.list.sources, function(key) {
-                        if (key != 'main') {
-                            col.push(key)
-                        }
-                    })
-                } catch (err) {}
-            }
-            if (src.form) {
-                col.push(src.form.collection)
-            }
-            var tx = ''
-            col.forEach(function(val) {
-                tx = tx + '\n\n#' + _.pad(val, 40, ' ') + ' | Tipo'
-                tx = tx + '\n\#' + _.rpad('-', 40, '-') + ' | ' + _.rpad('-', 10, '-')
-                try {
-                    $.each(cCols[val].findOne(), function(key, value) {
-                        tx = tx + '\n\#' + _.rpad(key, 40, ' ') + ' | ' + $.type(value)
-                    })
-                } catch (err) {}
             })
-            var pos = editor.getCursorPosition()
-            editor.setValue(editor.getValue() + tx)
-            editor.moveCursorToPosition(pos)
-            editor.clearSelection()
         }
-        //todo Documentar el proceso de eliminar , update  y borrado lógico
-        //todo Arreglar las ayudas para que vuelque la estructura de los campos complejos
-        // fixme LOs enlaces a backend llevan a la version localhost:3000
-        //Ponemos formato a los elementos del editos
+    })
 }
