@@ -268,7 +268,7 @@ function helpColumns() {
     //todo Arreglar las ayudas para que vuelque la estructura de los campos complejos
     // fixme LOs enlaces a backend llevan a la version localhost:3000
     //Ponemos formato a los elementos del editos
-colorificaYaml = function colorificaYaml() {
+var colorificaYaml = function colorificaYaml() {
     function tag2Color(cadenas, clase, ambito) {
         if ($.type(cadenas) != 'array') {
             cadenas = [cadenas]
@@ -316,5 +316,5 @@ colorificaYaml = function colorificaYaml() {
                 })
             })
         }
-    }, 1)
+    }, 100)
 }

@@ -97,10 +97,23 @@ nav.backend {
         border: none;
     }
     li.name {
-        font-weight: bold;
-        padding: 0px 1em !important;
-        color: $admin-text-color;
-        font-size: 1.3em;
+        select, span {
+            display: inline-block !important;
+            width: auto;
+        }
+        &, select {
+            background-color: transparent;
+            font-weight: bold;
+            padding: 0px 1em !important;
+            color: $admin-text-color;
+            font-size: 1em;
+        }
+        select {
+            text-transform: uppercase;
+        }
+        .ace-mode-title {
+            font-size: .8em;
+        }
     }
     li#guardar {
         input {
@@ -122,4 +135,10 @@ nav.backend {
             }
         }
     }
+}
+#mandrill_ace {
+    display: block;
+    min-height: 400px;
+    margin: 0px;
+    padding: 0px;
 }
