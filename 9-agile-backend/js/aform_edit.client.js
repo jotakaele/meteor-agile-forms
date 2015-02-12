@@ -1,4 +1,4 @@
-//modo en que estamos trabajando en diseño
+//Modo en que estamos trabajando en diseño
 aceOptions = {
     maxLines: Infinity,
     enableBasicAutocompletion: true,
@@ -134,7 +134,7 @@ carga = function carga(nombreForm) {
         })
         //3. Hacemos algo más
 }
-colorificaYaml = function colorificaYaml() {
+var colorificaYaml = function colorificaYaml() {
     function tag2Color(cadenas, clase, ambito) {
         if ($.type(cadenas) != 'array') {
             cadenas = [cadenas]
@@ -425,7 +425,8 @@ function helpColumns() {
                 })
             } catch (err) {}
         })
-        var pos = editor.getCursorPosition()
+        var pos = editor
+.getCursorPosition()
         editor.setValue(editor.getValue() + tx)
         colorificaYaml()
         editor.moveCursorToPosition(pos)

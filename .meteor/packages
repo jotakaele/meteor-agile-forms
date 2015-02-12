@@ -10,15 +10,17 @@ fourseven:scss
 mandrill:ace
 mrt:underscore-string-latest
 pfafman:font-awesome-4
-meteorhacks:zones
+#meteorhacks:zones
 momentjs:moment
 iron:router
 jeremy:selectize
 vsivsi:numeral
 mquandalle:bower
-msavin:mongoinspector
+#msavin:mongoinspector
 acemtp:csm
 #meteorhacks:kadira
 #jparker:crypto-aes
 jparker:crypto-base64
 insecure
+chuangbo:marked #Parser para markdown
+mquandalle:jade

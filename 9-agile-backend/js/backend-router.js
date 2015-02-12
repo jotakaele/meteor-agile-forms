@@ -21,15 +21,4 @@ Router.map(function() {
         },
         controller: 'BaseController'
     });
-    this.route('autoListEdit', {
-        path: '/backend/al/:itemname?',
-        data: function() {
-            vname = this.params.itemname || localStorage.getItem('lastListAdminChargeName')
-            datos = {
-                name: vname
-            }
-            return datos || null
-        },
-        controller: 'BaseController'
-    });
 })

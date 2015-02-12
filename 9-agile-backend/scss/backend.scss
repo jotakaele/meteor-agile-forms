@@ -97,10 +97,35 @@ nav.backend {
         border: none;
     }
     li.name {
-        font-weight: bold;
-        padding: 0px 1em !important;
-        color: $admin-text-color;
-        font-size: 1.3em;
+        select, span {
+            display: inline-block !important;
+            width: auto;
+        }
+        &, select {
+            background-color: transparent;
+            font-weight: bold;
+            padding: 0px 1em !important;
+            color: $admin-text-color;
+            font-size: 1em;
+        }
+        select {
+            color: $admin-bg;
+            background-color: #fff;
+            span.mode {
+                color: #000 !important;
+                text-transform: none;
+                font-size: .8em;
+            }
+        }
+        .ace-mode-title {
+            font-size: .8em;
+        }
+    }
+    #crear, #eliminar, #idiomas, #guardar {
+        &:hover {
+            background-color: darken($admin-bg, 20);
+            color: lighten($admin-text-color, 20)
+        }
     }
     li#guardar {
         input {
@@ -122,4 +147,10 @@ nav.backend {
             }
         }
     }
+}
+#mandrill_ace {
+    display: block;
+    min-height: 400px;
+    margin: 0px;
+    padding: 0px;
 }

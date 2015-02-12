@@ -1,0 +1,216 @@
+(function() {
+    //both
+    //...............................................................................................
+    //Configuracion del modulo para que sirva para futuras implementaciones..........................
+    Router.map(function() {
+        this.route('masterEdit', {
+            path: '/backend/master/:modname/:itemname?',
+            data: function() {
+                Session.set('masterTitle', this.params.modname)
+                var datos = {
+                    itemname: this.params.itemname,
+                    modname: this.params.modname
+                }
+                return datos || null
+            },
+            controller: 'BaseController'
+        });
+    })
+    modConfig = {}
+    if (Meteor.isClient) {
+        Template.masterEdit.created = function() {
+            dbg('created', this)
+            modConfig = {
+                name: this.data.modname,
+                ace: s('_backendMasterCategories')[this.data.modname].ace,
+                collection: s('_backendMasterCategories')[this.data.modname].collection,
+                renderFromEditor: function() {
+                    //   renderList(jsyaml.load(editor.getValue()), 'ritem')
+                    //   El comando que se lanzará cuando queramos renderizar el list/etc depues d emodificarlo ene le editor
+                },
+                renderFromDatabase: function(src) {
+                    //renderList(src, 'ritem') //El comando que se lanzará cuando queramos renderizar el list/etc directamente desde la configuración de la base de datos
+                },
+                //Transformaciones que hacemos al valor recuperado del editor antes de guardarlo en la base de datos.
+                editorToSave: function() {
+                    return editor.getValue()
+                        // Si estamos recuperando JSON y vamos a trabajar en YAML ....
+                        //return jsyaml.load(editor.getValue())
+                },
+                //Transformaciones que hacemos al valor recuperado de la base de datos antes de volcarlo en el editor
+                savedToEditor: function(src) {
+                    editor.setValue(src)
+                        // editor.setValue(sanitizeObjectNameKeys(src))
+                        //Si estamos almacenando JSON...
+                        //editor.setValue = jsyaml.dump(sanitizeObjectNameKeys(src))
+                },
+                lastItemLocalStorageName: 'last_' + this.data.modname + '_ChargeName', //la plantilla de los nuevos elementos
+                cargarItemInicial: false, //
+                defaultItem: "body {color: green;}",
+                aceOptions: {
+                    maxLines: Infinity,
+                    enableBasicAutocompletion: true,
+                    enableLiveAutocompletion: true,
+                    // // showInvisibles: true,
+                    highlightGutterLine: true,
+                    theme: "ace/theme/textmate",
+                    highlightActiveLine: true,
+                    mode: "ace/mode/" + s('_backendMasterCategories')[this.data.modname].ace,
+                    wrap: true,
+                    tabSize: 2
+                }
+            }
+            Meteor.call('getItemList', modConfig.collection, function(err, res) {
+                //dbg("modConfig", o2S(modConfig))
+                Session.set('masterItemList', res)
+            })
+        }
+        Template.masterEdit.rendered = function() {
+            editor = ace.edit('editor');
+            if (this.data.itemname != undefined) {
+                dbg('hay')
+                itemCharge(this.data.itemname)
+            }
+            editor.setOptions(modConfig.aceOptions)
+            dbg("this", this)
+            dbg("modConfig", o2S(modConfig))
+            editor.on('input', editorCambiado)
+        };
+        Template.masterEdit.helpers({
+            title: function() {
+                return this.modname
+            },
+            format: function() {
+                return s('_backendMasterCategories')[this.modname].ace
+            },
+            items: function() {
+                return Session.get('masterItemList')
+            },
+            masterItem: function() {
+                return Session.get('masterItem')
+            }
+        });
+        Template.masterEdit.events({
+            'click #eliminar': function eliminarItem(ev) {
+                if (currentItem._id) {
+                    if (confirm("Delete the " + modConfig.name + " \n[" + currentItem.name + "]?")) {
+                        //Guardamos el actual a traves de log 
+                        Meteor.call('deleteItem', modConfig.collection, currentItem._id, function(err, res) {
+                                if (res == 1) {
+                                    Meteor.call('setLog', 'delete_af', currentItem)
+                                    showToUser({
+                                        content: t('Form') + ' ' + currentItem.name + ' ' + t('deleted from database'),
+                                        class: 'secondary',
+                                        time: 2
+                                    })
+                                    $(ev).parent().remove()
+                                }
+                            })
+                            //Si ha insertado en el log
+                            //modConfig.dbConnection.remove(currentItem._id)
+                    }
+                }
+            },
+            'click #items_existentes .doc[id]': function seleccionarDocumento(e) {
+                if (editor_cambiado) {
+                    if (confirm("¿El item se ha modificado, pero no se ha guardado aún. \nSe perderán los cambios!! \n\n¿Continuar?") == false) {
+                        return false;
+                    }
+                }
+                $('#ritem').html('')
+                itemCharge($(e.target).attr('name'))
+            },
+            'keyup input#filtrar': function filtarLista(e) {
+                tx = $(e.target).val()
+                $("#items_existentes dd[name]").each(function() {
+                    if ($(this).text().toUpperCase().indexOf(tx.toUpperCase()) == -1) {
+                        $(this).hide(100)
+                    } else {
+                        $(this).show(100)
+                    }
+                })
+            }
+        })
+    }
+    if (Meteor.isServer) {
+        var getCols = {}
+        Meteor.methods({
+            getItemList: function(sCollection) {
+                dbg(sCollection)
+                if (!getCols[sCollection]) {
+                    getCols[sCollection] = new Mongo.Collection(sCollection);
+                }
+                var res = getCols[sCollection].find({}, {
+                    fields: {
+                        name: 1
+                    }
+                }).fetch()
+                return res
+            },
+            getItem: function(sCollection, sName) {
+                if (!getCols[sCollection]) {
+                    getCols = new Mongo.Collection(sCollection);
+                }
+                var res = getCols[sCollection].findOne({
+                    name: sName
+                })
+                return res
+            },
+            deleteItem: function(sCollection, sId) {
+                if (!getCols[sCollection]) {
+                    getCols = new Mongo.Collection(sCollection);
+                }
+                var res = getCols[sCollection].remove(sId)
+                return res
+            }
+        });
+    }
+    var itemCharge = function itemCharge(itemName) {
+        dbg('modConfig', modConfig)
+        Meteor.call('getItem', modConfig.collection, itemName, function(error, result) {
+            var res = result.content
+            dbg('result', result)
+                // Session.set('masterItem', res)
+                // localStorage.setItem(modConfig.lastItemLocalStorageName, itemName)
+            currentItem = result
+            dbg("currentItem", currentItem)
+            initialEditorValue = res
+            modConfig.savedToEditor(initialEditorValue)
+            $('#ritem').html('')
+            $("#nombre").val(itemName)
+            $(".doc[name]").parent().removeClass('active')
+            initiallNameText = $('li#guardar #nombre').val()
+            editor.gotoLine(1)
+            $('li#guardar #nombre').on("input", editorCambiado)
+            editorCambiado = false
+            modConfig.renderFromDatabase(res)
+            $('.doc[name="' + itemName + '"]').parent().addClass('active')
+        });
+    }
+    var editorCambiado = function editorCambiado() {
+        if (initialEditorValue != editor.getValue() || initiallNameText != $('li#guardar #nombre').val()) {
+            editor_cambiado = true
+            $('li#guardar i').removeClass('hide').parent().addClass('modificado')
+            $("div#editor").addClass("modificado")
+        } else {
+            editor.session.getUndoManager().reset()
+            editor_cambiado = false
+            $('li#guardar i').addClass('hide').parent().removeClass('modificado')
+            $("div#editor").removeClass("modificado")
+        }
+    }
+    var lanzarRenderizado = function lanzarRenderizado() {
+        if (hacer) {
+            clearTimeout(hacer)
+            delete hacer
+        }
+        hacer = setTimeout(function() {
+            if (editor_cambiado === true) {
+                $("#ritem").html('')
+                    //editorJSON = 
+                $('#ritem').fadeOut(200).fadeIn(300)
+                modConfig.renderFromEditor()
+            }
+        }, 800)
+    }
+})()
