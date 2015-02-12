@@ -110,6 +110,8 @@ nav.backend {
         }
         select {
             text-transform: uppercase;
+            color: $admin-bg;
+            background-color: #fff;
         }
         .ace-mode-title {
             font-size: .8em;
