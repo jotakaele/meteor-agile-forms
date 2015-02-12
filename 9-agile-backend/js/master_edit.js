@@ -1,32 +1,56 @@
 //Lista de categorias a gestionar
 categories = {
-    "html": {
-        "collection": "_html",
-        "ace": "html"
+    html: {
+        collection: "_html",
+        ace: "html",
+        renderFunction: function() {
+            renderHtml(oVars.editorToSave(), 'ritem')
+        }
     },
-    "template": {
-        "collection": "_template",
-        "ace": "jade"
+    template: {
+        collection: "_template",
+        ace: "jade",
+        renderFunction: function() {}
     },
-    "css": {
-        "collection": "_css",
-        "ace": "css"
+    markdown: {
+        collection: "_markdown",
+        ace: "markdown",
+        renderFunction: function() {
+            renderMarkdown(oVars.editorToSave(), 'ritem')
+        }
     },
-    "text": {
-        "collection": "_text",
-        "ace": "text"
+    css: {
+        collection: "_css",
+        ace: "css",
+        renderFunction: function() {}
     },
-    "config": {
-        "collection": "_config",
-        "ace": "yaml"
+    text: {
+        collection: "_text",
+        ace: "text",
+        renderFunction: function() {}
     },
-    "form": {
-        "collection": "_af",
-        "ace": "yaml"
+    config: {
+        collection: "_config",
+        ace: "yaml",
+        renderFunction: function() {}
     },
-    "list": {
-        "collection": "_al",
-        "ace": "yaml"
+    form: {
+        collection: "_af",
+        ace: "yaml",
+        renderFunction: function() {
+            cargaForm({
+                src: oVars.editorToSave(),
+                div: 'ritem',
+                name: $('input#name').val()
+            })
+        }
+    },
+    list: {
+        collection: "_al",
+        ace: "yaml",
+        renderFunction: function() {
+            renderList(oVars.editorToSave(), 'ritem')
+        }
     }
 }
 Router.map(function() {
@@ -47,6 +71,16 @@ _(categories).each(function(value, key) {
             masterConnection[key] = new Mongo.Collection(value.collection);
         }
         if (Meteor.isServer) {
+            //Creamos los indices si no se han creado antes
+            if (!s('master_ensure_index_run_' + key)) {
+                masterConnection[key]._ensureIndex({
+                    name: 1
+                }, {
+                    unique: true,
+                    dropDups: true
+                })
+                s('master_ensure_index_run_' + key, true)
+            }
             Meteor.publish(key, function() {
                 return masterConnection[key].find()
             })
@@ -92,10 +126,10 @@ if (Meteor.isClient) {
             }
         },
     }
+    Template.masterEdit.rendered = function() {
+        $('select#theme').val(s('active_ace_theme'))
+    };
     Template.masterEdit.helpers({
-        title: function() {
-            return s('masterActiveCategory')
-        },
         ace_mode: function() {
             return categories[s('masterActiveCategory')].ace
         },
@@ -105,6 +139,7 @@ if (Meteor.isClient) {
                 // 
                 var oTemp = {
                     name: key,
+                    title: key.toUpperCase(),
                     collection: value['collection'],
                     ace: value['ace']
                 }
@@ -119,11 +154,30 @@ if (Meteor.isClient) {
             return masterConnection[s('masterActiveCategory')].find({}, {
                 fields: {
                     name: 1
+                },
+                sort: {
+                    name: 1
                 }
             })
         }
     });
     Template.masterEdit.events({
+        'change select#theme': function(ev) {
+            s('active_ace_theme', $(ev.target).val())
+            if (editor) {
+                editor.setTheme(s('active_ace_theme'))
+            }
+        },
+        'mouseover select#theme option': function(ev) {
+            if (editor) {
+                editor.setTheme($(ev.target).val())
+            }
+        },
+        'mouseleave select#theme': function(ev) {
+            if (editor) {
+                editor.setTheme(s('active_ace_theme'))
+            }
+        },
         'change select#category': function(ev) {
             s('masterActiveCategory', $(ev.target).val())
             $('#editor').remove()
@@ -138,6 +192,40 @@ if (Meteor.isClient) {
                     $(this).show(100)
                 }
             })
+        },
+        'click #idiomas': function() {
+            if ($('#translatablewords').length >= 1) {
+                $('#translatablewords').toggle()
+            } else {
+                showTraductionsPanel()
+            }
+        },
+        'click #eliminar': function eliminarItem() {
+            if (!confirm("Delete this " + s('masterActiveCategory') + "  snipped \n[" + oVars.sInitialName + "]?")) {
+                return false
+            }
+            if (oVars.sCurrentItemId) {
+                //Guardamos el actual a traves de log 
+                Meteor.call('setLog', 'delete_master_' + s('masterActiveCategory'), {
+                    name: oVars.sInitialName,
+                    content: oVars.sInitialContent
+                }, function(err, okLog) {
+                    if (okLog) {
+                        //Si ha insertado en el log
+                        masterConnection[s('masterActiveCategory')].remove(oVars.sCurrentItemId)
+                        showToUser({
+                            content: t('Form') + ' ' + oVars.sInitialName + ' ' + t('deleted from database'),
+                            class: 'secondary',
+                            time: 2
+                        })
+                        $('input#name').val('')
+                        loadAceEditor('', categories[s('masterActiveCategory')].ace, 'editor-container')
+                        delete oVars.sCurrentItemId
+                        delete oVars.sInitialName
+                        dbg('oVars', oVars)
+                    }
+                })
+            }
         },
         'click li#crear': function() {
             if (oVars.bEditorCambiado) {
@@ -163,19 +251,19 @@ if (Meteor.isClient) {
             $('#ritem').html('')
             var sResContent = masterConnection[s('masterActiveCategory')].findOne($el.attr('id')).content
             sResContent = oVars.savedToEditor(sResContent)
-            loadAceEditor(sResContent, categories[s('masterActiveCategory')].ace, 'editor-container')
+            $('.doc[name]').parent().removeClass('active')
+            $el.parent().addClass('active')
             oVars.sInitialName = $el.attr('name');
             oVars.sCurrentItemId = $el.attr('id');
             $('input#name').val($el.attr('name'))
-            $('.doc[name]').parent().removeClass('active')
-            $el.parent().addClass('active')
+            loadAceEditor(sResContent, categories[s('masterActiveCategory')].ace, 'editor-container')
         },
         'click #guardar i': function() {
             saveItem($('input#name').val(), editor.getValue(), oVars.sCurrentItemId)
         },
     });
     //Destruye y crea un un nuevo editor ACE con el el contenido y configuración indicados
-    var editor = ''
+    editor = ''
     loadAceEditor = function loadAceEditor(sContent, sMode, sDivContainer) {
             var aceOptions = {
                 maxLines: 'Infinity',
@@ -183,7 +271,7 @@ if (Meteor.isClient) {
                 enableLiveAutocompletion: true,
                 // showInvisibles: true,
                 highlightGutterLine: true,
-                theme: 'ace/theme/clouds',
+                theme: s('active_ace_theme') || 'ace/theme/clouds',
                 highlightActiveLine: true,
                 // mode: '/ace/mode/' + sMode,
                 wrap: true,
@@ -204,6 +292,7 @@ if (Meteor.isClient) {
             oVars.sInitialContent = sContent //Aplicar aqui las trasnformaciones de cada modo
             editor.session.setValue(oVars.sInitialContent)
             editor.on('input', onEditorChange)
+            categories[s('masterActiveCategory')].renderFunction()
         }
         //Lo que procesamos cuando se cambia algo en ele editor o en el input#name
     onEditorChange = function onEditorChange() {
@@ -215,6 +304,7 @@ if (Meteor.isClient) {
                 $('#editor').removeClass('modificado')
                 $('li#guardar i').addClass('hide').parent().removeClass('modificado')
             }
+            lanzarRenderizado()
         }
         //Guardar el item 
     function saveItem(sName, sContent, sId) {
@@ -232,7 +322,7 @@ if (Meteor.isClient) {
             content: oVars.sInitialContent
         }, function(err, res) {
             if (res) {
-                if (!sId == undefined) {
+                if (sId) {
                     masterConnection[s('masterActiveCategory')].remove(sId)
                 }
                 sFilteredContent = oVars.editorToSave(sContent)
@@ -261,4 +351,21 @@ if (Meteor.isClient) {
             }
         })
     }
+    var hacer = ''
+
+    function lanzarRenderizado() {
+        if (hacer) {
+            clearTimeout(hacer)
+            delete hacer
+        }
+        hacer = setTimeout(function() {
+            if (oVars.bEditorCambiado === true) {
+                $("#ritem").html('Se ha lanzado el renderizado ' + new Date())
+                categories[s('masterActiveCategory')].renderFunction()
+            }
+        }, 800)
+    }
 }
+//fixme Ver que pasa cuando se guardan los campos json si están mal formados. Evitar que se borren si no se han guardado correctamente.
+//Todo crear un metodo para duplicar snippet
+//Todo incorporar los elementos propios del modo edit , readonly y delete de form

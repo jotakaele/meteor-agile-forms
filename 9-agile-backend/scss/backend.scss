@@ -109,12 +109,22 @@ nav.backend {
             font-size: 1em;
         }
         select {
-            text-transform: uppercase;
             color: $admin-bg;
             background-color: #fff;
+            span.mode {
+                color: #000 !important;
+                text-transform: none;
+                font-size: .8em;
+            }
         }
         .ace-mode-title {
             font-size: .8em;
+        }
+    }
+    #crear, #eliminar, #idiomas, #guardar {
+        &:hover {
+            background-color: darken($admin-bg, 20);
+            color: lighten($admin-text-color, 20)
         }
     }
     li#guardar {

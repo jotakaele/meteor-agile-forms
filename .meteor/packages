@@ -22,3 +22,5 @@ acemtp:csm
 #jparker:crypto-aes
 jparker:crypto-base64
 insecure
+chuangbo:marked #Parser para markdown
+mquandalle:jade
