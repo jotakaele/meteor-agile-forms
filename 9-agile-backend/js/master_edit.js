@@ -38,18 +38,29 @@ categories = {
         collection: "_af",
         ace: "yaml",
         renderFunction: function() {
-            cargaForm({
-                src: oVars.editorToSave(),
-                div: 'ritem',
-                name: $('input#name').val()
-            })
+            var contentFiltered = oVars.editorToSave()
+            if (contentFiltered) {
+                cargaForm({
+                    src: contentFiltered,
+                    div: 'ritem',
+                    name: $('input#name').val()
+                })
+            } else {
+                $('#ritem').html('<div class="alert-box alert">Form config error.</div>')
+            }
         }
     },
     list: {
         collection: "_al",
         ace: "yaml",
         renderFunction: function() {
-            renderList(oVars.editorToSave(), 'ritem')
+            var contentFiltered = oVars.editorToSave()
+            if (contentFiltered) {
+                dbg('hay')
+                renderList(contentFiltered, 'ritem')
+            } else {
+                $('#ritem').html('<div class="alert-box alert">List config error.</div>')
+            }
         }
     }
 }
@@ -92,7 +103,7 @@ _(categories).each(function(value, key) {
 })
 if (Meteor.isClient) {
     //Inicializacion de Variables y filtros
-    var oVars = {
+    oVars = {
         bEditorCambiado: false,
         renderFromEditor: function() {
             //   renderList(jsyaml.load(editor.getValue()), 'ritem')
@@ -106,7 +117,22 @@ if (Meteor.isClient) {
             switch (categories[s('masterActiveCategory')].ace) {
                 case 'yaml':
                     //Si estamos almacenando JSON...
-                    return jsyaml.load(editor.getValue())
+                    try {
+                        var oRes = jsyaml.load(editor.getValue())
+                    } catch (e) {
+                        console.log(e);
+                        showToUser({
+                            content: 'The YAML string is malformed <b>(LINEA ' + e.mark.line + ')</b>',
+                            time: 2
+                        })
+                        editor.gotoLine(e.mark.line)
+                        editor.moveCursorTo(e.mark.line - 1, e.mark.column - 1)
+                    }
+                    if (typeof oRes == 'object') {
+                        return oRes
+                    } else {
+                        return false
+                    }
                     break;
                 default:
                     return editor.getValue()
@@ -310,6 +336,10 @@ if (Meteor.isClient) {
     function saveItem(sName, sContent, sId) {
         console.clear()
         console.log(sName, sContent, sId)
+        sFilteredContent = oVars.editorToSave(sContent)
+        if (!sFilteredContent) {
+            return false;
+        }
         if (!oVars.bEditorCambiado) {
             return false;
         }
@@ -366,6 +396,6 @@ if (Meteor.isClient) {
         }, 800)
     }
 }
-//fixme Ver que pasa cuando se guardan los campos json si están mal formados. Evitar que se borren si no se han guardado correctamente.
+//fixed Ver que pasa cuando se guardan los campos json si están mal formados. Evitar que se borren si no se han guardado correctamente.
 //Todo crear un metodo para duplicar snippet
 //Todo incorporar los elementos propios del modo edit , readonly y delete de form
