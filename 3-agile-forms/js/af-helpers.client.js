@@ -87,7 +87,7 @@ cargaForm = function cargaForm(objOptions) {
                     var theAdminLink = $('<a>', {
                         class: 'admin admin-form',
                         target: '_blank',
-                        href: '/backend/af/' + options.name,
+                        href: '/backend/form/' + options.name,
                         title: t('Setup this form')
                     }).html('<i class="fa fa-wrench"></i>').prependTo($('#' + options.div).parent())
                 }

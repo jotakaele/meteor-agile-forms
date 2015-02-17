@@ -121,7 +121,7 @@ nav.backend {
             font-size: .8em;
         }
     }
-    #crear, #eliminar, #idiomas, #guardar {
+    li:not(.name) {
         &:hover {
             background-color: darken($admin-bg, 20);
             color: lighten($admin-text-color, 20)
@@ -153,4 +153,16 @@ nav.backend {
     min-height: 400px;
     margin: 0px;
     padding: 0px;
+}
+div.showToUser.renderized {
+    position: absolute;
+    z-index: 99;
+    right: 0px;
+    border-radius: 100%;
+    width: 10px;
+    height: 10px;
+    margin: 0px;
+    padding: 0px;
+    transform: rotate(90deg);
+    border: none;
 }

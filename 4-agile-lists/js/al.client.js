@@ -204,7 +204,7 @@ renderList = function renderList(objectSource, divDestName) {
             var theAdminLink = $('<a>', {
                     class: 'admin admin-list',
                     target: '_blank',
-                    href: '/backend/al/' + objectSource.name,
+                    href: '/backend/list/' + objectSource.name,
                     title: t('Setup this list')
                 }).html('<i class="fa fa-wrench"></i>').prependTo($('#' + divDestName).parent())
                 // c.HTML.title.wrap('<a target = _blank class="admin" href="/backend/af/' + c.form.name + '" title="You are admin. Setup form">')
