@@ -23,4 +23,7 @@ acemtp:csm
 jparker:crypto-base64
 insecure
 chuangbo:marked #Parser para markdown
-mquandalle:jade
+meteorhacks:npm
+
+
+npm-container

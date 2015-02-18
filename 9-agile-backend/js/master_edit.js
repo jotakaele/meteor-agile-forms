@@ -10,7 +10,9 @@ categories = {
         template: {
             collection: "_template",
             ace: "jade",
-            renderFunction: function() {}
+            renderFunction: function() {
+                renderJade(oVars.editorToSave(), 'ritem')
+            }
         },
         markdown: {
             collection: "_markdown",
@@ -174,7 +176,6 @@ if (Meteor.isClient) {
             return fModesC
         },
         form_active_doc: function() {
-            
             return s('last-' + this.name + '-backend-edit-id')
         },
         form_active_values: function() {
