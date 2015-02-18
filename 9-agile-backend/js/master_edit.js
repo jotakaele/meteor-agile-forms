@@ -436,6 +436,17 @@ if (Meteor.isClient) {
     var hacer = ''
 
     function lanzarRenderizado() {
+        switch (s('masterActiveCategory')) {
+            case 'template':
+                var t = 3000
+                break;
+            case 'html':
+                var t = 0
+                break;
+            default:
+                var t = 800
+                break;
+        }
         if (hacer) {
             clearTimeout(hacer)
             delete hacer
@@ -451,7 +462,7 @@ if (Meteor.isClient) {
                 $('#ritem').html('')
                 categories[s('masterActiveCategory')].renderFunction()
             }
-        }, 800)
+        }, t)
     }
 }
 //Carga los id de los elementos de formularios
