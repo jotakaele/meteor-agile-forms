@@ -174,8 +174,8 @@ if (Meteor.isClient) {
             return fModesC
         },
         form_active_doc: function() {
-            dbg("this.data", this.name)
-            return s('last-' + this.data.name + '-backend-edit-id')
+            
+            return s('last-' + this.name + '-backend-edit-id')
         },
         form_active_values: function() {
             return JSON.stringify(s('last-' + this.name + '-backend-edit-values'))
@@ -483,8 +483,8 @@ function cargarIdes() {
         })
     }
     //fixed Ver que pasa cuando se guardan los campos json si están mal formados. Evitar que se borren si no se han guardado correctamente.
-    //Todo crear un metodo para duplicar snippet
-    //Todo incorporar los elementos propios del modo edit , readonly y delete de form
+    //fixed crear un metodo para duplicar snippet
+    //fixed incorporar los elementos propios del modo edit , readonly y delete de form
     //todo Implementar métodos que permitan recuperar y transformar los snippets desde Javascript y desde templates, de manera cruzada, o sea que permitan usar uno en otros.
     //todo Permitir abrr master/edit invocando a un modo y nombre en concreto, para llamarlo desde fuera. (tambien invocando con un modo e doc en el caso de formularios)
     //fixed @urgente. Se eliminan los elementos cuando se les cambia el nombre!!!
