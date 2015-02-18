@@ -1,64 +1,77 @@
 //Lista de categorias a gestionar
 categories = {
-    html: {
-        collection: "_html",
-        ace: "html",
-        renderFunction: function() {
-            renderHtml(oVars.editorToSave(), 'ritem')
-        }
-    },
-    template: {
-        collection: "_template",
-        ace: "jade",
-        renderFunction: function() {}
-    },
-    markdown: {
-        collection: "_markdown",
-        ace: "markdown",
-        renderFunction: function() {
-            renderMarkdown(oVars.editorToSave(), 'ritem')
-        }
-    },
-    css: {
-        collection: "_css",
-        ace: "css",
-        renderFunction: function() {}
-    },
-    text: {
-        collection: "_text",
-        ace: "text",
-        renderFunction: function() {}
-    },
-    config: {
-        collection: "_config",
-        ace: "yaml",
-        renderFunction: function() {}
-    },
-    form: {
-        collection: "_af",
-        ace: "yaml",
-        renderFunction: function() {
-            cargaForm({
-                src: oVars.editorToSave(),
-                div: 'ritem',
-                name: $('input#name').val()
-            })
-        }
-    },
-    list: {
-        collection: "_al",
-        ace: "yaml",
-        renderFunction: function() {
-            renderList(oVars.editorToSave(), 'ritem')
+        html: {
+            collection: "_html",
+            ace: "html",
+            renderFunction: function() {
+                renderHtml(oVars.editorToSave(), 'ritem')
+            }
+        },
+        template: {
+            collection: "_template",
+            ace: "jade",
+            renderFunction: function() {
+                renderJade(oVars.editorToSave(), 'ritem')
+            }
+        },
+        markdown: {
+            collection: "_markdown",
+            ace: "markdown",
+            renderFunction: function() {
+                renderMarkdown(oVars.editorToSave(), 'ritem')
+            }
+        },
+        css: {
+            collection: "_css",
+            ace: "css",
+            renderFunction: function() {}
+        },
+        text: {
+            collection: "_text",
+            ace: "text",
+            renderFunction: function() {}
+        },
+        config: {
+            collection: "_config",
+            ace: "yaml",
+            renderFunction: function() {}
+        },
+        form: {
+            collection: "_af",
+            ace: "yaml",
+            renderFunction: function() {
+                $('#option-form').removeClass('hide')
+                var contentFiltered = oVars.editorToSave()
+                if (contentFiltered) {
+                    var oRenderOptions = {
+                        src: contentFiltered,
+                        div: 'ritem',
+                        name: $('input#name').val(),
+                        mode: $('select#form-mode').val() || s('master_edit_form_mode'),
+                        doc: $('select#form-doc-id').val() || s('last-' + $('input#name').val() + '-backend-edit-id'),
+                        values: s('last-' + $('input#name').val() + '-backend-edit-values') || {}
+                    }
+                    _(oRenderOptions).extend(jsyaml.load(editor.getValue()).test)
+                        // 
+                    cargaForm(oRenderOptions)
+                } else {
+                    $('#ritem').html('<div class="alert-box alert">Form config error.</div>')
+                }
+            }
+        },
+        list: {
+            collection: "_al",
+            ace: "yaml",
+            renderFunction: function() {
+                var contentFiltered = oVars.editorToSave()
+                if (contentFiltered) {
+                    renderList(contentFiltered, 'ritem')
+                } else {
+                    $('#ritem').html('<div class="alert-box alert">List config error.</div>')
+                }
+            }
         }
     }
-}
-Router.map(function() {
-        this.route('masterEdit', {
-            path: '/backend/master',
-            controller: 'BaseController',
-        });
-    })
     //Creamos las conexiones
 masterConnection = {}
 _(categories).each(function(value, key) {
@@ -92,7 +105,7 @@ _(categories).each(function(value, key) {
 })
 if (Meteor.isClient) {
     //Inicializacion de Variables y filtros
-    var oVars = {
+    oVars = {
         bEditorCambiado: false,
         renderFromEditor: function() {
             //   renderList(jsyaml.load(editor.getValue()), 'ritem')
@@ -106,7 +119,22 @@ if (Meteor.isClient) {
             switch (categories[s('masterActiveCategory')].ace) {
                 case 'yaml':
                     //Si estamos almacenando JSON...
-                    return jsyaml.load(editor.getValue())
+                    try {
+                        var oRes = jsyaml.load(editor.getValue())
+                    } catch (e) {
+                        console.log(e);
+                        // showToUser({
+                        //     content: 'The YAML string is malformed <b>(LINEA ' + e.mark.line + ')</b>',
+                        //     time: 2
+                        // })
+                        //editor.gotoLine(e.mark.line)
+                        //editor.moveCursorTo(e.mark.line - 1, e.mark.column - 1)
+                    }
+                    if (typeof oRes == 'object') {
+                        return oRes
+                    } else {
+                        return false
+                    }
                     break;
                 default:
                     return editor.getValue()
@@ -128,15 +156,38 @@ if (Meteor.isClient) {
     }
     Template.masterEdit.rendered = function() {
         $('select#theme').val(s('active_ace_theme'))
+        $('#items_existentes a[name="' + this.data.name + '"]').click()
     };
     Template.masterEdit.helpers({
         ace_mode: function() {
             return categories[s('masterActiveCategory')].ace
         },
+        form_modes: function() {
+            var fModes = ['new', 'edit', 'readonly', 'delete']
+            var fModesC = []
+            _(fModes).each(function(value, key) {
+                var oTemp = {}
+                oTemp.name = value
+                if (s('master_edit_form_mode') == value) {
+                    oTemp.selected = 'selected'
+                }
+                fModesC.push(oTemp)
+            })
+            return fModesC
+        },
+        form_active_doc: function() {
+            return s('last-' + this.name + '-backend-edit-id')
+        },
+        form_active_values: function() {
+            return JSON.stringify(s('last-' + this.name + '-backend-edit-values'))
+        },
+        currentCategory: function() {
+            return s('masterActiveCategory')
+        },
         categories: function() {
             var aValues = []
-            _(categories).each(function(value, key) {
-                // 
+            var filterCategories = this.mode ? _.pick(categories, this.mode) : categories
+            _(filterCategories).each(function(value, key) {
                 var oTemp = {
                     name: key,
                     title: key.toUpperCase(),
@@ -162,6 +213,9 @@ if (Meteor.isClient) {
         }
     });
     Template.masterEdit.events({
+        'change select#form-mode': function(ev) {
+            s('master_edit_form_mode', $(ev.target).val())
+        },
         'change select#theme': function(ev) {
             s('active_ace_theme', $(ev.target).val())
             if (editor) {
@@ -181,7 +235,10 @@ if (Meteor.isClient) {
         'change select#category': function(ev) {
             s('masterActiveCategory', $(ev.target).val())
             $('#editor').remove()
+            $('#eliminar,#duplicate').addClass('disabled')
             $('input#name').val('')
+            $('#modeoptions > div').addClass('hide')
+            $('#ritem').html('')
         },
         'keyup input#filtrar': function(e) {
             var tx = $(e.target).val()
@@ -192,6 +249,18 @@ if (Meteor.isClient) {
                     $(this).show(100)
                 }
             })
+        },
+        'click #duplicate': function() {
+            if (!editor) {
+                return false
+            }
+            var currentContent = editor.getValue()
+            var sNewName = $('#name').val() + '-copy'
+            $('#crear').click()
+            editor.setValue(currentContent)
+            editor.gotoLine(1)
+            $('#name').val(sNewName)
+            $('dd.active').removeClass('active')
         },
         'click #idiomas': function() {
             if ($('#translatablewords').length >= 1) {
@@ -222,7 +291,6 @@ if (Meteor.isClient) {
                         loadAceEditor('', categories[s('masterActiveCategory')].ace, 'editor-container')
                         delete oVars.sCurrentItemId
                         delete oVars.sInitialName
-                        dbg('oVars', oVars)
                     }
                 })
             }
@@ -261,6 +329,14 @@ if (Meteor.isClient) {
         'click #guardar i': function() {
             saveItem($('input#name').val(), editor.getValue(), oVars.sCurrentItemId)
         },
+        'change select#form-doc-id': function(ev) {
+            s('last-' + $('input#name').val() + '-backend-edit-id', $(ev.target).val())
+            $('#ritem').html('')
+            categories[s('masterActiveCategory')].renderFunction()
+        },
+        'click #cargaides': function() {
+            cargarIdes()
+        }
     });
     //Destruye y crea un un nuevo editor ACE con el el contenido y configuración indicados
     editor = ''
@@ -278,6 +354,7 @@ if (Meteor.isClient) {
                 tabSize: 2
             }
             $('#editor').remove()
+            $('#eliminar,#duplicate').addClass('disabled')
             var $editor = $('<div>', {
                 id: 'editor'
             }).appendTo($('#' + sDivContainer))
@@ -293,6 +370,7 @@ if (Meteor.isClient) {
             editor.session.setValue(oVars.sInitialContent)
             editor.on('input', onEditorChange)
             categories[s('masterActiveCategory')].renderFunction()
+            $('#eliminar,#duplicate').removeClass('disabled')
         }
         //Lo que procesamos cuando se cambia algo en ele editor o en el input#name
     onEditorChange = function onEditorChange() {
@@ -310,6 +388,10 @@ if (Meteor.isClient) {
     function saveItem(sName, sContent, sId) {
         console.clear()
         console.log(sName, sContent, sId)
+        sFilteredContent = oVars.editorToSave(sContent)
+        if (!sFilteredContent) {
+            return false;
+        }
         if (!oVars.bEditorCambiado) {
             return false;
         }
@@ -360,12 +442,50 @@ if (Meteor.isClient) {
         }
         hacer = setTimeout(function() {
             if (oVars.bEditorCambiado === true) {
-                $("#ritem").html('Se ha lanzado el renderizado ' + new Date())
+                showToUser({
+                    content: '',
+                    element: $('#ritem').parent(),
+                    time: 2,
+                    class: "renderized"
+                })
+                $('#ritem').html('')
                 categories[s('masterActiveCategory')].renderFunction()
             }
         }, 800)
     }
 }
-//fixme Ver que pasa cuando se guardan los campos json si están mal formados. Evitar que se borren si no se han guardado correctamente.
-//Todo crear un metodo para duplicar snippet
-//Todo incorporar los elementos propios del modo edit , readonly y delete de form
+//Carga los id de los elementos de formularios
+function cargarIdes() {
+        var coleccion = jsyaml.load(editor.getValue()).form.collection
+        $.when(cCols[coleccion].find({}, {
+            fields: {
+                _id: true
+            },
+            sort: {
+                autodate: -1
+            }
+        }).fetch()).done(function(res) {
+            var $select = $('select#form-doc-id')
+            $select.show()
+            $('option', $select).remove()
+            res.forEach(function(value, key) {
+                $option = $('<option>').text(value._id).appendTo($select)
+            })
+            if (res[0]) {
+                $select.val(res[0]._id)
+            }
+            $select.attr('title', coleccion)
+            showToUser({
+                content: coleccion,
+                class: 'success',
+                element: $('#form-doc-id').parent(),
+                time: .1
+            })
+        })
+    }
+    //fixed Ver que pasa cuando se guardan los campos json si están mal formados. Evitar que se borren si no se han guardado correctamente.
+    //fixed crear un metodo para duplicar snippet
+    //fixed incorporar los elementos propios del modo edit , readonly y delete de form
+    //todo Implementar métodos que permitan recuperar y transformar los snippets desde Javascript y desde templates, de manera cruzada, o sea que permitan usar uno en otros.
+    //todo Permitir abrr master/edit invocando a un modo y nombre en concreto, para llamarlo desde fuera. (tambien invocando con un modo e doc en el caso de formularios)
+    //fixed @urgente. Se eliminan los elementos cuando se les cambia el nombre!!!

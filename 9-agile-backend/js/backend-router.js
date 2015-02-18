@@ -1,24 +1,23 @@
 Router.map(function() {
-    this.route('autoFormEdit', {
-        path: '/backend/af/:itemname?',
-        data: function() {
-            vname = this.params.itemname || localStorage.getItem('lastFormAdminChargeName')
-            datos = {
-                name: vname
-            }
-            return datos || null
-        },
+    this.route('kitchensink2', {
+        path: '/backend/kitchensink',
         controller: 'BaseController'
-    });
-    this.route('autoListEdit', {
-        path: '/backend/al/:itemname?',
+    })
+    this.route('masterEdit', {
+        path: '/backend/:mode?/:name?',
+        controller: 'BaseController',
         data: function() {
-            vname = this.params.itemname || localStorage.getItem('lastListAdminChargeName')
-            datos = {
-                name: vname
+            if (this.params.mode) {
+                s('masterActiveCategory', this.params.mode)
             }
-            return datos || null
+            var datos = {}
+            if (this.params.mode) {
+                datos.mode = this.params.mode
+            }
+            if (this.params.name) {
+                datos.name = this.params.name
+            }
+            return datos
         },
-        controller: 'BaseController'
     });
 })

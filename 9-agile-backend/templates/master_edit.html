@@ -29,7 +29,8 @@
                     <input type="text" id="name">
                 </li>
                 <li class="button" id="crear" title="Add a new snippet"><i class="fa fa-plus"></i> </li>
-                <li class="button" id="eliminar" title="Delete this snippet"><i class="fa fa-remove"></i> </li>
+                <li class="button disabled" id="eliminar" title="Delete this snippet"><i class="fa fa-remove"></i> </li>
+                <li class="button disabled" id="duplicate" title="Duplicate this snippet"><i class="fa fa-files-o"></i> </li>
                 <li class="button" id="idiomas" title="Show traductions panel"><i class="fa fa-language"></i> </li>
             </ul>
             <ul class="right">
@@ -95,6 +96,20 @@
 
             <div id="editor-container" class="large-6 columns" data-equalizer-watch></div>
             <div id="elitem" class="large-6 columns" data-equalizer-watch>
+                <div id="modeoptions">
+
+                    <div id="option-form" class="hide">
+                        <div class="alert-box"> Para utilizar valores de test crea una clave test al final de la definición el formulario con los elementos que quieras usar, tal como espera cargaForm() </div>
+                        <span class="button tiny left" id="cargaides"><i class="fa fa-refresh"></i>
+</span>
+                        <select id="form-doc-id" class="columns large-10">
+                            <option selected>{{form_active_doc}}</option>
+                        </select>
+
+                    </div>
+
+
+                </div>
                 <div id="ritem">
                     <div data-alert class="alert-box info"> Si aparece este mensaje es que no se ha llamado correctamente al renderizado de {{name}} <a href="#" class="close">&times;</a> </div>
                 </div>

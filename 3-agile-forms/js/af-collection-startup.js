@@ -6,9 +6,7 @@ if (Meteor.isClient) {
 if (Meteor.isServer) {
     //Publicamos autof, de mood que esta disponible para todos
     Meteor.publish('_af', function() {
-        return Autof.find({
-            state: 'active'
-        })
+        return Autof.find()
     })
     sCols = {}
         // if (!sCols) {
