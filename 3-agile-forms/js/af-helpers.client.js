@@ -21,14 +21,12 @@ cargaForm = function cargaForm(objOptions) {
     }
     //Creamos options y le ponemos los valores por defecto más los que hemos recibido como argumentos
     options = _.extend({}, defOptions, objOptions)
-    dbg('options', o2S(options))
         //console.clear()
         //Creamo objItem para conectar a la base de datos
     var objItem = {} //cremaos el objeto temporal
         //Si no existe objOptions.src es que estamos construyeno a apartir del nombre y vamos a coger el formualrio desde la bd
     if (!objOptions.src) {
         var obj = {
-            state: 'active',
             name: objOptions.name
         }
     }

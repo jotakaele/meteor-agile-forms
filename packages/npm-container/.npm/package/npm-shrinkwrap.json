@@ -1,0 +1,95 @@
+{
+  "dependencies": {
+    "jade": {
+      "version": "1.9.2",
+      "dependencies": {
+        "character-parser": {
+          "version": "1.2.1"
+        },
+        "commander": {
+          "version": "2.6.0"
+        },
+        "constantinople": {
+          "version": "3.0.1",
+          "dependencies": {
+            "acorn-globals": {
+              "version": "1.0.2",
+              "dependencies": {
+                "acorn": {
+                  "version": "0.11.0"
+                }
+              }
+            }
+          }
+        },
+        "mkdirp": {
+          "version": "0.5.0",
+          "dependencies": {
+            "minimist": {
+              "version": "0.0.8"
+            }
+          }
+        },
+        "transformers": {
+          "version": "2.1.0",
+          "dependencies": {
+            "promise": {
+              "version": "2.0.0",
+              "dependencies": {
+                "is-promise": {
+                  "version": "1.0.1"
+                }
+              }
+            },
+            "css": {
+              "version": "1.0.8",
+              "dependencies": {
+                "css-parse": {
+                  "version": "1.0.4"
+                },
+                "css-stringify": {
+                  "version": "1.0.5"
+                }
+              }
+            },
+            "uglify-js": {
+              "version": "2.2.5",
+              "dependencies": {
+                "source-map": {
+                  "version": "0.1.43",
+                  "dependencies": {
+                    "amdefine": {
+                      "version": "0.1.0"
+                    }
+                  }
+                },
+                "optimist": {
+                  "version": "0.3.7",
+                  "dependencies": {
+                    "wordwrap": {
+                      "version": "0.0.2"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "void-elements": {
+          "version": "2.0.1"
+        },
+        "with": {
+          "version": "4.0.1",
+          "dependencies": {
+            "acorn": {
+              "version": "0.11.0"
+            },
+            "acorn-globals": {
+              "version": "1.0.2"
+            }
+          }
+        }
+      }
+    }
+  }
+}

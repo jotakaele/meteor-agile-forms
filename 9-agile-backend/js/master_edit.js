@@ -1,80 +1,8 @@
-//Lista de categorias a gestionar
-categories = {
-        html: {
-            collection: "_html",
-            ace: "html",
-            renderFunction: function() {
-                renderHtml(oVars.editorToSave(), 'ritem')
-            }
-        },
-        template: {
-            collection: "_template",
-            ace: "jade",
-            renderFunction: function() {
-                renderJade(oVars.editorToSave(), 'ritem')
-            }
-        },
-        markdown: {
-            collection: "_markdown",
-            ace: "markdown",
-            renderFunction: function() {
-                renderMarkdown(oVars.editorToSave(), 'ritem')
-            }
-        },
-        css: {
-            collection: "_css",
-            ace: "css",
-            renderFunction: function() {}
-        },
-        text: {
-            collection: "_text",
-            ace: "text",
-            renderFunction: function() {}
-        },
-        config: {
-            collection: "_config",
-            ace: "yaml",
-            renderFunction: function() {}
-        },
-        form: {
-            collection: "_af",
-            ace: "yaml",
-            renderFunction: function() {
-                $('#option-form').removeClass('hide')
-                var contentFiltered = oVars.editorToSave()
-                if (contentFiltered) {
-                    var oRenderOptions = {
-                        src: contentFiltered,
-                        div: 'ritem',
-                        name: $('input#name').val(),
-                        mode: $('select#form-mode').val() || s('master_edit_form_mode'),
-                        doc: $('select#form-doc-id').val() || s('last-' + $('input#name').val() + '-backend-edit-id'),
-                        values: s('last-' + $('input#name').val() + '-backend-edit-values') || {}
-                    }
-                    _(oRenderOptions).extend(jsyaml.load(editor.getValue()).test)
-                        // 
-                    cargaForm(oRenderOptions)
-                } else {
-                    $('#ritem').html('<div class="alert-box alert">Form config error.</div>')
-                }
-            }
-        },
-        list: {
-            collection: "_al",
-            ace: "yaml",
-            renderFunction: function() {
-                var contentFiltered = oVars.editorToSave()
-                if (contentFiltered) {
-                    renderList(contentFiltered, 'ritem')
-                } else {
-                    $('#ritem').html('<div class="alert-box alert">List config error.</div>')
-                }
-            }
-        }
-    }
+dbg('snippets', snippets)
     //Creamos las conexiones
 masterConnection = {}
-_(categories).each(function(value, key) {
+    //snippets id defined in 5-agile-snippets/js/snippets.js
+_(snippets).each(function(value, key) {
     if (key == 'form') {
         masterConnection[key] = Autof
     } else if (key == 'list') {
@@ -116,7 +44,7 @@ if (Meteor.isClient) {
         },
         //Transformaciones que hacemos al valor recuperado del editor antes de guardarlo en la base de datos.
         editorToSave: function() {
-            switch (categories[s('masterActiveCategory')].ace) {
+            switch (snippets[s('masterActiveCategory')].ace) {
                 case 'yaml':
                     //Si estamos almacenando JSON...
                     try {
@@ -143,7 +71,7 @@ if (Meteor.isClient) {
         },
         //Transformaciones que hacemos al valor recuperado de la base de datos antes de volcarlo en el editor
         savedToEditor: function(src) {
-            switch (categories[s('masterActiveCategory')].ace) {
+            switch (snippets[s('masterActiveCategory')].ace) {
                 case 'yaml':
                     // Si estamos recuperando JSON y vamos a trabajar en YAML ....
                     return jsyaml.dump(sanitizeObjectNameKeys(src))
@@ -160,7 +88,7 @@ if (Meteor.isClient) {
     };
     Template.masterEdit.helpers({
         ace_mode: function() {
-            return categories[s('masterActiveCategory')].ace
+            return snippets[s('masterActiveCategory')].ace
         },
         form_modes: function() {
             var fModes = ['new', 'edit', 'readonly', 'delete']
@@ -184,10 +112,10 @@ if (Meteor.isClient) {
         currentCategory: function() {
             return s('masterActiveCategory')
         },
-        categories: function() {
+        snippets: function() {
             var aValues = []
-            var filterCategories = this.mode ? _.pick(categories, this.mode) : categories
-            _(filterCategories).each(function(value, key) {
+            var filtersnippets = this.mode ? _.pick(snippets, this.mode) : snippets
+            _(filtersnippets).each(function(value, key) {
                 var oTemp = {
                     name: key,
                     title: key.toUpperCase(),
@@ -288,7 +216,7 @@ if (Meteor.isClient) {
                             time: 2
                         })
                         $('input#name').val('')
-                        loadAceEditor('', categories[s('masterActiveCategory')].ace, 'editor-container')
+                        loadAceEditor('', snippets[s('masterActiveCategory')].ace, 'editor-container')
                         delete oVars.sCurrentItemId
                         delete oVars.sInitialName
                     }
@@ -304,7 +232,7 @@ if (Meteor.isClient) {
             oVars.sInitialName = makeId(5)
             $('input#name').val(oVars.sInitialName)
             delete oVars.sCurrentItemId
-            loadAceEditor('Hey i am a new ' + s('masterActiveCategory') + ' snippet', categories[s('masterActiveCategory')].ace, 'editor-container')
+            loadAceEditor('Hey i am a new ' + s('masterActiveCategory') + ' snippet', snippets[s('masterActiveCategory')].ace, 'editor-container')
         },
         'keyup input#name': function() {
             onEditorChange()
@@ -324,7 +252,7 @@ if (Meteor.isClient) {
             oVars.sInitialName = $el.attr('name');
             oVars.sCurrentItemId = $el.attr('id');
             $('input#name').val($el.attr('name'))
-            loadAceEditor(sResContent, categories[s('masterActiveCategory')].ace, 'editor-container')
+            loadAceEditor(sResContent, snippets[s('masterActiveCategory')].ace, 'editor-container')
         },
         'click #guardar i': function() {
             saveItem($('input#name').val(), editor.getValue(), oVars.sCurrentItemId)
@@ -332,7 +260,7 @@ if (Meteor.isClient) {
         'change select#form-doc-id': function(ev) {
             s('last-' + $('input#name').val() + '-backend-edit-id', $(ev.target).val())
             $('#ritem').html('')
-            categories[s('masterActiveCategory')].renderFunction()
+            snippets[s('masterActiveCategory')].renderInMasterBackend()
         },
         'click #cargaides': function() {
             cargarIdes()
@@ -369,7 +297,7 @@ if (Meteor.isClient) {
             oVars.sInitialContent = sContent //Aplicar aqui las trasnformaciones de cada modo
             editor.session.setValue(oVars.sInitialContent)
             editor.on('input', onEditorChange)
-            categories[s('masterActiveCategory')].renderFunction()
+            snippets[s('masterActiveCategory')].renderInMasterBackend()
             $('#eliminar,#duplicate').removeClass('disabled')
         }
         //Lo que procesamos cuando se cambia algo en ele editor o en el input#name
@@ -460,7 +388,7 @@ if (Meteor.isClient) {
                     class: "renderized"
                 })
                 $('#ritem').html('')
-                categories[s('masterActiveCategory')].renderFunction()
+                snippets[s('masterActiveCategory')].renderInMasterBackend()
             }
         }, t)
     }
@@ -498,5 +426,5 @@ function cargarIdes() {
     //fixed crear un metodo para duplicar snippet
     //fixed incorporar los elementos propios del modo edit , readonly y delete de form
     //todo Implementar métodos que permitan recuperar y transformar los snippets desde Javascript y desde templates, de manera cruzada, o sea que permitan usar uno en otros.
-    //todo Permitir abrr master/edit invocando a un modo y nombre en concreto, para llamarlo desde fuera. (tambien invocando con un modo e doc en el caso de formularios)
+    //fixed Permitir abrr master/edit invocando a un modo y nombre en concreto, para llamarlo desde fuera. (tambien invocando con un modo e doc en el caso de formularios)
     //fixed @urgente. Se eliminan los elementos cuando se les cambia el nombre!!!

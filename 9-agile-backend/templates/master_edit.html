@@ -12,9 +12,9 @@
 
                     <span class="title">Agile</span>
                     <select id="category" class="editormode">
-                        {{#each categories}}
-                        <option collection="{{collection}}" ace="{{ace}}" value="{{name}}" selected="{{#if selected}}selected{{/if}}">{{title}} {<span class="mode">{{ace}}</span>}
-                        </option>
+                        {{#each snippets}}
+                            <option collection="{{collection}}" ace="{{ace}}" value="{{name}}" selected="{{#if selected}}selected{{/if}}">{{title}} {<span class="mode">{{ace}}</span>}
+                            </option>
                         {{/each}}
                     </select>
                     <!-- <span class="ace-mode-title">[{{ace_mode}}]</span> -->
@@ -84,7 +84,7 @@
         <dt>
             <input type="search" id="filtrar" placeholder="{{tr " Form filter "}}" /> </dt>
         {{#each items }}
-        <dd name="{{name}}"><a class="doc" name="{{name}}" id="{{_id}}">{{name}}</a> </dd>
+            <dd name="{{name}}"><a class="doc" name="{{name}}" id="{{_id}}">{{name}}</a> </dd>
         {{/each}}
     </dl>
     <div class="small-12 columns">

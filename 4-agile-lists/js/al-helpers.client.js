@@ -12,32 +12,31 @@ cargaList = function cargaList(options, destDivName) {
     if (options._id) {
         objItem._id = options._id
     }
-    obj = _.extend({
-        state: 'active'
-    }, objItem)
-
+    // obj = _.extend({
+    //     state: 'active'
+    // }, objItem)
     function cargarItemInicial(nombreItem, callback) {
-        res = Autol.findOne(obj)
+        res = Autol.findOne(objItem)
         callback(res)
     }
-    cargarItemInicial(obj.name, function(res) {
+    cargarItemInicial(objItem.name, function (res) {
         if (res) {
-            $.when(renderList(res, destDivName)).done(function() {
+            $.when(renderList(res, destDivName)).done(function () {
                 activateFormLinks()
             })
         }
     })
 }
-Template.listshow.rendered = function() {
+Template.listshow.rendered = function () {
     var config = this.data
-    Meteor.setTimeout(function() {
+    Meteor.setTimeout(function () {
         cargaList(config.listName)
     }, 100)
 }
-Template.pageList.rendered = function() {
+Template.pageList.rendered = function () {
     dbg('this', this.data)
     var config = this.data
-    Meteor.setTimeout(function() {
+    Meteor.setTimeout(function () {
         cargaList(config.name, 'listdest')
     }, 500)
 }
