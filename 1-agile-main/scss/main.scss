@@ -1,7 +1,6 @@
 @import "_settings";
 @import ".meteor/local/build/programs/server/assets/packages/matthew_foundation5-sass/scss/foundation";
 @import "myFoundationConfig";
-@import url(http://fonts.googleapis.com/css?family=Ubuntu:400,700,500,400italic,300italic,300,500italic,700italic);
 .button.active {
     background-color: darken($primary-color, 15);
     color: #fff

@@ -84,11 +84,9 @@ snippets = {
     css: {
         collection: "_css",
         ace: "css",
-        render: function (sContent, sDivName) {
-            $('<pre>').appendTo($('#' + sDivName)).html(sContent)
-        },
-        transform: function (src) {
-            return src;
+        transform: function (options) {
+            var transformValue = options.render ? '<pre>' + options.src + '</pre>' : options.src;
+            return transformValue;
         },
         renderInMasterBackend: function () {
             this.render(oVars.editorToSave(), 'ritem')
@@ -97,24 +95,25 @@ snippets = {
     text: {
         collection: "_text",
         ace: "text",
-        transform: function (src) {
-            return src;
+        transform: function (options) {
+            return options.src;
         },
         renderInMasterBackend: function () {}
     },
     config: {
         collection: "_config",
         ace: "yaml",
-        transform: function (src) {
-            return src;
+        transform: function (options) {
+            var transformValue = options.render ? EJSON.stringify(options.src) : options.src;
+            return transformValue;
         },
         renderInMasterBackend: function () {}
     },
     form: {
         collection: "_af",
         ace: "yaml",
-        render: function (sContent, sDivName) {
-            cargaForm(sDivName, sContent)
+        transform: function (options) {
+            cargaForm(options)
         },
         renderInMasterBackend: function () {
             $('#option-form').removeClass('hide')
@@ -139,8 +138,9 @@ snippets = {
     list: {
         collection: "_al",
         ace: "yaml",
-        render: function (sContent, sDivName) {
-            cargaList(sDivName, sContent)
+        transform: function (options) {
+            dbg('options', options)
+            cargaList(options.name, options.div)
         },
         renderInMasterBackend: function () {
             var contentFiltered = oVars.editorToSave()
@@ -168,36 +168,41 @@ if (Meteor.isServer) {
         }
     });
 }
-//Devuelve el contenido de un snippet definido en oOptions  o bien lo renderiza en oOptions.div (si existe)
+//Devuelve el contenido de un snippet definido en oOptions  o bien lo renderiza en oOptions.div (si existe y render= true)
 // cargarSnippet({
 //     src: null,
 //     type: 'html',
 //     name: 'unHtml',
 //     div: 'ritem'
+//     render: true || false (Si vuelca el contenido transformado en .div)
 // })
 if (Meteor.isClient) {
     cargarSnippet = function (oOptions) {
-        //Si no hay src, lo extraemos de la base de datos
-        if (!oOptions.src) {
-            oOptions.src = masterConnection[oOptions.type].findOne({
-                name: oOptions.name
-            }).content
+        //Si no hay src , lo extraemos de la base de datos, (Solo si es distinto de list o form, en cuyo caso se encarga renderForm o cargaList de consultar la base de datos)
+        if (['list', 'form'].indexOf(oOptions.type) == -1) {
+            if (!oOptions.src) {
+                oOptions.src = masterConnection[oOptions.type].findOne({
+                    name: oOptions.name
+                }).content
+            }
         }
         //Si es uno de los elemento que necesariamente han de renderizarse en eun div y no se ha pasado, devolvemos un error
-        if (!oOptions.div && _.has(['list', 'form', 'template'], oOptions.type)) {
-            return new Meteor.error(oOptions.type + " require a div name to run.");
+        if (!oOptions.div && ['list', 'form', 'template'].indexOf(oOptions.type) >= 0) {
+            throw Meteor.Error(oOptions.type + " require a div name to run.");
+            return false
         }
-        dbg("oOptions.src", oOptions.src)
-        if (oOptions.div) {
-            snippets[oOptions.type].render(oOptions.src, oOptions.div)
+        //dbg("oOptions.src", oOptions.src)
+        var value = snippets[oOptions.type].transform(oOptions)
+        if (oOptions.render && oOptions.div) {
+            $('#' + oOptions.div).html(value)
             return true
         } else {
-            return snippets[oOptions.type].render
+            return value
         }
     }
 }
 //TODO Organizar los metodos de snippet, de modo que la funcion cargaSnippet nos devuelva el contenido renderizado en cada caso ...
 /*
-Notas: la función render de snippets, debe ser lalmada siempre con un unico objeto que contenga la configuración con que se le llama e internamente la funcion llamar al renderizador de cada tipo usando los elementos que necesite.
+Notas: la función render de snippets, debe ser llamada siempre con un unico objeto que contenga la configuración con que se le llama e internamente la funcion llamar al renderizador de cada tipo usando los elementos que necesite.
 
  */

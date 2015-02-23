@@ -12,60 +12,52 @@
 // Licensed under MIT Open Source
 // This is the default html and body font-size for the base rem value.
 $rem-base: 16px !default;
-
 // IMPORT ONCE
 // We use this to prevent styles from being loaded multiple times for compenents that rely on other components.
 $modules: () !default;
-
 @mixin exports($name) {
-    @if index($modules, $name) == false {
+    @if index($modules, $name) false {
         $modules: append($modules, $name);
         @content;
     }
 }
-
 //
 // @functions
 //
 // RANGES
 // We use these functions to define ranges for various things, like media queries.
 @function lower-bound($range) {
-    @if length($range) <= 0 {
+    @if length($range) < 0 {
         @return 0;
     }
     @return nth($range, 1);
 }
-
 @function upper-bound($range) {
     @if length($range) < 2 {
         @return 999999999999;
     }
     @return nth($range, 2);
 }
-
 // STRIP UNIT
 // It strips the unit of measure and returns it
 @function strip-unit($num) {
     @return $num / ($num * 0 + 1);
 }
-
 // CONVERT TO REM
 @function convert-to-rem($value, $base-value: $rem-base) {
     $value: strip-unit($value) / strip-unit($base-value) * 1rem;
-    @if $value == 0rem {
+    @if $value 0rem {
         $value: 0;
     }
     // Turn 0rem into 0
     @return $value;
 }
-
 @function data($attr) {
     @if $namespace {
         @return "[data-" + $namespace + "-" + $attr + "]";
     }
     @return "[data-" + $attr + "]";
 }
-
 // REM CALC
 // New Syntax, allows to optionally calculate on a different base value to counter compounding effect of rem's.
 // Call with 1, 2, 3 or 4 parameters, 'px' is not required but supported:
@@ -85,7 +77,7 @@ $modules: () !default;
 //   rem-calc((16px, 32px, 48), 8px);
 @function rem-calc($values, $base-value: $rem-base) {
     $max: length($values);
-    @if $max == 1 {
+    @if $max 1 {
         @return convert-to-rem(nth($values, 1), $base-value);
     }
     $remValues: ();
@@ -94,19 +86,16 @@ $modules: () !default;
     }
     @return $remValues;
 }
-
 // OLD EM CALC
 // Deprecated: We'll drop support for this in 5.1.0, use rem-calc()
 @function emCalc($values) {
     @return rem-calc($values);
 }
-
 // OLD EM CALC
 // Deprecated: We'll drop support for this in 5.1.0, use rem-calc()
 @function em-calc($values) {
     @return rem-calc($values);
 }
-
 // $experimental: true;
 // The default font-size is set to 100% of the browser style sheet (usually 16px)
 // for compatibility with browser-based text zoom or user-set defaults.
@@ -124,7 +113,6 @@ $modules: () !default;
 // $include-html-block-grid-classes: $include-html-classes;
 // $include-xl-html-grid-classes: false;
 $row-width: rem-calc(1600);
-
 // $total-columns: 12;
 // Global
 // We use these to define default font weights
@@ -133,7 +121,7 @@ $row-width: rem-calc(1600);
 // We use these to control various global styles
 //$body-bg:#fff;
 // $body-font-color: #222;
-// $body-font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+//$body-font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
 // $body-font-weight: $font-weight-normal;
 // $body-font-style: normal;
 // We use this to control font-smoothing
@@ -1021,7 +1009,6 @@ $row-width: rem-calc(1600);
 // $include-html-top-bar-classes: $include-html-classes;
 // Background color for the top bar
 //$topbar-bg-color: #481909;
-
 // $topbar-bg: $topbar-bg-color;
 // Height and margin
 // $topbar-height: 45px;
