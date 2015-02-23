@@ -34,14 +34,17 @@ snippets = {
     html: {
         collection: "_html",
         ace: "html",
-        transform: function (src) {
-            return src;
-        },
-        render: function (sContent, sDivName) {
-            $('#' + sDivName).html(sContent)
+        transform: function (options) {
+            return options.src;
         },
         renderInMasterBackend: function () {
-            this.render(oVars.editorToSave(), 'ritem')
+            //this.render(oVars.editorToSave(), 'ritem')
+            cargarSnippet({
+                type: 'html',
+                src: oVars.editorToSave(),
+                div: 'ritem',
+                render: true
+            })
         }
     },
     template: {
@@ -71,14 +74,17 @@ snippets = {
     markdown: {
         collection: "_markdown",
         ace: "markdown",
-        transform: function (src) {
-            return src;
-        },
-        render: function (sContent, sDivName) {
-            $('#' + sDivName).html(marked(sContent))
+        transform: function (options) {
+            return marked(options.src)
         },
         renderInMasterBackend: function () {
-            this.render(oVars.editorToSave(), 'ritem')
+            //this.render(oVars.editorToSave(), 'ritem')
+            cargarSnippet({
+                type: 'markdown',
+                src: oVars.editorToSave(),
+                div: 'ritem',
+                render: true
+            })
         }
     },
     css: {
@@ -89,7 +95,13 @@ snippets = {
             return transformValue;
         },
         renderInMasterBackend: function () {
-            this.render(oVars.editorToSave(), 'ritem')
+            //this.render(oVars.editorToSave(), 'ritem')
+            cargarSnippet({
+                type: 'css',
+                src: oVars.editorToSave(),
+                div: 'ritem',
+                render: true
+            })
         }
     },
     text: {
