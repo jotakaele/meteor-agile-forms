@@ -367,10 +367,10 @@ form:
 
 ## helpers (y sustituciones)
 Se permite el uso de `$nombreDeOtraClave$` para insertar en su posición el contenido de la clave indicada.
-Si la clave no contiene una ruta (uno o más . [puntos]) se espera que sea un clave dentro de helpers, que debe estar en el primer nivel de la configuración,  en caso contrario debe indicarse la ruta completa
+PENDIENTE DE VERIFICAR....  Si la clave no contiene una ruta (uno o más . [puntos]) se espera que sea un clave dentro de helpers, que debe estar en el primer nivel de la configuración,  en caso contrario debe indicarse la ruta completa
 
-`$colorbase$` es reemplazado por la clave helpers.colorbase
-`$form.fields.campo1.columns$` será sustituido por el valor de la ruta indicada
+`$helper.colorbase$` es reemplazado por la clave helpers.colorbase
+`$helper.form.fields.campo1.columns$` será sustituido por el valor de la ruta indicada
 
 
 ```yaml

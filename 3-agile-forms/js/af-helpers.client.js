@@ -31,15 +31,15 @@ cargaForm = function cargaForm(objOptions) {
         }
     }
     //recuperamos el af, solo si no estamos recibiendo  objOptions.src como un objeto
-    $.when((function(options) {
-            if (!options.src) {
-                return Autof.findOne(obj)
-            } else {
-                return options.src
-            }
-        })(options))
-        //recuperamos el nombre de la coleccion a partir del resultado y extraemos el documento
-        .then(function(res) {
+    $.when((function (options) {
+        if (!options.src) {
+            return Autof.findOne(obj)
+        } else {
+            return options.src
+        }
+    })(options))
+    //recuperamos el nombre de la coleccion a partir del resultado y extraemos el documento
+    .then(function (res) {
             if (!options.src) {
                 options.src = res
             } else {
@@ -65,13 +65,13 @@ cargaForm = function cargaForm(objOptions) {
             return null
         })
         // Incorporamos los datos del documento a theRes
-        .then(function(theDoc) {
+        .then(function (theDoc) {
             if (theDoc) {
                 insertDataValues(options.src.content.form.fields, theDoc)
             }
         })
         //lanzamos el renderizado
-        .done(function(res) {
+        .done(function (res) {
             if (options.src) {
                 autof = new AF(options.div, {
                         def: sanitizeObjectNameKeys(options.src.content || option.src),
@@ -93,22 +93,22 @@ cargaForm = function cargaForm(objOptions) {
         })
     return options
 }
-Template.formshow.rendered = function() {
+Template.formshow.rendered = function () {
     var config = this.data
-    Meteor.setTimeout(function() {
+    Meteor.setTimeout(function () {
         cargaForm(config)
     }, 100)
 }
-Template.pageForm.rendered = function() {
+Template.pageForm.rendered = function () {
         var config = this.data
-        Meteor.setTimeout(function() {
+        Meteor.setTimeout(function () {
             cargaForm(config)
         }, 500)
     }
     //Inserta los datos del documento (si existe) como value en la definición de cada field
 insertDataValues = function insertDataValues(form, data) {
         var inBlock = false // Ccreamos variable
-        _(form).each(function(value, key, form) {
+        _(form).each(function (value, key, form) {
             value = value || {}
                 //primero quitamos los valores por defecto
             if (_.has(value, 'value')) {
@@ -126,14 +126,14 @@ insertDataValues = function insertDataValues(form, data) {
                 }
             }
         })
-        _(data).each(function(value, key, theR) { //por cada item en data
+        _(data).each(function (value, key, theR) { //por cada item en data
             if (_.has(form, key)) { //Si existe la clave en el form
                 form[key] = form[key] || {} //Asignamos un objeto, por si estuviera vacia
                 if (_.startsWith(key, '_')) { //Si comienza por _
                     //Procesamos los objetos
                     if (form[key].limit == 1) {
                         //Soy un objeto simple
-                        _(value).each(function(dataValue, dataKey) {
+                        _(value).each(function (dataValue, dataKey) {
                             // console.log(dataKey, dataValue)
                             if (form[dataKey].block == key) {
                                 form[dataKey].value = bdToHtmlValue(dataValue, form[dataKey].type)
@@ -143,8 +143,8 @@ insertDataValues = function insertDataValues(form, data) {
                     if (form[key].limit > 1) { //Si es un array (limit>1)
                         form[key].values = [] //Eliminino los valores existentes
                             //Soy un array. Puedo cargar los valores en form como un array, pero aún no puedo asignarlos directamente a cada field, porque se renderizan en html
-                        _(value).each(function(arrayValue, arrayKey) { //..por cada elemento del array 
-                            _(arrayValue).each(function(arrayDataValue, arrayDataKey) { //..recorro sus elementos
+                        _(value).each(function (arrayValue, arrayKey) { //..por cada elemento del array 
+                            _(arrayValue).each(function (arrayDataValue, arrayDataKey) { //..recorro sus elementos
                                 if (form[arrayDataKey]) {
                                     var theFormType = (form[arrayDataKey] || {}).type
                                 } else {
@@ -166,27 +166,27 @@ insertDataValues = function insertDataValues(form, data) {
     //Convierte valores de kl abase de datos en el indicado en tyeHTML
 bdToHtmlValue = function bdToHtmlValue(value, typeHTML) {
     switch ($.type(value)) {
-        case 'string':
-            res = value
-            break;
+    case 'string':
+        res = value
+        break;
+    case 'date':
+        switch (typeHTML) {
         case 'date':
-            switch (typeHTML) {
-                case 'date':
-                    res = moment(value).format(s('default_date_format').moment)
-                    break;
-                case 'datetime':
-                    res = moment(value).format(s('default_datetime_format').moment)
-                    break;
-                case 'time':
-                    res = moment(value).format(s('default_time_format').moment)
-                    break;
-                default:
-                    break;
-            }
+            res = moment(value).format(s('default_date_format').moment)
+            break;
+        case 'datetime':
+            res = moment(value).format(s('default_datetime_format').moment)
+            break;
+        case 'time':
+            res = moment(value).format(s('default_time_format').moment)
             break;
         default:
-            res = value
             break;
+        }
+        break;
+    default:
+        res = value
+        break;
     }
     return res
 }

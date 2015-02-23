@@ -1,13 +1,13 @@
 randEl = Function
     /*Devuelve un elemento aleatorio del arrat theArray*/
-randEl = function(theArray) {
+randEl = function (theArray) {
     var els = theArray.length
     var ind = Math.floor(Math.random() * els)
     return theArray[ind]
 }
 makeId = Function
     //Devuelve una cadena aleatoria de @num || 5 caracteres
-makeId = function(num) {
+makeId = function (num) {
         var pas = num || 5
         var text = "";
         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -105,7 +105,7 @@ parseEvalObjects = function parseEvalObjects(obj) {
         var expresion = /eval\(.*\)/g
         var matches = v.match(expresion) || []
             //console.log(matches)
-        matches.forEach(function(match) {
+        matches.forEach(function (match) {
             var vEval = match.replace(/eval/, '');
             v = v.replace(match, eval(vEval));
             //console.log(vEval)
@@ -121,14 +121,14 @@ parseSubstNodes = function parseSubstNodes(obj) {
         var v = JSON.stringify(obj, undefined, 1) //importante devolver con indentacion para que pueda detectar los saltos de linea
         var expresion = /\$.*\$/g
         var matches = v.match(expresion) || []
-        matches.forEach(function(match) {
+        matches.forEach(function (match) {
             var vEval = match.replace(/\$/g, '');
             var cad = 'obj.def'
             var trozos = vEval.split('.')
             if (trozos.length == 1) {
                 cad = 'obj.def.helpers'
             }
-            trozos.forEach(function(item) {
+            trozos.forEach(function (item) {
                     cad = cad + '[\'' + item + '\']'
                 })
                 // console.log(cad)
@@ -217,9 +217,9 @@ showToUser = function showToUser(options) {
             title: t(opt.close + ' to close'),
             style: 'display:none',
             id: opt.id
-        }).html(opt.content).prependTo(opt.element).on(opt.close, function() {
+        }).html(opt.content).prependTo(opt.element).on(opt.close, function () {
             $d = $(this)
-            $d.slideUp(400, function() {
+            $d.slideUp(400, function () {
                 $d.remove()
             })
         }).slideDown(400)
@@ -237,8 +237,8 @@ showToUser = function showToUser(options) {
             }).appendTo(theDiv)
             theCounter.animate({
                 width: '100%'
-            }, opt.time * 1000, 'linear', function() {
-                theDiv.slideUp(200, function() {
+            }, opt.time * 1000, 'linear', function () {
+                theDiv.slideUp(200, function () {
                     theDiv.remove()
                 })
             })

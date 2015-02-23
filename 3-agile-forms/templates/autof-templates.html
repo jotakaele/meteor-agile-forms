@@ -4,13 +4,30 @@
 
 
 
+<template name="snippet">
+
+    <div id="snippetdest"></div>
 
 
-<template name="exampleform"> {{> formshow name="Personas" mode="new"}} </template>
+</template>
+
+
+
+
+
+<template name="exampleform">
+
+
+    <h1>UN formulario</h1> {{> formshow name="Personas" mode="new"}}
+
+    <h1>UN snippet</h1> {{> snippet type="html" name="unHtml"}}
+</template>
+
 
 
 
 
 <template name="pageForm">
     <div class="large-6 small-12 columns large-centered" id="formdest"></div>
+
 </template>
