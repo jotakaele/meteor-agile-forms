@@ -22,38 +22,6 @@ if (Defaults.find().count() === 0) {
         translating: 'none', // auto|none|manual
         dbg: true, //true|false activa o desacctiva la salida dbg
         log: true, // activa o desactiva la grabación de logs en el servidor
-        _backendMasterCategories: {
-            html: {
-                collection: '_html',
-                ace: 'html'
-            },
-            template: {
-                collection: '_template',
-                ace: 'jade'
-            },
-            // list: {
-            //     collection: '_al',
-            //     ace: 'yaml'
-            // },
-            // form: {
-            //     collection: '_af',
-            //     ace: 'yaml'
-            // },
-            css: {
-                collection: '_css',
-                ace: 'css'
-            },
-            text: {
-                collection: '_text',
-                ace: 'text'
-            },
-            config: {
-                collection: "_config",
-                ace: "yaml"
-            }
-        }
-        //Categorias de items editables en backendMaster /backend/master/.....
-        ,
         log_expire: { // Determina el tiempo de expiracion de los registros de log 
             insert_record: {
                 year: 1
@@ -73,7 +41,7 @@ if (Defaults.find().count() === 0) {
         }
     }
     console.log('Cargando tabla _defaults')
-    _.each(objDef, function(value, key) {
+    _.each(objDef, function (value, key) {
         Defaults.insert({
             _id: key,
             value: value

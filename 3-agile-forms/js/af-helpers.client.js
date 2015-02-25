@@ -7,7 +7,6 @@ La función cargaForm espera un objeto tal que
     name: El nombre del formulario a cargar
     doc: el id del documento(a cargar) si estamos en modo edit
 }
-
 */
 cargaForm = function cargaForm(objOptions) {
     // creamos opciones por defecto
@@ -32,14 +31,14 @@ cargaForm = function cargaForm(objOptions) {
     }
     //recuperamos el af, solo si no estamos recibiendo  objOptions.src como un objeto
     $.when((function (options) {
-        if (!options.src) {
-            return Autof.findOne(obj)
-        } else {
-            return options.src
-        }
-    })(options))
-    //recuperamos el nombre de la coleccion a partir del resultado y extraemos el documento
-    .then(function (res) {
+            if (!options.src) {
+                return Autof.findOne(obj)
+            } else {
+                return options.src
+            }
+        })(options))
+        //recuperamos el nombre de la coleccion a partir del resultado y extraemos el documento
+        .then(function (res) {
             if (!options.src) {
                 options.src = res
             } else {
@@ -90,8 +89,9 @@ cargaForm = function cargaForm(objOptions) {
                     }).html('<i class="fa fa-wrench"></i>').prependTo($('#' + options.div).parent())
                 }
             }
+            return true
         })
-    return options
+        //return options
 }
 Template.formshow.rendered = function () {
     var config = this.data
@@ -165,28 +165,52 @@ insertDataValues = function insertDataValues(form, data) {
     }
     //Convierte valores de kl abase de datos en el indicado en tyeHTML
 bdToHtmlValue = function bdToHtmlValue(value, typeHTML) {
-    switch ($.type(value)) {
-    case 'string':
-        res = value
-        break;
-    case 'date':
-        switch (typeHTML) {
+        switch ($.type(value)) {
+        case 'string':
+            res = value
+            break;
         case 'date':
-            res = moment(value).format(s('default_date_format').moment)
-            break;
-        case 'datetime':
-            res = moment(value).format(s('default_datetime_format').moment)
-            break;
-        case 'time':
-            res = moment(value).format(s('default_time_format').moment)
+            switch (typeHTML) {
+            case 'date':
+                res = moment(value).format(s('default_date_format').moment)
+                break;
+            case 'datetime':
+                res = moment(value).format(s('default_datetime_format').moment)
+                break;
+            case 'time':
+                res = moment(value).format(s('default_time_format').moment)
+                break;
+            default:
+                break;
+            }
             break;
         default:
+            res = value
             break;
         }
-        break;
-    default:
-        res = value
-        break;
+        return res
     }
-    return res
+    /*
+      Sustituye todos los valores entre $valor$ por el elemento del objeto correspondiente
+     */
+parseSubstNodes = function parseSubstNodes(obj) {
+    obj = obj || {}
+    obj.helpers = obj.helpers || {}
+    var v = JSON.stringify(obj, undefined, 1) //importante devolver con indentacion para que pueda detectar los saltos de linea
+    var expresion = /\$.*\$/g
+    var matches = v.match(expresion) || []
+    matches.forEach(function (match) {
+        var vEval = match.replace(/\$/g, '');
+        var cad = 'obj.def'
+        var trozos = vEval.split('.')
+        if (trozos.length == 1) {
+            cad = 'obj.def.helpers'
+        }
+        trozos.forEach(function (item) {
+                cad = cad + '[\'' + item + '\']'
+            })
+            // console.log(cad)
+        v = v.replace(match, eval(cad));
+    })
+    return JSON.parse(v)
 }

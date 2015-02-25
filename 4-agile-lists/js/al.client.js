@@ -1,11 +1,11 @@
-AL = function(element, options) {
+AL = function (element, options) {
         this.options = options || {}
         this.element = document.getElementById(element)
         this.options = options
         this.list = this.options.def.list
         listCss = options.def.css || {}
         list = this.list
-        _.keys(list.sources).forEach(function(iSource) {
+        _.keys(list.sources).forEach(function (iSource) {
             if (iSource != 'main') {
                 list.sources.main.columns[iSource] = '' //Hacemos que esten disponibles las columnas de los joins directamente, sin tener que ponerlas expresamente
             }
@@ -14,7 +14,6 @@ AL = function(element, options) {
         dSources = {} //el objeto donde vamos a meter emn primera instancia el resultado de los joins
         function loadSource(sourceObject, keyName) {
                 //Meteor.subscribe(sourceObject.collection)
-                //   dbg('sourceObject', sourceObject)
                 if (!sourceObject.collection) {
                     sourceObject.collection = keyName
                     var nFilter = {}
@@ -33,12 +32,12 @@ AL = function(element, options) {
                 var arrCollection = []
                     //Devuelve un array con la lista decampos mencionados o listados en list.columns (o en el join) , son los que se utilizarán para extraer de la base de datos
                 var arrFieldsToRetrieve = []
-                $.each(sourceObject.columns, function(key, value) {
+                $.each(sourceObject.columns, function (key, value) {
                     var cad = value || key
                     cad == key ? arrFieldsToRetrieve.push(key) : false
                     var expresion = /\[[a-zA-Z0-9_-]+\]/g
                     var t = cad.match(expresion) || []
-                    t.forEach(function(v) {
+                    t.forEach(function (v) {
                         arrFieldsToRetrieve.push(v.replace(/\[/g, '').replace(/\]/g, ''))
                     })
                 })
@@ -52,7 +51,7 @@ AL = function(element, options) {
                 var objSort = {}
                 if (sourceObject.sort) {
                     var b = sourceObject.sort.split(',')
-                    b.forEach(function(value) {
+                    b.forEach(function (value) {
                         var x = value.split(' ')
                         if (x[1]) {
                             var direction = x[1].trim() == 'desc' ? -1 : 1
@@ -61,7 +60,7 @@ AL = function(element, options) {
                     })
                 }
                 var objIncluded = {}
-                arrFieldsToRetrieve.forEach(function(value) {
+                arrFieldsToRetrieve.forEach(function (value) {
                     objIncluded[value.trim()] = 1
                 })
                 var objFilter = sourceObject.filter || {}
@@ -70,9 +69,8 @@ AL = function(element, options) {
                     fields: objIncluded
                 }
                 var objCollection = cCols[sourceObject.collection].find(objFilter, findOptions).fetch()
-                    //dbg("objCollection", objCollection)
                 arrCollection = []
-                $.each(objCollection, function(el) {
+                $.each(objCollection, function (el) {
                         arrCollection.push(objCollection[el])
                             //Creamos una array (solo en main) con los _id's de main para usarlos luego en los joins
                         if (keyName == 'main') {
@@ -82,18 +80,18 @@ AL = function(element, options) {
                     //EvaluateMYFIELDS////////////////////////////////////////////////////////////////////////////////////////////
                     //Procesa los campos que se van a enviar a json2tableList. Procesa mediante "eval" la expresion coontenida. Pueden usarse los nombres de campos disponibles, encerrados entre corchetes. Si se encierran entre [corchetes], el resultado es encerrado entre comillas, si se encierran entre [[corchetes dobles]] el resultado se devuelve sin comillas
                 var subst = []
-                $.each(sourceObject.columns, function(key, value) {
+                $.each(sourceObject.columns, function (key, value) {
                         var cad = value || key
                             //sustituimos lo encerrado entre corchetes con el contenido del campo de su nombre
                         var expresion = /\[[a-zA-Z0-9_-]+\]/g
                         var t = cad.match(expresion) || []
-                        t.forEach(function(k) {
+                        t.forEach(function (k) {
                             subst.push(k.replace(/\[|\]/g, ''))
                         })
-                        arrCollection.forEach(function(theRowKey) {
+                        arrCollection.forEach(function (theRowKey) {
                             if (value) {
                                 var strVal = value
-                                subst.forEach(function(v) {
+                                subst.forEach(function (v) {
                                     strVal = strVal.replace("[" + v + "]", "'" + theRowKey[v] + "'").replace(/\['/g, '').replace(/'\]/g, '')
                                 })
                                 theRowKey[key] = eval(strVal)
@@ -106,7 +104,7 @@ AL = function(element, options) {
                         var a = arrFieldsToRetrieve
                         var b = _.keys(sourceObject.columns)
                         var c = []
-                        a.forEach(function(k) {
+                        a.forEach(function (k) {
                             if (k != sourceObject.main_id) {
                                 b.indexOf(k) === -1 ? c.push(k) : false
                             }
@@ -116,8 +114,8 @@ AL = function(element, options) {
                     //Borramos las columnas que hemos usado para construir dSource, pero que no ya no necesitamos
                 function removeUnusedColumns() {
                     var arrToDel = unusedColumns()
-                    arrCollection.forEach(function(eachRow) {
-                        arrToDel.forEach(function(eachCol) {
+                    arrCollection.forEach(function (eachRow) {
+                        arrToDel.forEach(function (eachCol) {
                             delete eachRow[eachCol]
                         })
                     })
@@ -129,7 +127,7 @@ AL = function(element, options) {
         function calculateColumns2Array() {
                 var arrCColums = []
                 if (list.options.calculateColumns) {
-                    _.each(list.options.calculateColumns, function(value, key) {
+                    _.each(list.options.calculateColumns, function (value, key) {
                         var objCColums = {}
                         var t = value.split(',')
                         objCColums.column = key
@@ -147,9 +145,9 @@ AL = function(element, options) {
             var nObj = {} //creamos el objeto
             var nkey = configSource.main_id //Establecemos el nombre del campo que relaciona
             var show = _.keys(configSource.columns) //los campos que se deben mostrar
-            $.each(theSource, function(key, value) { //por cada elemento en uno de los joins
+            $.each(theSource, function (key, value) { //por cada elemento en uno de los joins
                 var sObj = {}
-                show.forEach(function(s) {
+                show.forEach(function (s) {
                     if (s != configSource.main_id) {
                         sObj[s] = value[s]
                     }
@@ -159,19 +157,18 @@ AL = function(element, options) {
                 }
                 nObj[value[nkey]][value['_id']] = sObj
             })
-            dSources.main.forEach(function(vkey) { //recorremos el array principal
+            dSources.main.forEach(function (vkey) { //recorremos el array principal
                 vkey[mainFieldName] = {}
                 if (nObj[vkey._id]) {
                     vkey[mainFieldName] = nObj[vkey._id]
                 }
             })
         }
-        Tracker.autorun(function() {
-            _.each(list.sources, function(iSource, key) {
+        Tracker.autorun(function () {
+            _.each(list.sources, function (iSource, key) {
                 dSources[key] = loadSource(iSource, key)
             })
-            _.each(dSources, function(idSource, key) {
-                // dbg("key.type", list.sources[key].type)
+            _.each(dSources, function (idSource, key) {
                 if (key != 'main') {
                     mergeArrayOneToMany(idSource, list.sources[key], key)
                 }
@@ -179,11 +176,10 @@ AL = function(element, options) {
             if (dSources.main.length >= 1) {
                 //Reordenamos la primera fila, con sus propios valores para que las columnas se muestren en el orden correcto
                 var orderCols = {}
-                _.each(list.sources.main.columns, function(value, key) {
+                _.each(list.sources.main.columns, function (value, key) {
                     orderCols[key] = dSources.main[0][key] || 1
                 })
                 dSources.main[0] = orderCols
-                    //dbg("listCss", listCss)
                 json2TableList(dSources.main, element, parseEvalObjects(list.options) || {})
                 processListCssKey($('#' + element), listCss)
             }
@@ -193,33 +189,31 @@ AL = function(element, options) {
     //TODO Ver que ocurre con eval(luhlhlhh) cuando no se utiliza al final de la linea
     //Refactorizar autol, incluyendo el uso de _.extend para posibilitar relaciones oneToOne directamente. Ver si usandolo en el resto mejoramos el rendimiento
     //TODO HAcer compatible el sistema de grid con bootstrap y otros....
-renderList = function renderList(objectSource, divDestName) {
-        // dbg("objectSource", objectSource)
-        autol = new AL(divDestName, {
-                def: sanitizeObjectNameKeys(objectSource.content || objectSource),
-                name: objectSource.name
+renderList = function renderList(options) {
+        dbg("roptions", options)
+        autol = new AL(options.div, {
+                def: sanitizeObjectNameKeys(options.src),
+                name: options.name
             })
             //TODO Importante @security Poner una condicion que permita que solo los ususrios administradores puedan manejar la configuración
         if (1 == 1) {
             var theAdminLink = $('<a>', {
                     class: 'admin admin-list',
                     target: '_blank',
-                    href: '/backend/list/' + objectSource.name,
+                    href: '/backend/list/' + options.name,
                     title: t('Setup this list')
-                }).html('<i class="fa fa-wrench"></i>').prependTo($('#' + divDestName).parent())
+                }).html('<i class="fa fa-wrench"></i>').prependTo($('#' + options.div).parent())
                 // c.HTML.title.wrap('<a target = _blank class="admin" href="/backend/af/' + c.form.name + '" title="You are admin. Setup form">')
         }
     }
     //Creamos un clave en listado para incluir css en la página. Importante, las claves dentro de css: deben estar rodeadas de comillas dobles, y los valores que lo requieran, ( por incluir espacios o caracteres especiales, deben ir entre comillas simples)
 processListCssKey = function processListCssKey($element, listCss) {
     var newCss = {}
-    _(listCss).each(function(value, key) {
+    _(listCss).each(function (value, key) {
         newCss['#' + $element.attr('id') + ' ' + key] = value
     })
     newCss = JSON.stringify(newCss, 0).replace(/"/g, '').replace(/:{/g, '{').replace(/,/g, '').replace(/{/, '').replace(/}$/, '')
     var $style = $('<style>', {
         class: 'def-list'
     }).text(newCss).prependTo($element)
-    dbg("newCss", $style)
-    dbg("element", $element)
 }

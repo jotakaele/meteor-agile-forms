@@ -1,27 +1,13 @@
-cargaList = function cargaList(options, destDivName) {
-    destDivName = destDivName || "listdest"
-    if ($.type(options) != "object") {
-        options = {
-            name: options
-        }
-    }
-    var objItem = {}
-    if (options.name) {
-        objItem.name = options.name
-    }
-    if (options._id) {
-        objItem._id = options._id
-    }
-    // obj = _.extend({
-    //     state: 'active'
-    // }, objItem)
+cargaList = function cargaList(options) {
+    dbg("loptions", options)
+
     function cargarItemInicial(nombreItem, callback) {
-        res = Autol.findOne(objItem)
+        res = Autol.findOne(_(options).pick('name'))
         callback(res)
     }
-    cargarItemInicial(objItem.name, function (res) {
+    cargarItemInicial(options.name, function (res) {
         if (res) {
-            $.when(renderList(res, destDivName)).done(function () {
+            $.when(renderList(options)).done(function () {
                 activateFormLinks()
             })
         }
@@ -29,14 +15,16 @@ cargaList = function cargaList(options, destDivName) {
 }
 Template.listshow.rendered = function () {
     var config = this.data
+    config.type = 'list'
     Meteor.setTimeout(function () {
-        cargaList(config.listName)
+        doSnippet(config)
     }, 100)
 }
 Template.pageList.rendered = function () {
-    dbg('this', this.data)
     var config = this.data
+    config.div = 'listdest'
+    config.type = 'list'
     Meteor.setTimeout(function () {
-        cargaList(config.name, 'listdest')
+        doSnippet(config)
     }, 500)
 }

@@ -21,7 +21,7 @@ snippets = {
             },
             renderInMasterBackend: function () {
                 //this.render(oVars.editorToSave(), 'ritem')
-                cargarSnippet({
+                doSnippet({
                     type: 'html',
                     src: oVars.editorToSave(),
                     div: 'ritem',
@@ -45,13 +45,15 @@ snippets = {
                         })
                     }
                     if (res) {
+                        res = substSnippets(res)
                         $('#' + options.div).html(res)
+                        return true
                     }
                 });
             },
             renderInMasterBackend: function () {
                 //this.render(oVars.editorToSave(), 'ritem')
-                cargarSnippet({
+                doSnippet({
                     type: 'jade',
                     src: oVars.editorToSave(),
                     div: 'ritem',
@@ -67,7 +69,7 @@ snippets = {
             },
             renderInMasterBackend: function () {
                 //this.render(oVars.editorToSave(), 'ritem')
-                cargarSnippet({
+                doSnippet({
                     type: 'markdown',
                     src: oVars.editorToSave(),
                     div: 'ritem',
@@ -84,7 +86,7 @@ snippets = {
             },
             renderInMasterBackend: function () {
                 //this.render(oVars.editorToSave(), 'ritem')
-                cargarSnippet({
+                doSnippet({
                     type: 'css',
                     src: oVars.editorToSave(),
                     div: 'ritem',
@@ -113,7 +115,7 @@ snippets = {
             collection: "_af",
             ace: "yaml",
             transform: function (options) {
-                cargaForm(options)
+                return cargaForm(options)
             },
             renderInMasterBackend: function () {
                 $('#option-form').removeClass('hide')
@@ -130,7 +132,7 @@ snippets = {
                     }
                     _(oRenderOptions).extend(jsyaml.load(editor.getValue()).test)
                         // 
-                    cargarSnippet(oRenderOptions)
+                    doSnippet(oRenderOptions)
                 } else {
                     $('#ritem').html('<div class="alert-box alert">Form config error.</div>')
                 }
@@ -140,21 +142,27 @@ snippets = {
             collection: "_al",
             ace: "yaml",
             transform: function (options) {
-                dbg('options', options)
-                cargaList(options.name, options.div)
+                return cargaList(options)
             },
             renderInMasterBackend: function () {
                 var contentFiltered = oVars.editorToSave()
                 if (contentFiltered) {
-                    renderList(contentFiltered, 'ritem')
+                    var oRenderOptions = {
+                        type: 'list',
+                        src: contentFiltered,
+                        div: 'ritem',
+                        render: true,
+                        name: $('input#name').val()
+                    }
                 } else {
                     $('#ritem').html('<div class="alert-box alert">List config error.</div>')
                 }
+                doSnippet(oRenderOptions)
             }
         }
     }
     //Devuelve el contenido de un snippet definido en oOptions  o bien lo renderiza en oOptions.div (si existe y render= true)
-    // cargarSnippet({
+    // doSnippet({
     //     src: null,
     //     type: 'html',
     //     name: 'unHtml',
@@ -162,29 +170,51 @@ snippets = {
     //     render: true || false (Si vuelca el contenido transformado en .div)
     // })
 if (Meteor.isClient) {
-    cargarSnippet = function (oOptions) {
-            //Si no hay src , lo extraemos de la base de datos, (Solo si es distinto de list o form, en cuyo caso se encarga renderForm o cargaList de consultar la base de datos)
-            //
-            if (['list', 'form'].indexOf(oOptions.type) == -1) {
-                oOptions.render = true
-                if (!oOptions.src) {
-                    oOptions.src = masterConnection[oOptions.type].findOne({
-                        name: oOptions.name
-                    }).content
-                }
+    doSnippet = function (oOptions) {
+            //Si es uno de los elemento que necesariamente han de renderizarse en un div y no se ha pasado, devolvemos un error
+            function returnError() {
+                return ('<span class="error">Error,  --snippet|' + oOptions.type + ' | ' + oOptions.name + '-- not found</span>')
             }
-            //Si es uno de los elemento que necesariamente han de renderizarse en eun div y no se ha pasado, devolvemos un error
+            if (!snippets[oOptions.type]) {
+                return returnError()
+            }
             if (!oOptions.div && ['list', 'form', 'jade'].indexOf(oOptions.type) >= 0) {
                 throw Meteor.Error(oOptions.type + " require a div name to run.");
                 return false
             }
-            //dbg("oOptions.src", oOptions.src)
+            if (!oOptions.src) {
+                var r = masterConnection[oOptions.type].findOne({
+                    name: oOptions.name
+                }) || undefined
+                if (r) {
+                    oOptions.src = r.content
+                }
+            }
+            if (!oOptions.src) {
+                return returnError()
+            }
+            //Stringifica transformando los valores
+            function replacer(key, value) {
+                    if (typeof value === "string") {
+                        return substSnippets(value);
+                    }
+                    return value;
+                }
+                //oOptions.src = substSnippets(oOptions.src)
+            if (typeof oOptions.src == 'object') {
+                src = oOptions.src
+                src = JSON.stringify(src, replacer)
+                oOptions.src = JSON.parse(src)
+                    // return null
+            } else {
+                oOptions.src = substSnippets(oOptions.src)
+            }
             var value = snippets[oOptions.type].transform(oOptions)
             if (oOptions.render && oOptions.div) {
-                $('#' + oOptions.div).html(substSnippets(value))
+                $('#' + oOptions.div).html(value)
                 return true
             } else {
-                return substSnippets(value)
+                return value
             }
         }
         //TODO Organizar los metodos de snippet, de modo que la funcion cargaSnippet nos devuelva el contenido renderizado en cada caso ...
@@ -199,10 +229,14 @@ if (Meteor.isClient) {
          * @param  {string} cadena [La cadena donde sustituir]
          * @return {string}        [LA cadena ya sustituida]
          */
-    substSnippets = function substSnippets(cadena) {
+    substSnippets = function (cadena) {
         var expresion = /--snippet.*--/g
         var matches = cadena.match(expresion) || []
-            //console.log(matches)
+            // console.log(matches)
+            // console.log('bucle')
+        if (matches.length == 0) {
+            return cadena
+        }
         matches.forEach(function (match) {
             //current ver como hacemos las substituciones para que no interfira con las sustituciones de helpers de los formularios
             var snippet = match.replace(/--/g, '').split('|')
@@ -211,8 +245,10 @@ if (Meteor.isClient) {
                     name: snippet[2]
                 }
                 // console.log(conf)
-            var res = cargarSnippet(conf)
-            cadena = cadena.replace(match, res);
+            var res = doSnippet(conf)
+            if (cadena) {
+                cadena = cadena.replace(match, res);
+            }
         })
         return cadena
     }
@@ -220,14 +256,10 @@ if (Meteor.isClient) {
             var config = this.data
             config.render = true
             config.div = config.div || "snippetdest"
-            dbg("config", o2S(config))
-            Meteor.setTimeout(function () {
-                cargaSnippet(config)
-            }, 1500)
+            doSnippet(config)
         }
         // Template.snippet.helpers({
         //         content: function () {
-        //             dbg('this', this)
         //             var config = this
         //             return cargaSnippet(config)
         //         )

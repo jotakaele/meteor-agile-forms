@@ -112,30 +112,6 @@ parseEvalObjects = function parseEvalObjects(obj) {
         })
         return JSON.parse(v)
     }
-    /*
-                                        Sustituye todos los valores entre $valor$ por el elemento del objeto correspondiente
-                                        */
-parseSubstNodes = function parseSubstNodes(obj) {
-        obj = obj || {}
-        obj.helpers = obj.helpers || {}
-        var v = JSON.stringify(obj, undefined, 1) //importante devolver con indentacion para que pueda detectar los saltos de linea
-        var expresion = /\$.*\$/g
-        var matches = v.match(expresion) || []
-        matches.forEach(function (match) {
-            var vEval = match.replace(/\$/g, '');
-            var cad = 'obj.def'
-            var trozos = vEval.split('.')
-            if (trozos.length == 1) {
-                cad = 'obj.def.helpers'
-            }
-            trozos.forEach(function (item) {
-                    cad = cad + '[\'' + item + '\']'
-                })
-                // console.log(cad)
-            v = v.replace(match, eval(cad));
-        })
-        return JSON.parse(v)
-    }
     /*reemplazamos  caracteres que prioducen errores para evitar errores en la inserción en MongoDb */
 desanitizeObjectNameKeys = function desanitizeObjectNameKeys(obj) {
         obj = JSON.stringify(obj)
@@ -169,7 +145,6 @@ arrayProcess = function arrayProcess(theArray, theOperacion) {
     }
     //Devuelve un objeto fecha formateado a partir de un string en el pattern patern
 toDate = function toDate(formaDateString, pattern) {
-        //dbg('formaDateString', formaDateString)
         pattern = pattern || s('default_date_format').datetimepicker.replace(/\//g, '').toLowerCase()
         formaDateString = formaDateString.toString().replace(/\//g, '-')
         formaDateString = formaDateString.toString().replace(/\./g, '-')
