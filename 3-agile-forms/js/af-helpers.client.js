@@ -32,7 +32,7 @@ cargaForm = function cargaForm(objOptions) {
     //recuperamos el af, solo si no estamos recibiendo  objOptions.src como un objeto
     $.when((function (options) {
             if (!options.src) {
-                return Autof.findOne(obj)
+                return masterConnection.form.findOne(obj)
             } else {
                 return options.src
             }
@@ -51,7 +51,7 @@ cargaForm = function cargaForm(objOptions) {
             var colName = options.src.content.form.collection
             if (_(['edit', 'readonly', 'delete']).indexOf(options.mode) >= 0) {
                 //fixme ¿Quizas debamos recuperar desde un metodo, porque no siempre estarán todos los registros en el cliente....? OJO, ya hay un metodo hecho para ello
-                var myRes = cCols[colName].findOne(options.doc)
+                var myRes = masterConnection[colName].findOne(options.doc)
                 if (!myRes) {
                     showToUser({
                         content: t('No such document') + ' <strong>' + options.doc + '</strong> ' + t('on collection') + '  <strong>' + colName + '</strong>, or isn`t allowed for current user',

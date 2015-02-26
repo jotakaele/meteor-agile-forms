@@ -1,35 +1,3 @@
-//Creamos las conexiones
-masterConnection = {}
-    //snippets id defined in 5-agile-snippets/js/snippets.js
-_(snippets).each(function (value, key) {
-    if (key == 'form') {
-        masterConnection[key] = Autof
-    } else if (key == 'list') {
-        masterConnection[key] = Autol
-    } else {
-        if (!masterConnection[key]) {
-            masterConnection[key] = new Mongo.Collection(value.collection);
-        }
-        if (Meteor.isServer) {
-            //Creamos los indices si no se han creado antes
-            if (!s('master_ensure_index_run_' + key)) {
-                masterConnection[key]._ensureIndex({
-                    name: 1
-                }, {
-                    unique: true,
-                    dropDups: true
-                })
-                s('master_ensure_index_run_' + key, true)
-            }
-            Meteor.publish(key, function () {
-                return masterConnection[key].find()
-            })
-        }
-        if (Meteor.isClient) {
-            Meteor.subscribe(key);
-        }
-    }
-})
 if (Meteor.isClient) {
     //Inicializacion de Variables y filtros
     oVars = {
@@ -143,24 +111,24 @@ if (Meteor.isClient) {
         }
     }
     snippets.list.renderInMasterBackend = function () {
-        var contentFiltered = oVars.editorToSave()
-        if (contentFiltered) {
-            var oRenderOptions = {
-                type: 'list',
-                src: contentFiltered,
-                div: 'ritem',
-                render: true,
-                name: $('input#name').val()
+            var contentFiltered = oVars.editorToSave()
+            if (contentFiltered) {
+                var oRenderOptions = {
+                    type: 'list',
+                    src: contentFiltered,
+                    div: 'ritem',
+                    render: true,
+                    name: $('input#name').val()
+                }
+            } else {
+                $('#ritem').html('<div class="alert-box alert">List config error.</div>')
             }
-        } else {
-            $('#ritem').html('<div class="alert-box alert">List config error.</div>')
+            doSnippet(oRenderOptions)
         }
-        doSnippet(oRenderOptions)
-    }
-    /*    // Extendemos snippets con los metodos necesarios para el backend
-    _.each(extendToBackend, function (value, key) {
-        _.extend(snippets[key], value);
-    });*/
+        /*    // Extendemos snippets con los metodos necesarios para el backend
+        _.each(extendToBackend, function (value, key) {
+            _.extend(snippets[key], value);
+        });*/
     Template.masterEdit.rendered = function () {
         $('select#theme').val(s('active_ace_theme'))
         $('#items_existentes a[name="' + this.data.name + '"]').click()

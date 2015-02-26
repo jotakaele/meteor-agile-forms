@@ -1,7 +1,7 @@
 Meteor.methods({
     //Update AF record
-    'deleteAfRecord': function(formName, objectToDelete) {
-        var theForm = Autof.findOne({
+    'deleteAfRecord': function (formName, objectToDelete) {
+        var theForm = masterConnection.form.findOne({
             name: formName
         }).content.form
         var theDelete = {}
@@ -13,11 +13,11 @@ Meteor.methods({
         Meteor.call('setLog', 'delete_record', {
             collection: theDelete.collection,
             id: theDelete.docId,
-            record: sCols[theDelete.collection].findOne(theDelete.docId)
-        }, function(err, res) {
+            record: masterConnection[theDelete.collection].findOne(theDelete.docId)
+        }, function (err, res) {
             if (res) {
                 //..y si ha funcionado, borramos el registro
-                isOk = sCols[theDelete.collection].remove(theDelete.docId)
+                isOk = masterConnection[theDelete.collection].remove(theDelete.docId)
                 if (isOk == 1) {
                     console.log('REGISTRO BORRADO')
                     theDelete.res = {
@@ -42,8 +42,8 @@ Meteor.methods({
         return theDelete.res
     },
     //Update AF record
-    'updateAfRecord': function(formName, formResults) {
-        var theForm = Autof.findOne({
+    'updateAfRecord': function (formName, formResults) {
+        var theForm = masterConnection.form.findOne({
             name: formName
         }).content.form
         var theSave = {}
@@ -58,7 +58,7 @@ Meteor.methods({
             }
             //_.extend(theSave.data, autoData)
         if (theSave.isValid) {
-            var isOk = sCols[theSave.collection].update(theSave.docId, {
+            var isOk = masterConnection[theSave.collection].update(theSave.docId, {
                 $set: theSave.data, //Actualizamos los datos
                 $push: { //Añadimos la información de auditoría
                     autodata: autoData
@@ -88,8 +88,8 @@ Meteor.methods({
         }
     },
     //Guardar un registro desde af 
-    'addAfRecord': function(formName, formResults) {
-        var theForm = Autof.findOne({
+    'addAfRecord': function (formName, formResults) {
+        var theForm = masterConnection.form.findOne({
             name: formName
         }).content.form
         var theSave = {}
@@ -105,7 +105,7 @@ Meteor.methods({
         }
         _.extend(theSave.data, autoData)
         if (theSave.isValid) {
-            var theId = sCols[theSave.collection].insert(theSave.data)
+            var theId = masterConnection[theSave.collection].insert(theSave.data)
             if (theId) {
                 Meteor.call('setLog', 'insert_record', {
                     collection: theSave.collection,
@@ -130,8 +130,8 @@ Meteor.methods({
         }
     },
     //Recuperar un registro
-    'getDoc': function(theCollection, theId) {
-        return sCols[theCollection].findOne(theId)
+    'getDoc': function (theCollection, theId) {
+        return masterConnection[theCollection].findOne(theId)
     }
 });
 //Comprueba la validación del formulario en el servidor, en base a diferentes parameros (campos requeridos, seguridad, etc)
@@ -154,7 +154,7 @@ function validateRecord(theData, theForm) {
         return check
     }
     //Vamos a convertir the Data en un objeto de una sola dimension...
-    _.each(theDataCopy, function(value, key) {
+    _.each(theDataCopy, function (value, key) {
         if (!_(objTheAllowedFields).has(key)) {
             check.isValid = false
             check.info.push('<p>The field <b>' + key + '</b> is not in  [form>fields] neither in [form.allow_inject]<p>Please contact with app administrator')
@@ -167,12 +167,12 @@ function validateRecord(theData, theForm) {
         }
         if (_.startsWith(key, '_')) {
             if (value.length == undefined) { //significa que es un objeto
-                _.each(value, function(oValue, oKey) {
+                _.each(value, function (oValue, oKey) {
                     theDataCopy[oKey + '.' + key] = oValue
                 })
             } else { // o es un array
-                _.each(value, function(aValue, aIndex) {
-                    _.each(aValue, function(aoValue, aoKey) {
+                _.each(value, function (aValue, aIndex) {
+                    _.each(aValue, function (aoValue, aoKey) {
                         theDataCopy[aoKey + '.' + (aIndex + 1) + '.' + key] = aoValue
                     })
                 })
@@ -180,7 +180,7 @@ function validateRecord(theData, theForm) {
             delete theDataCopy[key]
         }
     })
-    _.each(theDataCopy, function(value, key) {
+    _.each(theDataCopy, function (value, key) {
         //Comprobamos required
         theRealKey = key.split('.')[0]
         if ((theForm.fields[theRealKey] || {}).required == false ? false : true) {

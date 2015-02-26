@@ -1,5 +1,5 @@
-if (Autof.find().count() === 0) {
-    var defaultAutoF = {
+if (masterConnection.form.find().count() === 0) {
+    var defaultForm = {
         "form": {
             "collection": "persons",
             "title": "Persons data",
@@ -133,19 +133,19 @@ if (Autof.find().count() === 0) {
     var sexo = ["Hombre", "Mujer"]
     var provincias = ["Álava", "Albacete", "Alicante", "Almería", "Asturias", "Ávila", "Badajoz", "Barcelona", "Burgos", "Cáceres", "Cádiz", "Cantabria", "Castellón", "Ciudad Real", "Córdoba", "La Coruña", "Cuenca", "Gerona", "Granada", "Guadalajara", "Guipúzcoa", "Huelva", "Huesca", "Islas Baleares", "Jaén", "León", "Lérida", "Lugo", "Madrid", "Málaga", "Murcia", "Navarra", "Orense", "Palencia", "Las Palmas", "Pontevedra", "La Rioja", "Salamanca", "Santa Cruz de Tenerife", "Segovia", "Sevilla", "Soria", "Tarragona", "Teruel", "Toledo", "Valencia", "Valladolid", "Vizcaya", "Zamora", "Zaragoza", "Ceuta", "Melilla"]
     dbg("Insertando datos de prueba de formulario");
-    Autof.insert({
+    masterConnection.form.insert({
         type: "form",
         name: "Personas",
-        content: defaultAutoF,
+        content: defaultForm,
         state: "active"
     })
-    Autof.insert({
+    masterConnection.form.insert({
         type: "form",
         name: "Sample Form",
         content: sampleForm,
         state: "active"
     })
-    Autof._ensureIndex({
+    masterConnection.form._ensureIndex({
         name: 1
     }, {
         unique: true,
