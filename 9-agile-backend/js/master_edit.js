@@ -1,5 +1,4 @@
-dbg('snippets', snippets)
-    //Creamos las conexiones
+//Creamos las conexiones
 masterConnection = {}
     //snippets id defined in 5-agile-snippets/js/snippets.js
 _(snippets).each(function (value, key) {
@@ -34,54 +33,134 @@ _(snippets).each(function (value, key) {
 if (Meteor.isClient) {
     //Inicializacion de Variables y filtros
     oVars = {
-        bEditorCambiado: false,
-        renderFromEditor: function () {
-            //   renderList(jsyaml.load(editor.getValue()), 'ritem')
-            //   El comando que se lanzará cuando queramos renderizar el list/etc depues d emodificarlo ene le editor
-        },
-        renderFromDatabase: function (src) {
-            //renderList(src, 'ritem') //El comando que se lanzará cuando queramos renderizar el list/etc directamente desde la configuración de la base de datos
-        },
-        //Transformaciones que hacemos al valor recuperado del editor antes de guardarlo en la base de datos.
-        editorToSave: function () {
-            switch (snippets[s('masterActiveCategory')].ace) {
-            case 'yaml':
-                //Si estamos almacenando JSON...
-                try {
-                    var oRes = jsyaml.load(editor.getValue())
-                } catch (e) {
-                    console.log(e);
-                    // showToUser({
-                    //     content: 'The YAML string is malformed <b>(LINEA ' + e.mark.line + ')</b>',
-                    //     time: 2
-                    // })
-                    //editor.gotoLine(e.mark.line)
-                    //editor.moveCursorTo(e.mark.line - 1, e.mark.column - 1)
+            bEditorCambiado: false,
+            renderFromEditor: function () {
+                //   renderList(jsyaml.load(editor.getValue()), 'ritem')
+                //   El comando que se lanzará cuando queramos renderizar el list/etc depues d emodificarlo ene le editor
+            },
+            renderFromDatabase: function (src) {
+                //renderList(src, 'ritem') //El comando que se lanzará cuando queramos renderizar el list/etc directamente desde la configuración de la base de datos
+            },
+            //Transformaciones que hacemos al valor recuperado del editor antes de guardarlo en la base de datos.
+            editorToSave: function () {
+                switch (snippets[s('masterActiveCategory')].ace) {
+                case 'yaml':
+                    //Si estamos almacenando JSON...
+                    try {
+                        var oRes = jsyaml.load(editor.getValue())
+                    } catch (e) {
+                        console.log(e);
+                        // showToUser({
+                        //     content: 'The YAML string is malformed <b>(LINEA ' + e.mark.line + ')</b>',
+                        //     time: 2
+                        // })
+                        //editor.gotoLine(e.mark.line)
+                        //editor.moveCursorTo(e.mark.line - 1, e.mark.column - 1)
+                    }
+                    if (typeof oRes == 'object') {
+                        return oRes
+                    } else {
+                        return false
+                    }
+                    break;
+                default:
+                    return editor.getValue()
+                    break;
                 }
-                if (typeof oRes == 'object') {
-                    return oRes
-                } else {
-                    return false
+            },
+            //Transformaciones que hacemos al valor recuperado de la base de datos antes de volcarlo en el editor
+            savedToEditor: function (src) {
+                switch (snippets[s('masterActiveCategory')].ace) {
+                case 'yaml':
+                    // Si estamos recuperando JSON y vamos a trabajar en YAML ....
+                    return jsyaml.dump(sanitizeObjectNameKeys(src))
+                    break;
+                default:
+                    return sanitizeObjectNameKeys(src)
+                    break;
                 }
-                break;
-            default:
-                return editor.getValue()
-                break;
-            }
-        },
-        //Transformaciones que hacemos al valor recuperado de la base de datos antes de volcarlo en el editor
-        savedToEditor: function (src) {
-            switch (snippets[s('masterActiveCategory')].ace) {
-            case 'yaml':
-                // Si estamos recuperando JSON y vamos a trabajar en YAML ....
-                return jsyaml.dump(sanitizeObjectNameKeys(src))
-                break;
-            default:
-                return sanitizeObjectNameKeys(src)
-                break;
-            }
-        },
+            },
+        }
+        /**
+         * Extendemos la funcionalidad de snippets para trabajar con el backend
+         */
+    snippets.html.renderInMasterBackend = function () {
+        //this.render(oVars.editorToSave(), 'ritem')
+        doSnippet({
+            type: 'html',
+            src: oVars.editorToSave(),
+            div: 'ritem',
+            render: true
+        })
     }
+    snippets.jade.renderInMasterBackend = function () {
+        //this.render(oVars.editorToSave(), 'ritem')
+        doSnippet({
+            type: 'jade',
+            src: oVars.editorToSave(),
+            div: 'ritem',
+            render: true
+        })
+    }
+    snippets.markdown.renderInMasterBackend = function () {
+        //this.render(oVars.editorToSave(), 'ritem')
+        doSnippet({
+            type: 'markdown',
+            src: oVars.editorToSave(),
+            div: 'ritem',
+            render: true
+        })
+    }
+    snippets.css.renderInMasterBackend = function () {
+        //this.render(oVars.editorToSave(), 'ritem')
+        doSnippet({
+            type: 'css',
+            src: oVars.editorToSave(),
+            div: 'ritem',
+            render: true
+        })
+    }
+    snippets.text.renderInMasterBackend = function () {}
+    snippets.config.renderInMasterBackend = function () {}
+    snippets.form.renderInMasterBackend = function () {
+        $('#option-form').removeClass('hide')
+        var contentFiltered = oVars.editorToSave()
+        if (contentFiltered) {
+            var oRenderOptions = {
+                type: 'form',
+                src: contentFiltered,
+                div: 'ritem',
+                name: $('input#name').val(),
+                mode: $('select#form-mode').val() || s('master_edit_form_mode'),
+                doc: $('select#form-doc-id').val() || s('last-' + $('input#name').val() + '-backend-edit-id'),
+                values: s('last-' + $('input#name').val() + '-backend-edit-values') || {}
+            }
+            _(oRenderOptions).extend(jsyaml.load(editor.getValue()).test)
+                // 
+            doSnippet(oRenderOptions)
+        } else {
+            $('#ritem').html('<div class="alert-box alert">Form config error.</div>')
+        }
+    }
+    snippets.list.renderInMasterBackend = function () {
+        var contentFiltered = oVars.editorToSave()
+        if (contentFiltered) {
+            var oRenderOptions = {
+                type: 'list',
+                src: contentFiltered,
+                div: 'ritem',
+                render: true,
+                name: $('input#name').val()
+            }
+        } else {
+            $('#ritem').html('<div class="alert-box alert">List config error.</div>')
+        }
+        doSnippet(oRenderOptions)
+    }
+    /*    // Extendemos snippets con los metodos necesarios para el backend
+    _.each(extendToBackend, function (value, key) {
+        _.extend(snippets[key], value);
+    });*/
     Template.masterEdit.rendered = function () {
         $('select#theme').val(s('active_ace_theme'))
         $('#items_existentes a[name="' + this.data.name + '"]').click()

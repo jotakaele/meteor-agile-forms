@@ -18,23 +18,11 @@ snippets = {
             ace: "html",
             transform: function (options) {
                 return options.src;
-            },
-            renderInMasterBackend: function () {
-                //this.render(oVars.editorToSave(), 'ritem')
-                doSnippet({
-                    type: 'html',
-                    src: oVars.editorToSave(),
-                    div: 'ritem',
-                    render: true
-                })
             }
         },
         jade: {
             collection: "_jade",
             ace: "jade",
-            // transform: function (options) {
-            //     return jadeProcess(options.src);
-            // },
             transform: function (options) {
                 Meteor.call('jadeRender', options.src, function (err, res) {
                     if (err) {
@@ -50,15 +38,6 @@ snippets = {
                         return true
                     }
                 });
-            },
-            renderInMasterBackend: function () {
-                //this.render(oVars.editorToSave(), 'ritem')
-                doSnippet({
-                    type: 'jade',
-                    src: oVars.editorToSave(),
-                    div: 'ritem',
-                    render: true
-                })
             }
         },
         markdown: {
@@ -66,15 +45,6 @@ snippets = {
             ace: "markdown",
             transform: function (options) {
                 return marked(options.src)
-            },
-            renderInMasterBackend: function () {
-                //this.render(oVars.editorToSave(), 'ritem')
-                doSnippet({
-                    type: 'markdown',
-                    src: oVars.editorToSave(),
-                    div: 'ritem',
-                    render: true
-                })
             }
         },
         css: {
@@ -83,15 +53,6 @@ snippets = {
             transform: function (options) {
                 var transformValue = options.render ? '<pre>' + options.src + '</pre>' : options.src;
                 return transformValue;
-            },
-            renderInMasterBackend: function () {
-                //this.render(oVars.editorToSave(), 'ritem')
-                doSnippet({
-                    type: 'css',
-                    src: oVars.editorToSave(),
-                    div: 'ritem',
-                    render: true
-                })
             }
         },
         text: {
@@ -99,8 +60,7 @@ snippets = {
             ace: "text",
             transform: function (options) {
                 return options.src;
-            },
-            renderInMasterBackend: function () {}
+            }
         },
         config: {
             collection: "_config",
@@ -108,34 +68,13 @@ snippets = {
             transform: function (options) {
                 var transformValue = options.render ? EJSON.stringify(options.src) : options.src;
                 return transformValue;
-            },
-            renderInMasterBackend: function () {}
+            }
         },
         form: {
             collection: "_af",
             ace: "yaml",
             transform: function (options) {
                 return cargaForm(options)
-            },
-            renderInMasterBackend: function () {
-                $('#option-form').removeClass('hide')
-                var contentFiltered = oVars.editorToSave()
-                if (contentFiltered) {
-                    var oRenderOptions = {
-                        type: 'form',
-                        src: contentFiltered,
-                        div: 'ritem',
-                        name: $('input#name').val(),
-                        mode: $('select#form-mode').val() || s('master_edit_form_mode'),
-                        doc: $('select#form-doc-id').val() || s('last-' + $('input#name').val() + '-backend-edit-id'),
-                        values: s('last-' + $('input#name').val() + '-backend-edit-values') || {}
-                    }
-                    _(oRenderOptions).extend(jsyaml.load(editor.getValue()).test)
-                        // 
-                    doSnippet(oRenderOptions)
-                } else {
-                    $('#ritem').html('<div class="alert-box alert">Form config error.</div>')
-                }
             }
         },
         list: {
@@ -143,21 +82,6 @@ snippets = {
             ace: "yaml",
             transform: function (options) {
                 return cargaList(options)
-            },
-            renderInMasterBackend: function () {
-                var contentFiltered = oVars.editorToSave()
-                if (contentFiltered) {
-                    var oRenderOptions = {
-                        type: 'list',
-                        src: contentFiltered,
-                        div: 'ritem',
-                        render: true,
-                        name: $('input#name').val()
-                    }
-                } else {
-                    $('#ritem').html('<div class="alert-box alert">List config error.</div>')
-                }
-                doSnippet(oRenderOptions)
             }
         }
     }

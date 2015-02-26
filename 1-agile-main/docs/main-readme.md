@@ -85,3 +85,16 @@ Parametros:
 ```
 
 
+# Snippets
+
+Los diferentes tipos de snippets están definidos en la variable **snippets** que indica: 
+- El nombre del snippet
+- La colección de mongo donde se almacenan
+- El modo de la libreria ACE para que muetsre la sintaxis correcta a cada tipo
+- El metodo **transform** que indica como se renderiza (o devuelve) el snippet
+ 
+
+Actualmemte existes los siguientes typos
+
+## Funcion doSnippet
+Esta funci
