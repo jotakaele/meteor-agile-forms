@@ -2,7 +2,7 @@ cargaList = function cargaList(options) {
     dbg("loptions", options)
 
     function cargarItemInicial(nombreItem, callback) {
-        res = Autol.findOne(_(options).pick('name'))
+        res = masterConnection.list.findOne(_(options).pick('name'))
         callback(res)
     }
     cargarItemInicial(options.name, function (res) {

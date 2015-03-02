@@ -385,7 +385,7 @@ if (Meteor.isClient) {
                 sFilteredContent = oVars.editorToSave(sContent)
                 var okInsert = masterConnection[s('masterActiveCategory')].insert({
                     name: sName,
-                    content: sFilteredContent,
+                    content: desanitizeObjectNameKeys(sFilteredContent),
                     create_date: new Date(),
                     update: new Date()
                 }, function (err, okInsert) {
@@ -443,7 +443,7 @@ if (Meteor.isClient) {
 //Carga los id de los elementos de formularios
 function cargarIdes() {
         var coleccion = jsyaml.load(editor.getValue()).form.collection
-        $.when(cCols[coleccion].find({}, {
+        $.when(masterConnection[coleccion].find({}, {
             fields: {
                 _id: true
             },
