@@ -1,7 +1,9 @@
 autol = function autol(options) {
+    dbg('options', options)
+        //console.clear()
     this.div = options.div || 'listdest';
-    this.list = options.src.list || null
-        //recuperamos los datos de las colecciones indicadas en la configuración
+    //recuperamos los datos de las colecciones indicadas en la configuración
+    this.list = options.src.list
     this.getCollectionData = function () {
         var parent = this;
         dbg('this', this)
@@ -44,6 +46,7 @@ autol = function autol(options) {
 							    .....transformaciones
 							    return doc;
 							  }
+}
 */
             var tmpObj = {
                 fields: {}
@@ -57,27 +60,31 @@ autol = function autol(options) {
                 tmpObj.fields[value.relation.self] = 1
             }
             _.each(originalFields, function (trValue, trKey) {
-                    // dbg(trKey, trValue)
-                    bodyF += 'doc.' + trKey + '=' + trValue.replace(/@/g, 'doc.') + ';\n'
-                    tmpObj.transform = new Function('doc', bodyF + 'return doc;')
-                    trValue.match(/@[A-Z0-9]*/gi).map(function (item) {
-                        tmpObj.fields[item.replace(/@/, '')] = 1
-                    })
+                    if (trValue) {
+                        bodyF += 'doc.' + trKey + '=' + trValue.replace(/@/g, 'doc.') + ';\n'
+                        tmpObj.transform = new Function('doc', bodyF + 'return doc;')
+                        trValue.match(/@[A-Z0-9]*/gi).map(function (item) {
+                            tmpObj.fields[item.replace(/@/, '')] = 1
+                        })
+                    }
                 })
                 // dbg("tmpObj", o2S(tmpObj))
             _.extend(value.options, tmpObj, {
                 fields: {}
             });
-            // dbg("value.options", value.options)
-            ///
-            ///
-            ///
             ///
             //Ejecutamos la query y la anexamos a value.data
             value.tempData = masterConnection[value.collection].find(value.selector || {}, value.options || {}).fetch()
                 //dbg('originalFields', originalFields)
             value.data = value.tempData.map(function (record) {
-                return _.pick(record, keysToKeep)
+                //dbg("record", o2S(record))
+                var obj = {}
+                _.each(keysToKeep, function (key) {
+                    obj[key] = record[key] || " "
+                })
+                dbg("obj", o2S(obj))
+                return obj
+                    //return _.pick(record, keysToKeep)
             })
             delete value.tempData
                 //Eliminamos los campos que no se han pedido en la query
@@ -102,12 +109,28 @@ autol = function autol(options) {
                 })
                 var mainData = parent.list.sources[relationSource].data
                 mainData.map(function (mainRecord) {
-                    mainRecord[key] = tmpData[mainRecord[relationKey]] || {}
-                })
-                dbg("tmpData", tmpData)
-                dbg("mainData", o2S(mainData))
+                        mainRecord[key] = tmpData[mainRecord[relationKey]] || {}
+                    })
+                    //dbg("tmpData", tmpData)
+                dbg("mainData", mainData)
+                parent.list.sources[relationSource].data = mainData
             }
         })
     }
+    var parent = this
+    $.when(parent.getCollectionData())
+        //
+        .then(function () {
+            parent.mergeToMain()
+        })
+        //
+        .then(function () {
+            //dbg("parent.list.sources.main.data", parent.list.sources.main.data)
+            json2TableList(parent.list.sources.main.data, parent.div, parent.list.options)
+        })
+        //Activamos los links a formularios
+        .done(function () {
+            activateFormLinks()
+        })
 }
 

@@ -59,7 +59,7 @@ if (Meteor.isServer) {
                     })
                 }
             })
-            return aUserCollections
+            return _.omit(aUserCollections, _.keys(snippets))
         }
     });
 }
@@ -74,3 +74,4 @@ if (Meteor.isClient) {
         }
     })
 }
+

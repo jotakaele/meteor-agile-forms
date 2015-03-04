@@ -114,16 +114,17 @@ if (Meteor.isClient) {
             var contentFiltered = oVars.editorToSave()
             if (contentFiltered) {
                 var oRenderOptions = {
-                    type: 'list',
-                    src: contentFiltered,
-                    div: 'ritem',
-                    render: true,
-                    name: $('input#name').val()
-                }
+                        type: 'list',
+                        src: contentFiltered,
+                        div: 'ritem'
+                            // name: $('input#name').val()
+                    }
+                    //dbg("oRenderOptions", oRenderOptions)
+                doSnippet(oRenderOptions)
             } else {
                 $('#ritem').html('<div class="alert-box alert">List config error.</div>')
             }
-            doSnippet(oRenderOptions)
+            //dbg('bl', oRenderOptions)
         }
         /*    // Extendemos snippets con los metodos necesarios para el backend
         _.each(extendToBackend, function (value, key) {
@@ -475,3 +476,4 @@ function cargarIdes() {
     //todo Implementar métodos que permitan recuperar y transformar los snippets desde Javascript y desde templates, de manera cruzada, o sea que permitan usar uno en otros.
     //fixed Permitir abrr master/edit invocando a un modo y nombre en concreto, para llamarlo desde fuera. (tambien invocando con un modo e doc en el caso de formularios)
     //fixed @urgente. Se eliminan los elementos cuando se les cambia el nombre!!!
+
