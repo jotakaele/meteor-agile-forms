@@ -81,7 +81,7 @@ snippets = {
             collection: "_al",
             ace: "yaml",
             transform: function (options) {
-                return cargaList(options)
+                return new autol(options)
             }
         }
     }
@@ -111,7 +111,7 @@ if (Meteor.isClient) {
                     name: oOptions.name
                 }) || undefined
                 if (r) {
-                    oOptions.src = r.content
+                    oOptions.src = sanitizeObjectNameKeys(r.content)
                 }
             }
             if (!oOptions.src) {
@@ -191,3 +191,4 @@ if (Meteor.isClient) {
         // });
         // current HAcer un helper que funcione y renderize el snippet llamado en cada caso. Probar en /test
 }
+

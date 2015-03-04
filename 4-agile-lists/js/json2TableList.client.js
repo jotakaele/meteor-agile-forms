@@ -125,9 +125,9 @@ json2TableList = function (data, dest, options) {
                     if (rowKey[cellKey]) {
                         //console.log(cellKey)
                         if (index == 0) {
-                            var theCellHead = $('<th>').text(_.humanize(cellKey)).appendTo(theHeadRow).addClass(_.slugify('column-' + cellKey))
+                            var theCellHead = $('<th>').text(_.humanize(cellKey)).appendTo(theHeadRow).addClass(_.slugify('col-' + cellKey))
                         }
-                        var theCell = $('<td>').html(whatType(rowKey[cellKey])).appendTo(theRow).addClass(_.slugify('column-' + cellKey)).attr('name', cellKey)
+                        var theCell = $('<td>').html(whatType(rowKey[cellKey])).appendTo(theRow).addClass(_.slugify('col-' + cellKey)).attr('name', cellKey)
                             //Si el valor es uno de los tipos indicados, y se ha indicado la propiedad createCellClassLimit entonces establecemos una clase para la celde con el contenido "slugificado". para ello formateamos los campos date antes de procesarlos
                         if (that.config.createCellClassLimit) {
                             var showType = $.type(rowKey[cellKey]) == 'date' ? moment(rowKey[cellKey]).format(that.config.cellDateFormat) : rowKey[cellKey]
@@ -178,7 +178,7 @@ json2TableList = function (data, dest, options) {
         }
         var nOk = []
         var theSum = 0
-        var cells = $('td.column-' + columName, theTable)
+        var cells = $('td.col-' + columName, theTable)
         var countCell = cells.length
         cells.each(function () {
             if ($.isNumeric($(this).text())) {
@@ -199,10 +199,11 @@ json2TableList = function (data, dest, options) {
         if (precision) {
             res = res.toFixed(precision)
         }
-        var destCellRes = $('tfoot th.column-' + columName, theTable)
+        var destCellRes = $('tfoot th.col-' + columName, theTable)
         var thecellRes = $('<div>', {
             operation: operation
         }).text(res).appendTo(destCellRes)
     }
     parseJson(data, dest)
 }
+

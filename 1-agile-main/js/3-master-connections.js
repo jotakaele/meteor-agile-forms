@@ -28,6 +28,10 @@ _(snippets).each(function (value, key) {
 })
 if (Meteor.isServer) {
     Meteor.methods({
+        /**
+         * Añade a masterConnection las colecciones referenciadas en list y form. TAmbién son publicadas en el servidor.
+         * @return {array} [Devuelve un array con los nombre de colecciones, para que en el cliente puedan ser utilizadas y susbcribirse a ellas.]
+         */
         getUserCollections: function () {
             var aUserCollections = []
                 //Extraemos las collecciones de list
@@ -55,19 +59,19 @@ if (Meteor.isServer) {
                     })
                 }
             })
-            return aUserCollections
+            return _.omit(aUserCollections, _.keys(snippets))
         }
     });
 }
 if (Meteor.isClient) {
+    //Añadimos a masterConnection las tablas devueltas por el método getUserCollections y nos susbcribimos a ellas 
     Meteor.call('getUserCollections', function (err, res) {
         if (!err && res) {
-            console.log(res)
             _.each(res, function (value) {
-                console.log(value)
                 masterConnection[value] = new Mongo.Collection(value)
                 Meteor.subscribe(value)
             })
         }
     })
 }
+

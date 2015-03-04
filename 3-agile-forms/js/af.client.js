@@ -1056,7 +1056,7 @@ addFormToMongo = function addFormToMongo($form) {
                 }
             }
         })
-        //var insert = cCols[dest].insert(insertObj)
+        //var insert = masterConnection.form[dest].insert(insertObj)
         //return insert
 }
 updateFormToMongo = function updateFormToMongo($form) {
@@ -1096,7 +1096,7 @@ updateFormToMongo = function updateFormToMongo($form) {
                 }
             }
         })
-        //var insert = cCols[dest].insert(insertObj)
+        //var insert = masterConnection.form[dest].insert(insertObj)
         //return insert
 }
 deleteFormMongo = function deleteFormMongo($form) {
@@ -1134,7 +1134,7 @@ deleteFormMongo = function deleteFormMongo($form) {
                     }
                 }
             })
-            //var insert = cCols[dest].insert(insertObj)
+            //var insert = masterConnection.form[dest].insert(insertObj)
             //return insert
     }
     // //Devuelve un array de objetos con las claves value y label, listo para ser usado en un campo tipo enum de formulario.
@@ -1190,7 +1190,8 @@ queryToEnum = function queryToEnum(query) {
             query.format.sort = {}
             query.format.sort[subst[0]] = 1
         }
-        var qRes = cCols[query.collection].find(query.filter || {}, query.format || {}).fetch()
+        dbg("query", query)
+        var qRes = masterConnection[query.collection].find(query.filter || {}, query.format || {}).fetch()
         var arrRes = []
         var arrCompare = []
         qRes.forEach(function (theRowKey) {

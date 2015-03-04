@@ -44,7 +44,7 @@ AL = function (element, options) {
                 keyName != 'main' ? arrFieldsToRetrieve.push(sourceObject.main_id) : false
                 arrFieldsToRetrieve = _.uniq(arrFieldsToRetrieve)
                 records = {}
-                if (!cCols[sourceObject.collection]) {
+                if (!masterConnection[sourceObject.collection]) {
                     console.error('Se ha intentado utilizar la colección [' + sourceObject.collection + '], pero no está registrada!. Al añadirse una nueva colección, por el momento hay que reiniciar Meteor')
                 }
                 //ordenamos si se ha establecido el orden
@@ -68,7 +68,7 @@ AL = function (element, options) {
                     sort: objSort,
                     fields: objIncluded
                 }
-                var objCollection = cCols[sourceObject.collection].find(objFilter, findOptions).fetch()
+                var objCollection = masterConnection[sourceObject.collection].find(objFilter, findOptions).fetch()
                 arrCollection = []
                 $.each(objCollection, function (el) {
                         arrCollection.push(objCollection[el])
