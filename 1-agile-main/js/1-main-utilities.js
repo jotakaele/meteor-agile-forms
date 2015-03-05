@@ -219,23 +219,92 @@ showToUser = function showToUser(options) {
             })
         }
     }
-    //Todo Ver que modo de encriptado usamos aqui
-    //Codifica objOrString mediante (escape de momento), para poder usarlo donde haga falta,por ejemplo en una url
-o2secure = function o2secure(obj) {
-        if (typeof obj == 'object') {
-            var a = EJSON.stringify(obj)
-        } else {
-            var a = obj
-        }
-        var rawStr = a;
-        var wordArray = CryptoJS.enc.Utf8.parse(rawStr);
-        var base64 = CryptoJS.enc.Base64.stringify(wordArray);
-        return base64
-    }
-    //Pasa unescape de momento, 
-secure2o = function secure2o(cad) {
-    var parsedWordArray = CryptoJS.enc.Base64.parse(cad);
-    var parsedStr = parsedWordArray.toString(CryptoJS.enc.Utf8);
-    //console.log("parsed:",parsedStr);
-    return parsedStr
+    /**
+     * Devuelve un array con los valores unicos en la colecion indicada
+     * @param  {string} col            [La coleccion donde buscar]
+     * @param  {string} field          [El nombre del campo donde buscar]
+     * @param  {object} oQuerySelector [El objeto selector de la query hacia mongo]
+     * @return {Array}                [Un array con los valores unico en el campo indicado]
+     */
+getArrayValues = function (col, field, oQuerySelector) {
+    var campos = JSON.parse('{"' + field + '":1}')
+    var res = masterConnection[col].find(oQuerySelector || {}, {
+        fields: campos
+    }).fetch()
+    myArray = _.uniq(res.map(function (item) {
+        return item[field]
+    }))
+    return myArray
 }
+doQuery_first = function (sMode, sCollection, oSelector, oOptions) {
+        if (sMode == 'find') {
+            return masterConnection[sCollection].find(oSelector || {}, oOptions || {}).fetch()
+        } else if (sMode == 'findOne') {
+            return masterConnection[sCollection].findOne(oSelector || {}, oOptions || {})
+        }
+    }
+    /**
+     * [doQuery Ejecuta una funcion sobre mongo]
+     * @param  {[string find|findOne]} mode       [El tipo de consulta a ajecutar]
+     * @param  {[string]} collection [La colección a utilizar]
+     * @param  {[object]} selector   [El objeto selector de Mongodb]
+     * @param  {[object]} options    [El objeto oprions de Mongodb]
+     * @return {[array | object]}            [Si mode es find, devuelve un array de objetos, si es findOne devuelve un objeto]
+     */
+doQuery = function (sMode, sCollection, oSelector, oOptions) {
+    /*     
+                  Transformamos la clave fields para generar una clave transform, segun espera mongo y cambiamos la clave fields, para que devuelva la lista de campos a traer de la base de datos.
+                 
+                                 TRANSFORMAMOS:
+                                 fields:
+                                  {
+                                    NOMBRE: '@nombre.toUpperCase()',
+                                    Nombre_Completo: '@nombre + \' \' + @apellidos'
+                                  }
+
+                                EN el formato que espera mongo
+
+                                  fields:
+                                  {
+                                    nombre: 1,
+                                    apellidos: 1
+                                  },
+                                  transform: function (doc) {
+                                    .....transformaciones
+                                    return doc;
+                                  }
+    }
+    */
+    oOptions = oOptions || {}
+    var tmpObj = {
+        fields: {}
+    }
+    var bodyF = '' //El cuerpo de la funcion a crear al vuelo
+    var originalFields = oOptions.fields || {}
+    var keysToKeep = _.keys(originalFields) //Los campos indicados expresamente
+    if (oOptions.fields) {
+        _.each(originalFields, function (trValue, trKey) {
+            if (trValue && typeof trValue == 'string') {
+                bodyF += 'doc.' + trKey + '=' + trValue.replace(/@/g, 'doc.') + ';\n'
+                tmpObj.transform = new Function('doc', bodyF + 'return doc;')
+                trValue.match(/@[A-Z0-9]*/gi) || [].map(function (item) {
+                    tmpObj.fields[item.replace(/@/, '')] = 1
+                })
+            }
+        })
+        _.extend(oOptions, tmpObj, {
+            fields: {}
+        });
+    }
+    if (sMode == 'find') {
+        var res = masterConnection[sCollection].find(oSelector || {}, oOptions || {}).fetch()
+        return res.map(function (record) {
+            return _.pick(record, keysToKeep)
+        })
+    } else if (sMode == 'findOne') {
+        var res = masterConnection[sCollection].findOne(oSelector || {}, oOptions || {})
+        return _.pick(res, keysToKeep)
+    }
+    return Meteor.Error('The "doQuery" query has errors')
+}
+

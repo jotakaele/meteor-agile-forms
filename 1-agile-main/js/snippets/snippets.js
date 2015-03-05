@@ -95,7 +95,8 @@ snippets = {
     // })
 if (Meteor.isClient) {
     doSnippet = function (oOptions) {
-            //Si es uno de los elemento que necesariamente han de renderizarse en un div y no se ha pasado, devolvemos un error
+            dbg("oOptions", oOptions)
+                //Si es uno de los elemento que necesariamente han de renderizarse en un div y no se ha pasado, devolvemos un error
             function returnError() {
                 return ('<span class="error">Error,  --snippet|' + oOptions.type + ' | ' + oOptions.name + '-- not found</span>')
             }

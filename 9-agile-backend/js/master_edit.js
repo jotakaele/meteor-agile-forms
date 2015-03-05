@@ -285,6 +285,7 @@ if (Meteor.isClient) {
         'keyup input#name': function () {
             onEditorChange()
         },
+        'click #createfixture': createFixture,
         'click #items_existentes .doc[id]': function (ev) {
             var $el = $(ev.target)
             if (oVars.bEditorCambiado) {
@@ -410,8 +411,7 @@ if (Meteor.isClient) {
         })
     }
     var hacer = ''
-
-    function lanzarRenderizado() {
+    lanzarRenderizado = function lanzarRenderizado() {
         switch (s('masterActiveCategory')) {
         case 'jade':
             var t = 3000
@@ -443,31 +443,76 @@ if (Meteor.isClient) {
 }
 //Carga los id de los elementos de formularios
 function cargarIdes() {
-        var coleccion = jsyaml.load(editor.getValue()).form.collection
-        $.when(masterConnection[coleccion].find({}, {
-            fields: {
-                _id: true
-            },
-            sort: {
-                autodate: -1
+    var coleccion = jsyaml.load(editor.getValue()).form.collection
+    $.when(masterConnection[coleccion].find({}, {
+        fields: {
+            _id: true
+        },
+        sort: {
+            autodate: -1
+        }
+    }).fetch()).done(function (res) {
+        var $select = $('select#form-doc-id')
+        $select.show()
+        $('option', $select).remove()
+        res.forEach(function (value, key) {
+            $option = $('<option>').text(value._id).appendTo($select)
+        })
+        if (res[0]) {
+            $select.val(res[0]._id)
+        }
+        $select.attr('title', coleccion)
+        showToUser({
+            content: coleccion,
+            class: 'success',
+            element: $('#form-doc-id').parent(),
+            time: .1
+        })
+    })
+}
+
+function createFixture() {
+        $f = $('.autof')
+        $('.block[limit] ', $f).each(function () {
+            $thisBlock = $(this)
+            var numClicks = _.random(1, $(this).attr('limit'))
+            for (var c = 0; c <= numClicks - 1; c++) {
+                $('.utilityRow .fa-plus', $thisBlock).click()
             }
-        }).fetch()).done(function (res) {
-            var $select = $('select#form-doc-id')
-            $select.show()
-            $('option', $select).remove()
-            res.forEach(function (value, key) {
-                $option = $('<option>').text(value._id).appendTo($select)
-            })
-            if (res[0]) {
-                $select.val(res[0]._id)
+        })
+        var fixForm = jsyaml.load(editor.getValue()).form
+        var src = fixForm.fields
+        var fixCollection = fixForm.collection
+        var existsRecord = masterConnection[fixCollection].find().count()
+        $('[name]', $f).each(function () {
+            sField = $(this).attr('name')
+            sFieldSource = sField.split('-')[0]
+                //$field = $(this)
+            var def = src[sFieldSource]
+            if (_.has(def, 'enum') && $.type(def.enum) == 'array') {
+                setFieldValue(sField, randEl(def.enum))
+            } else if (_.has(def, 'fixtures') && $.type(def.fixtures) == 'array') {
+                setFieldValue(sField, randEl(def.fixtures))
+            } else if (_.contains(['number', 'currency'], def.type)) {
+                try {
+                    var min = def.html.min
+                    var max = def.html.max
+                } catch (e) {}
+                setFieldValue(sField, _.random(min || 1, max || 10000))
+            } else if (def.type == 'email') {
+                setFieldValue(sField, makeId(_.random(3, 15)) + '@' + makeId(_.random(3, 15)) + '.' + randEl(['es', 'com', 'info', 'io', 'edu', 'gov']).toLowerCase().replace(/[0-9]/g, ''))
+            } else if (def.type == 'date') {
+                setFieldValue(sField, moment().add(_.random(-100, 100), 'DAY').format('DD/MM/YYYY'))
+            } else if (def.type == 'textarea') {
+                var max = null
+                try {
+                    var max = def.html.maxlength
+                } catch (e) {}
+                setFieldValue(sField, _.humanize(makeId(max || 200).replace(/[0-9]/g, ' ')))
+            } else {
+                setFieldValue(sField, _.humanize(makeId(10)))
             }
-            $select.attr('title', coleccion)
-            showToUser({
-                content: coleccion,
-                class: 'success',
-                element: $('#form-doc-id').parent(),
-                time: .1
-            })
+            $('#new-button').click()
         })
     }
     //fixed Ver que pasa cuando se guardan los campos json si están mal formados. Evitar que se borren si no se han guardado correctamente.
