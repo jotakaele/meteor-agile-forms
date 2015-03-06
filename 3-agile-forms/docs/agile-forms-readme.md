@@ -380,7 +380,7 @@ PENDIENTE DE VERIFICAR....  Si la clave no contiene una ruta (uno o más . [punt
 
 
 ## queries (consultas contra la base de datos)
-Devuelve el resultado de una consulta a la base de datos, con formato listo para ser usado en un enum. Usa el lenguaje de consultas propio de Meteor.Mongo
+Devuelve el resultado de una consulta a la base de datos, con formato listo para ser usado en un enum. Usa el lenguaje de consultas propio de Meteor.Mongo Utiliza la función doQuery para hacer transformaciones
 
  ```yaml
 form:
@@ -390,16 +390,17 @@ form:
 queries:
   persons_list: # Requerido. El nombre de la clave que usaremos despues
     collection: persons # Requerido. El nombre de la coleccion de mongo donde ha de buscar.
-    filter: #Opcional. importante comprobar que devuelve datos con valor al menos. 
+    selector: #Opcional. importante comprobar que devuelve datos con valor al menos. 
       primer_apellido: # El nombre de un (o más) campo a comprobar dentro de filter
         $in: ["garcia", "sanchez"] #la(s) condicion(es) a comprobar
-    format: # Opcional. definimos los campos que va a devolver y como la consulta. 
+    options: # requerido. definimos los campos que va a devolver y como la consulta. 
       sort: #Opcional. Si no existe ordenará por el primer campo usado en "value"
         primer_apellido: 1
       limit: 20  #Opcional. El número de registros devueltos por la consulta.
-    value: "[nombre]" # Requerido.El valor que se utilizará como value en el control, debe aparecer encerrado entre corchetes. Puede componerse a apartir de varios campos. Es pasado por eval()
-    label: "[nombre] + ' ' + [primer_apellido]" #Opcional. La cadena que se mostrará. Es pasado por eval. Los campos deben encerrarse entre corchetes. Si no existe se utiliza "value" en su lugar.
-    optgroup: "[sexo]" #Opcional. El valor por el que agruparemos, Es pasado por eval, y los campos que utiliza deben encerrarse entre corchetes.
+        fields:  #requerido
+            label: "@nombre + ' ' + @apellidos" # opcional. La cadena que se mostrará. Construida según la sintaxis de doQuery
+            value: "@nombre" # Requerido.El valor que se utilizará como value en el control.
+            optgroup: "@sexo" #Opcional. El valor por el que agruparemos, 
  ```
 
 ## css 

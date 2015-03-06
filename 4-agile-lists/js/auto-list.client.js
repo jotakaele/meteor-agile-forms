@@ -3,11 +3,11 @@ autol = function autol(options) {
     this.div = options.div || 'listdest';
     //recuperamos los datos de las colecciones indicadas en la configuración
     this.list = options.src.list
+    this.html = options.src.html || {}
+    this.css = options.src.css || {}
     this.getCollectionData = function () {
         var parent = this;
-        //dbg('this', this)
         _.each(this.list.sources, function (value, key) {
-            //    dbg('key', value)
             if (value.relation) {
                 var relationSource = value.relation.source.split('@')[0]
                 var relationKey = value.relation.source.split('@')[1]
@@ -15,7 +15,6 @@ autol = function autol(options) {
                 var ids = parent.list.sources[relationSource].data.map(function (val) {
                         return val[relationKey]
                     })
-                    //  dbg("ids", ids)
                     //Construimos el objeto selector, para extender el ya existente
                 var objIn = JSON.parse('{"' + value.relation.self + '":""}')
                 objIn[value.relation.self] = {
@@ -32,45 +31,61 @@ autol = function autol(options) {
         })
     }
     this.mergeToMain = function () {
-        var parent = this
-        _.each(this.list.sources, function (value, key) {
-            if (key != 'main') {
-                var sJoin = value.relation
-                var relationSource = sJoin.source.split('@')[0]
-                var relationKey = sJoin.source.split('@')[1]
-                var data = value.data
-                var tmpData = {}
-                _.each(data, function (record) {
-                    if (!tmpData[record[sJoin.self]]) {
-                        tmpData[record[sJoin.self]] = {}
-                    }
-                    //tmpData[record[sJoin.self]][record['_id']] = _.omit(record, sJoin.self, '_id')
-                    tmpData[record[sJoin.self]][record['_id']] = _.omit(record, sJoin.self, '_id')
-                })
-                var mainData = parent.list.sources[relationSource].data
-                mainData.map(function (mainRecord) {
+            var parent = this
+            _.each(this.list.sources, function (value, key) {
+                if (key != 'main') {
+                    var sJoin = value.relation
+                    var relationSource = sJoin.source.split('@')[0]
+                    var relationKey = sJoin.source.split('@')[1]
+                    var data = value.data
+                    var tmpData = {}
+                    _.each(data, function (record) {
+                        if (!tmpData[record[sJoin.self]]) {
+                            tmpData[record[sJoin.self]] = {}
+                        }
+                        //tmpData[record[sJoin.self]][record['_id']] = _.omit(record, sJoin.self, '_id')
+                        tmpData[record[sJoin.self]][record['_id']] = _.omit(record, sJoin.self, '_id')
+                    })
+                    var mainData = parent.list.sources[relationSource].data
+                    mainData.map(function (mainRecord) {
                         mainRecord[key] = tmpData[mainRecord[relationKey]] || {}
                     })
-                    //dbg("tmpData", tmpData)
-                parent.list.sources[relationSource].data = mainData
-            }
-        })
-    }
+                    parent.list.sources[relationSource].data = mainData
+                }
+            })
+        }
+        //Creamos un clave en listado para incluir css en la página. Importante, las claves dentro de css: deben estar rodeadas de comillas dobles, y los valores que lo requieran, ( por incluir espacios o caracteres especiales, deben ir entre comillas simples)
+    this.processListCssKey = function processListCssKey($element, listCss) {
+            var newCss = {}
+            _(listCss).each(function (value, key) {
+                newCss['#' + $element.attr('id') + ' ' + key] = value
+            })
+            newCss = JSON.stringify(newCss, 0).replace(/"/g, '').replace(/:{/g, '{').replace(/,/g, '').replace(/{/, '').replace(/}$/, '')
+            var $style = $('<style>', {
+                class: 'def-list'
+            }).text(newCss).prependTo($element)
+        }
+        ////
     var parent = this
-    $.when(Tracker.autorun(function () {
-            parent.getCollectionData()
-        }))
+    $.when(parent.getCollectionData())
         //
         .then(function () {
             parent.mergeToMain()
         })
         //
         .then(function () {
-            //dbg("parent.list.sources.main.data", parent.list.sources.main.data)
             json2TableList(parent.list.sources.main.data, parent.div, parent.list.options)
         })
         //Activamos los links a formularios
         .done(function () {
+            $autol = $('#' + parent.div + ' .autol')
+            if (parent.html.before) {
+                $("<div>").html(parent.html.before).insertBefore($autol)
+            }
+            if (parent.html.after) {
+                $('<div>').html(parent.html.after).insertAfter($autol)
+            }
+            parent.processListCssKey($('#' + parent.div), parent.css)
             activateFormLinks()
         })
 }

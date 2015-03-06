@@ -296,14 +296,26 @@ doQuery = function (sMode, sCollection, oSelector, oOptions) {
             fields: {}
         });
     }
+    // Creamos un  objeto como plantilla del registro, para evitar que queden huecos en los campos
+    var recordTemplate = _.object(keysToKeep, keysToKeep.map(function (b) {
+        return ' '
+    }))
     if (sMode == 'find') {
         var res = masterConnection[sCollection].find(oSelector || {}, oOptions || {}).fetch()
-        return res.map(function (record) {
-            return _.pick(record, keysToKeep)
-        })
+        if (oOptions.fields) {
+            return res.map(function (record) {
+                return _.extend(EJSON.clone(recordTemplate), _.pick(record, keysToKeep))
+            })
+        } else {
+            return res;
+        }
     } else if (sMode == 'findOne') {
         var res = masterConnection[sCollection].findOne(oSelector || {}, oOptions || {})
-        return _.pick(res, keysToKeep)
+        if (oOptions.fields) {
+            return _.pick(res, keysToKeep)
+        } else {
+            return res;
+        }
     }
     return Meteor.Error('The "doQuery" query has errors')
 }
