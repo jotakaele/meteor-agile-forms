@@ -1,5 +1,5 @@
 //Inicializamos la tabla _defaults, con los valores que necesitamos al inicio
-if (Defaults.find().count() === 0) {
+if (Defaults.find('appName').count() === 0) {
     var objDef = {
         appName: "Agile-form-master",
         adminEmail: "juan.chamizo@gmail.com",
@@ -50,3 +50,4 @@ if (Defaults.find().count() === 0) {
 }
 //TODO Importante hacer un mecanismo que elimine automáticamente los registros de log expirados
 //TODO hacer un mecanismo que impida que los usuarios modifiquen las variables globales, pero que permita que los usuarios si modifiquen su configuración. Lo mejor será crear un campo user, y uno global ¿y quizas uno scope, para odficinas, grupos, roles, etc....?
+
