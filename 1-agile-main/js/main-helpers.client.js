@@ -1,7 +1,11 @@
-Template.main.rendered = function() {
+Template.main.rendered = function () {
     // dbg('pageList')
     // activateFormLinks()
-    $('body').on('mousemove', function() {
+    $('body').on('mousemove', function () {
         activateFormLinks()
     })
 }
+Template.registerHelper('default', function (defaultName) {
+    return s(defaultName)
+})
+
