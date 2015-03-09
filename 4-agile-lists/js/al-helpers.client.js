@@ -1,4 +1,4 @@
-cargaList = function cargaList(options) {
+/*cargaList = function cargaList(options) {
     dbg("loptions", options)
 
     function cargarItemInicial(nombreItem, callback) {
@@ -12,7 +12,7 @@ cargaList = function cargaList(options) {
             })
         }
     })
-}
+}*/
 Template.listshow.rendered = function () {
     var config = this.data
     config.type = 'list'
@@ -24,7 +24,19 @@ Template.pageList.rendered = function () {
     var config = this.data
     config.div = 'listdest'
     config.type = 'list'
+        //dbg('config', config)
     Meteor.setTimeout(function () {
         doSnippet(config)
     }, 500)
 }
+Template.list.helpers({
+    table: function () {
+        a = {
+            src: sanitizeObjectNameKeys(masterConnection.list.findOne({
+                name: this.name
+            }).content)
+        }
+        return renderList(a)
+    }
+});
+

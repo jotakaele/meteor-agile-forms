@@ -81,7 +81,9 @@ snippets = {
             collection: "_al",
             ace: "yaml",
             transform: function (options) {
-                return new autol(options)
+                Tracker.autorun(function () {
+                    renderList(options)
+                });
             }
         }
     }
@@ -94,6 +96,7 @@ snippets = {
     //     render: true || false (Si vuelca el contenido transformado en .div)
     // })
 if (Meteor.isClient) {
+    // ...
     doSnippet = function (oOptions) {
             dbg("oOptions", oOptions)
                 //Si es uno de los elemento que necesariamente han de renderizarse en un div y no se ha pasado, devolvemos un error
