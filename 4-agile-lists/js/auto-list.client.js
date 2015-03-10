@@ -1,3 +1,4 @@
+// ...
 autol = function autol(options) {
     //console.clear()
     this.div = options.div || 'listdest';
@@ -5,14 +6,16 @@ autol = function autol(options) {
     this.list = options.src.list
     this.html = options.src.html || {}
     this.css = options.src.css || {}
-    this.getCollectionData = function () {
+    data = {}
+
+    function getCollectionData() {
         var parent = this;
         _.each(this.list.sources, function (value, key) {
             if (value.relation) {
                 var relationSource = value.relation.source.split('@')[0]
                 var relationKey = value.relation.source.split('@')[1]
                     //Extraemos los ids (o el campo indicado , no tiene necesariamente que ser _id)
-                var ids = parent.list.sources[relationSource].data.map(function (val) {
+                var ids = data[relationSource].map(function (val) {
                         return val[relationKey]
                     })
                     //Construimos el objeto selector, para extender el ya existente
@@ -27,66 +30,71 @@ autol = function autol(options) {
             if (value.relation) { //Si hay value relation indicamos en fields el campo que vamos a usar para la relacion
                 value.options.fields[value.relation.self] = 1
             }
-            value.data = doQuery('find', value.collection, value.selector, value.options)
+            data[key] = doQuery('find', value.collection, value.selector, value.options)
+        })
+        return data
+    }
+
+    function mergeToMain() {
+        var parent = this
+        _.each(this.list.sources, function (value, key) {
+            if (key != 'main') {
+                var sJoin = value.relation // La clave de la relacion
+                var relationSource = sJoin.source.split('@')[0] // la coleccion de la relacion
+                var relationKey = sJoin.source.split('@')[1] //el campo de la relacion
+                var tmpData = {} //objeto vacio
+                _.each(data[key], function (record) { //recorremps cada registro del recordset secundario
+                    if (!tmpData[record[sJoin.self]]) {
+                        tmpData[record[sJoin.self]] = {}
+                    }
+                    tmpData[record[sJoin.self]][record['_id']] = _.omit(record, sJoin.self, '_id')
+                })
+                data[relationSource].map(function (mainRecord) {
+                    mainRecord[key] = tmpData[mainRecord[relationKey]] || {}
+                })
+                delete data[key]
+            }
         })
     }
-    this.mergeToMain = function () {
-            var parent = this
-            _.each(this.list.sources, function (value, key) {
-                if (key != 'main') {
-                    var sJoin = value.relation
-                    var relationSource = sJoin.source.split('@')[0]
-                    var relationKey = sJoin.source.split('@')[1]
-                    var data = value.data
-                    var tmpData = {}
-                    _.each(data, function (record) {
-                        if (!tmpData[record[sJoin.self]]) {
-                            tmpData[record[sJoin.self]] = {}
-                        }
-                        //tmpData[record[sJoin.self]][record['_id']] = _.omit(record, sJoin.self, '_id')
-                        tmpData[record[sJoin.self]][record['_id']] = _.omit(record, sJoin.self, '_id')
-                    })
-                    var mainData = parent.list.sources[relationSource].data
-                    mainData.map(function (mainRecord) {
-                        mainRecord[key] = tmpData[mainRecord[relationKey]] || {}
-                    })
-                    parent.list.sources[relationSource].data = mainData
-                }
-            })
-        }
-        //Creamos un clave en listado para incluir css en la página. Importante, las claves dentro de css: deben estar rodeadas de comillas dobles, y los valores que lo requieran, ( por incluir espacios o caracteres especiales, deben ir entre comillas simples)
-    this.processListCssKey = function processListCssKey($element, listCss) {
-            var newCss = {}
-            _(listCss).each(function (value, key) {
-                newCss['#' + $element.attr('id') + ' ' + key] = value
-            })
-            newCss = JSON.stringify(newCss, 0).replace(/"/g, '').replace(/:{/g, '{').replace(/,/g, '').replace(/{/, '').replace(/}$/, '')
-            var $style = $('<style>', {
-                class: 'def-list'
-            }).text(newCss).prependTo($element)
-        }
-        ////
     var parent = this
-    $.when(parent.getCollectionData())
-        //
-        .then(function () {
-            parent.mergeToMain()
-        })
-        //
-        .then(function () {
-            json2TableList(parent.list.sources.main.data, parent.div, parent.list.options)
-        })
-        //Activamos los links a formularios
-        .done(function () {
-            $autol = $('#' + parent.div + ' .autol')
-            if (parent.html.before) {
-                $("<div>").html(parent.html.before).insertBefore($autol)
-            }
-            if (parent.html.after) {
-                $('<div>').html(parent.html.after).insertAfter($autol)
-            }
-            parent.processListCssKey($('#' + parent.div), parent.css)
-            activateFormLinks()
-        })
+    getCollectionData()
+    mergeToMain()
+    return data.main
 }
+renderList = function (options) {
+        options.src.html = options.src.html || {}
+            // options = JSON.parse(substSnippets(JSON.stringify(options)))
+            // res = res + options.src.html.before ? options.src.html.before : false
+        var idElement = makeId(4)
+        var $tableContent = json2TableList(autol(options), options.div, options.src.list.options)
+        var res = ''
+        if (options.src.css) {
+            res += '<style id=' + idElement + '>' + processListCssKey(idElement, options.src.css).text() + '</style>'
+        }
+        if (options.src.html.before) {
+            res += options.src.html.before
+        }
+        res += '<table class="autol" id=' + idElement + '>'
+        res += $tableContent.html()
+        res += '</table>'
+        if (options.src.html.after) {
+            res += options.src.html.after
+        }
+        res += '<script type="text/javascript">  activateFormLinks();  </script>'
+        return res
+            // res = res + options.src.html.after ? options.src.html.after : false
+    }
+    //Creamos un clave en listado para incluir css en la página. Importante, las claves dentro de css: deben estar rodeadas de comillas dobles, y los valores que lo requieran, ( por incluir espacios o caracteres especiales, deben ir entre comillas simples)
+processListCssKey = function processListCssKey(idElement, listCss) {
+        var newCss = {}
+        _(listCss).each(function (value, key) {
+            newCss['#' + idElement + ' ' + key] = value
+        })
+        newCss = JSON.stringify(newCss, 0).replace(/"/g, '').replace(/:{/g, '{').replace(/,/g, '').replace(/{/, '').replace(/}$/, '')
+        var $style = $('<style>', {
+            class: 'def-list'
+        }).text(newCss)
+        return $style
+    }
+    ////
 

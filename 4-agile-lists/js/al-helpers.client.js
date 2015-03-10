@@ -1,18 +1,3 @@
-cargaList = function cargaList(options) {
-    dbg("loptions", options)
-
-    function cargarItemInicial(nombreItem, callback) {
-        res = masterConnection.list.findOne(_(options).pick('name'))
-        callback(res)
-    }
-    cargarItemInicial(options.name, function (res) {
-        if (res) {
-            $.when(renderList(options)).done(function () {
-                activateFormLinks()
-            })
-        }
-    })
-}
 Template.listshow.rendered = function () {
     var config = this.data
     config.type = 'list'
@@ -28,3 +13,15 @@ Template.pageList.rendered = function () {
         doSnippet(config)
     }, 500)
 }
+Template.list.helpers({
+    table: function () {
+        a = {
+            src: sanitizeObjectNameKeys(masterConnection.list.findOne({
+                name: this.name
+            }).content),
+            type: 'list'
+        }
+        return doSnippet(a)
+    }
+});
+

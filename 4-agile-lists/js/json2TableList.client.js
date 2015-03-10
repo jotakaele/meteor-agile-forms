@@ -5,6 +5,12 @@
 //underscore.string no conflict
 _.mixin(_.str.exports());
 json2TableList = function (data, dest, options) {
+    if (data.length === 0) {
+        data = [{
+            Info: 'No data'
+        }]
+        options = {}
+    }
     var intObjectLevel = 1 //el nivel de profundidad de los elementos tipo object, para poder tratarlos despues mediante CSS
     var intArrayLevel = 1 //el nivel de profundidad de los elementos tipo array, para poder tratarlos despues mediante CSS
     userOptions = options || {}
@@ -107,10 +113,8 @@ json2TableList = function (data, dest, options) {
             var theHeadRow = $('<tr>').appendTo(theHead)
                 //Leeemos la configuración de orden de campos fieldsSort, si se ha establecido
             if (_.isArray(that.config.fieldsSort)) {
-                //            console.log(that.config.fieldsSort)
-                //            console.log(_.uniq(that.config.fieldsSort.concat(_.keys(dataArray[0]))))
                 arrOrderedFields = _.uniq(that.config.fieldsSort.concat(_.keys(dataArray[0])))
-                console.log(arrOrderedFields)
+                    //console.log(arrOrderedFields)
             } else {
                 arrOrderedFields = _.keys(dataArray[0])
             }
@@ -163,6 +167,7 @@ json2TableList = function (data, dest, options) {
                     calculateColum(theTable, key.column, key.operation, key.precision || 0)
                 })
             }
+            return theTable
         }
         /* Muestra los totales para cada columna
          * @param theTable object jQuery
@@ -204,6 +209,6 @@ json2TableList = function (data, dest, options) {
             operation: operation
         }).text(res).appendTo(destCellRes)
     }
-    parseJson(data, dest)
+    return parseJson(data, dest)
 }
 

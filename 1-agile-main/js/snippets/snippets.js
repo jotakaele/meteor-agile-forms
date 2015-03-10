@@ -9,7 +9,6 @@
  * collection: La collección mongo donde se guardan los snippets
  * ace; El resaltado de sintextis de ACE que usa cada tipo
  * render: la función maestra que renderiza cada snippet,
- * renderInMasterBackend: el modo en que llamamamos a snippets.clave.render en el editor backend.
  * @type {Object}
  */
 snippets = {
@@ -81,7 +80,7 @@ snippets = {
             collection: "_al",
             ace: "yaml",
             transform: function (options) {
-                return new autol(options)
+                return renderList(options)
             }
         }
     }
@@ -94,16 +93,16 @@ snippets = {
     //     render: true || false (Si vuelca el contenido transformado en .div)
     // })
 if (Meteor.isClient) {
+    //
     doSnippet = function (oOptions) {
-            dbg("oOptions", oOptions)
-                //Si es uno de los elemento que necesariamente han de renderizarse en un div y no se ha pasado, devolvemos un error
+            //Si es uno de los elemento que necesariamente han de renderizarse en un div y no se ha pasado, devolvemos un error
             function returnError() {
                 return ('<span class="error">Error,  --snippet|' + oOptions.type + ' | ' + oOptions.name + '-- not found</span>')
             }
             if (!snippets[oOptions.type]) {
                 return returnError()
             }
-            if (!oOptions.div && ['list', 'form', 'jade'].indexOf(oOptions.type) >= 0) {
+            if (!oOptions.div && ['form', 'jade'].indexOf(oOptions.type) >= 0) {
                 throw Meteor.Error(oOptions.type + " require a div name to run.");
                 return false
             }
@@ -131,6 +130,7 @@ if (Meteor.isClient) {
                 src = JSON.stringify(src, replacer)
                 oOptions.src = JSON.parse(src)
                     // return null
+                    // 
             } else {
                 oOptions.src = substSnippets(oOptions.src)
             }
