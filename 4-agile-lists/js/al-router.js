@@ -15,7 +15,7 @@ Router.map(function () {
         controller: 'BaseController',
         data: function () {
             return {
-                name: this.params.itemname
+                name: this.params.itemname,
             }
         }
     });

@@ -11,7 +11,6 @@ autol = function autol(options) {
     function getCollectionData() {
         var parent = this;
         _.each(this.list.sources, function (value, key) {
-            dbg(key, value)
             if (value.relation) {
                 var relationSource = value.relation.source.split('@')[0]
                 var relationKey = value.relation.source.split('@')[1]
@@ -31,7 +30,6 @@ autol = function autol(options) {
             if (value.relation) { //Si hay value relation indicamos en fields el campo que vamos a usar para la relacion
                 value.options.fields[value.relation.self] = 1
             }
-            // dbg('value', o2S(value))
             data[key] = doQuery('find', value.collection, value.selector, value.options)
         })
         return data
@@ -62,44 +60,27 @@ autol = function autol(options) {
     getCollectionData()
     mergeToMain()
     return data.main
-        //return data;
-        /*
-            $.when(parent.getCollectionData())
-                //
-                .then(function () {
-                    parent.mergeToMain()
-                })
-                //
-                .then(function () {
-                    json2TableList(parent.list.sources.main.data, parent.div, parent.list.options)
-                })
-                //Activamos los links a formularios
-                .done(function () {
-                    $autol = $('#' + parent.div + ' .autol')
-                    if (parent.html.before) {
-                        $("<div>").html(parent.html.before).insertBefore($autol)
-                    }
-                    if (parent.html.after) {
-                        $('<div>').html(parent.html.after).insertAfter($autol)
-                    }
-                    parent.processListCssKey($('#' + parent.div), parent.css)
-                    activateFormLinks()
-                })
-        */
 }
 renderList = function (options) {
-        //options = JSON.parse(substSnippets(JSON.stringify(options)))
-        // res = res + options.src.html.before ? options.src.html.before : false
+        options.src.html = options.src.html || {}
+            // options = JSON.parse(substSnippets(JSON.stringify(options)))
+            // res = res + options.src.html.before ? options.src.html.before : false
         var idElement = makeId(4)
         var $tableContent = json2TableList(autol(options), options.div, options.src.list.options)
-        var res
-        res += '<style id=' + idElement + '>' + processListCssKey(idElement, options.src.css).text() + '</style>'
-        res += options.src.html.before
+        var res = ''
+        if (options.src.css) {
+            res += '<style id=' + idElement + '>' + processListCssKey(idElement, options.src.css).text() + '</style>'
+        }
+        if (options.src.html.before) {
+            res += options.src.html.before
+        }
         res += '<table class="autol" id=' + idElement + '>'
         res += $tableContent.html()
         res += '</table>'
-        res += options.src.html.after
-        res += '<script type="text/javascript">' + activateFormLinks() + '</script>'
+        if (options.src.html.after) {
+            res += options.src.html.after
+        }
+        res += '<script type="text/javascript">  activateFormLinks();  </script>'
         return res
             // res = res + options.src.html.after ? options.src.html.after : false
     }

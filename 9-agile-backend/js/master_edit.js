@@ -116,7 +116,8 @@ if (Meteor.isClient) {
                 var oRenderOptions = {
                         type: 'list',
                         src: contentFiltered,
-                        div: 'ritem'
+                        div: 'ritem',
+                        render: true
                             // name: $('input#name').val()
                     }
                     //dbg("oRenderOptions", oRenderOptions)
