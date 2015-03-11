@@ -26,7 +26,8 @@ json2TableList = function (data, dest, options) {
         allowEvalCells: true, //boolean Activa o desactiva la posibilidad de pasar eval al contenido de las celdas que se han definido mediante "eval [algo a evaluar]"
         sortable: true, //TODO Hacerla Sortable
         filterable: true, //TODO Hacerla filterable
-        calculateColumns: false //Es un array con objetos json, que definen los que se espera en las columnas a calcular ej: [{column: 'col1', operation:'sum', precision:2}, {column: 'col2', operation:'avg'}]  Los valores 'column' y 'operation' para cada columna son obligatorios. 'precision' es opcional default 0
+        calculateColumns: false, //Es un array con objetos json, que definen los que se espera en las columnas a calcular ej: [{column: 'col1', operation:'sum', precision:2}, {column: 'col2', operation:'avg'}]  Los valores 'column' y 'operation' para cada columna son obligatorios. 'precision' es opcional default 0,
+        rowNumber: true //Indica si se numeran las filas con una celda a la izquierda
     }
     $.each(userOptions, function (key) {
             config[key] = userOptions[key]

@@ -2,6 +2,16 @@
 table.autol {
     width: 100% !important;
     td {
+        span {
+            display: block;
+            padding: 0px .5em;
+            &[type=number] {
+                text-align: right;
+            }
+            &[type=date] {
+                text-align: center;
+            }
+        }
         padding: 2px;
         span.array-list {
             border: 1px solid darken($secondary-color, 20);
@@ -41,7 +51,6 @@ table.autol {
     tr {
         &:hover td {
             text-decoration: underline;
-
         }
     }
 }

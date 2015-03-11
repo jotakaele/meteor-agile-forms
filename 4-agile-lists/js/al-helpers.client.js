@@ -24,4 +24,9 @@ Template.list.helpers({
         return doSnippet(a)
     }
 });
+Template.list.rendered = function () {
+    setTimeout(function () {
+        $('.autol:not(.datatable)').DataTable()
+    }, 100);
+};
 
