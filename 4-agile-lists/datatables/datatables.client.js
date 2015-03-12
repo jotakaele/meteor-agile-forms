@@ -35,6 +35,9 @@ Template.containsTheDataTable.helpers({
     }
 });*/
 ReactiveDatatable = function (options) {
+    if (!options.divName) {
+        options.divName = "datatable_wrapper"
+    }
     var tableID = "datatable";
     var self = this;
     this.options = options = _.defaults(options, {
@@ -59,7 +62,7 @@ ReactiveDatatable = function (options) {
     table.id = tableID;
     table.className = "table dataTable";
     // Render the table element and turn it into a DataTable
-    $("#datatable_wrapper").append(table);
+    $("#" + options.divName).append(table);
     this.datatable = $(table).DataTable(options);
 };
 ReactiveDatatable.prototype.update = function (data) {
@@ -69,34 +72,71 @@ ReactiveDatatable.prototype.update = function (data) {
         .draw(false); // I couldn't get the page drawing to work otherwise
 };
 Template.listdt.rendered = function () {
-    var listName = this.data.name
-    if (!Session.get('lists_' + listName)) {
-        Session.set('lists_' + listName, JSON.parse(substSnippets(JSON.stringify(sanitizeObjectNameKeys(masterConnection.list.findOne({
-            name: listName
-        }).content)))))
-    }
-    src = Session.get('lists_' + listName)
-    options = src.list.options || {}
-    dbg("src", src)
-    var columns = []
-    _.each(_.keys(src.list.sources.main.options.fields).concat(_.without(_.keys(src.list.sources), 'main')), function (key) {
-        var o = {}
-        o.title = _.humanize(key)
-        o.data = key
-        o.className = 'cell-' + key
-        columns.push(o)
-    })
-    var newOptions = {
-        columns: columns
-    }
-    dbg("columns", columns)
-    _.extend(options, newOptions)
-    var dataTable = new ReactiveDatatable(options)
-    Tracker.autorun(function (a) {
-        data = autol({
-            src: Session.get('lists_' + listName)
-        })
-        dataTable.update(data)
+    cargaListdt({
+        name: this.data.name
     })
 };
+cargaListdt = function (theOptions) {
+    //Definimos erro por si pasamos algo diferente a un objeto
+    if (typeof theOptions != 'object') {
+        console.error("Se requiere un objeto con la propiedad src o name y div");
+        return null
+    }
+    if (theOptions.src) {
+        var idTmpList = makeId(4)
+        Session.set(idTmpList, JSON.parse(substSnippets(JSON.stringify(sanitizeObjectNameKeys(theOptions.src)))))
+        var src = Session.get(idTmpList)
+    } else if (theOptions.name) {
+        //Definimos nombre para usar
+        var listName = theOptions.name
+            //Si no existe el origen el la sesion, lo creamos
+        if (!Session.get('lists_' + listName)) {
+            Session.set('lists_' + listName, JSON.parse(substSnippets(JSON.stringify(sanitizeObjectNameKeys(masterConnection.list.findOne({
+                name: listName
+            }).content)))))
+        }
+        /// y lo extraemos
+        var src = Session.get('lists_' + listName)
+    }
+    //Extraemos las opciones del origen    
+    options = src.list.options || {}
+    dbg('src', src)
+    var columns = []
+        //Creamos options.columns automáticamente, a apartir de los nombres de campos definidos
+    _.each(_.keys(src.list.sources.main.options.fields).concat(_.without(_.keys(src.list.sources), 'main')), function (key) {
+            var o = {}
+            o.title = _.humanize(key)
+            o.data = key
+            o.className = 'cell-' + key
+            columns.push(o)
+        })
+        //onl default options
+    var newOptions = {
+            columns: columns,
+            autoWidth: false,
+            paging: false
+        }
+        //Si hemos pasado un div especifico lo tenemos en cuenta
+    if (theOptions.div) {
+        newOptions.divName = theOptions.div
+    }
+    //Extendemos las opciones con newOptions
+    _.extend(options, newOptions)
+        //CReamos datatables
+    var dataTable = new ReactiveDatatable(options)
+        //Reactivamente ....
+    Tracker.autorun(function (a) {
+        //Preguntamos por los los dats a partir de config
+        if (idTmpList) {
+            var dataSrc = Session.get(idTmpList)
+        } else {
+            var dataSrc = Session.get('lists_' + listName)
+        }
+        data = autol({
+                src: dataSrc
+            })
+            //Se actualiza la tabla con los datos
+        dataTable.update(data)
+    })
+}
 
