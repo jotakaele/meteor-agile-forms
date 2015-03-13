@@ -56,9 +56,21 @@ autol = function autol(options) {
             }
         })
     }
+
+    function processObjectToHTML() {
+        _.each(data.main, function (value, key) {
+            _.each(value, function (oValue, oKey) {
+                if (typeof oValue == 'object') {
+                    data.main[key][oKey] = o2HTML(oValue)
+                }
+            })
+            dbg('datamainkey', data.main[key])
+        })
+    }
     var parent = this
     getCollectionData()
     mergeToMain()
+    processObjectToHTML()
     return data.main
 }
 renderList = function (options) {

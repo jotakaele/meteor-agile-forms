@@ -113,8 +113,6 @@ cargaListdt = function (theOptions) {
         //onl default options
     var newOptions = {
             columns: columns,
-            autoWidth: false,
-            paging: false
         }
         //Si hemos pasado un div especifico lo tenemos en cuenta
     if (theOptions.div) {
@@ -124,6 +122,7 @@ cargaListdt = function (theOptions) {
     _.extend(options, newOptions)
         //CReamos datatables
     var dataTable = new ReactiveDatatable(options)
+        //new $.fn.dataTable.Responsive(datatable);
         //Reactivamente ....
     Tracker.autorun(function (a) {
         //Preguntamos por los los dats a partir de config

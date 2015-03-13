@@ -252,71 +252,104 @@ doQuery_first = function (sMode, sCollection, oSelector, oOptions) {
      * @return {[array | object]}            [Si mode es find, devuelve un array de objetos, si es findOne devuelve un objeto]
      */
 doQuery = function (sMode, sCollection, oSelector, oOptions) {
-    /*     
-                  Transformamos la clave fields para generar una clave transform, segun espera mongo y cambiamos la clave fields, para que devuelva la lista de campos a traer de la base de datos.
-                 
-                                 TRANSFORMAMOS:
-                                 fields:
-                                  {
-                                    NOMBRE: '@nombre.toUpperCase()',
-                                    Nombre_Completo: '@nombre + \' \' + @apellidos'
-                                  }
+        /*     
+                      Transformamos la clave fields para generar una clave transform, segun espera mongo y cambiamos la clave fields, para que devuelva la lista de campos a traer de la base de datos.
+                     
+                                     TRANSFORMAMOS:
+                                     fields:
+                                      {
+                                        NOMBRE: '@nombre.toUpperCase()',
+                                        Nombre_Completo: '@nombre + \' \' + @apellidos'
+                                      }
 
-                                EN el formato que espera mongo
+                                    EN el formato que espera mongo
 
-                                  fields:
-                                  {
-                                    nombre: 1,
-                                    apellidos: 1
-                                  },
-                                  transform: function (doc) {
-                                    .....transformaciones
-                                    return doc;
-                                  }
-    }
-    */
-    oOptions = oOptions || {}
-    var tmpObj = {
-        fields: {}
-    }
-    var bodyF = '' //El cuerpo de la funcion a crear al vuelo
-    var originalFields = oOptions.fields || {}
-    var keysToKeep = _.keys(originalFields) //Los campos indicados expresamente
-    if (oOptions.fields) {
-        _.each(originalFields, function (trValue, trKey) {
-            if (trValue && typeof trValue == 'string') {
-                bodyF += 'doc.' + trKey + '=' + trValue.replace(/@/g, 'doc.') + ';\n'
-                tmpObj.transform = new Function('doc', bodyF + 'return doc;')
-                trValue.match(/@[A-Z0-9]*/gi) || [].map(function (item) {
-                    tmpObj.fields[item.replace(/@/, '')] = 1
-                })
-            }
-        })
-        _.extend(oOptions, tmpObj, {
+                                      fields:
+                                      {
+                                        nombre: 1,
+                                        apellidos: 1
+                                      },
+                                      transform: function (doc) {
+                                        .....transformaciones
+                                        return doc;
+                                      }
+        }
+        */
+        oOptions = oOptions || {}
+        var tmpObj = {
             fields: {}
-        });
-    }
-    // Creamos un  objeto como plantilla del registro, para evitar que queden huecos en los campos
-    var recordTemplate = _.object(keysToKeep, keysToKeep.map(function (b) {
-        return ' '
-    }))
-    if (sMode == 'find') {
-        var res = masterConnection[sCollection].find(oSelector || {}, oOptions || {}).fetch()
+        }
+        var bodyF = '' //El cuerpo de la funcion a crear al vuelo
+        var originalFields = oOptions.fields || {}
+        var keysToKeep = _.keys(originalFields) //Los campos indicados expresamente
         if (oOptions.fields) {
-            return res.map(function (record) {
-                return _.extend(EJSON.clone(recordTemplate), _.pick(record, keysToKeep))
+            _.each(originalFields, function (trValue, trKey) {
+                if (trValue && typeof trValue == 'string') {
+                    bodyF += 'doc.' + trKey + '=' + trValue.replace(/@/g, 'doc.') + ';\n'
+                    tmpObj.transform = new Function('doc', bodyF + 'return doc;')
+                    trValue.match(/@[A-Z0-9]*/gi) || [].map(function (item) {
+                        tmpObj.fields[item.replace(/@/, '')] = 1
+                    })
+                }
             })
-        } else {
-            return res;
+            _.extend(oOptions, tmpObj, {
+                fields: {}
+            });
         }
-    } else if (sMode == 'findOne') {
-        var res = masterConnection[sCollection].findOne(oSelector || {}, oOptions || {})
-        if (oOptions.fields) {
-            return _.pick(res, keysToKeep)
-        } else {
-            return res;
+        // Creamos un  objeto como plantilla del registro, para evitar que queden huecos en los campos
+        var recordTemplate = _.object(keysToKeep, keysToKeep.map(function (b) {
+            return ' '
+        }))
+        if (sMode == 'find') {
+            var res = masterConnection[sCollection].find(oSelector || {}, oOptions || {}).fetch()
+            if (oOptions.fields) {
+                return res.map(function (record) {
+                    return _.extend(EJSON.clone(recordTemplate), _.pick(record, keysToKeep))
+                })
+            } else {
+                return res;
+            }
+        } else if (sMode == 'findOne') {
+            var res = masterConnection[sCollection].findOne(oSelector || {}, oOptions || {})
+            if (oOptions.fields) {
+                return _.pick(res, keysToKeep)
+            } else {
+                return res;
+            }
         }
+        return Meteor.Error('The "doQuery" query has errors')
     }
-    return Meteor.Error('The "doQuery" query has errors')
+    /**
+     * Convierte recursivamente un objeto JSON o Array en su estructura a base de DIV, a cada nodo lo encierra en un div y le pone como class el tipo de elemento devuelto por $.type()
+     * @param  {object || array} obj  Requerido. El objeto o array de objetos JSON a convertir
+     * @param  {jQuery element } $div Optional. El elemento JQuery que encerrara el resultado de la función. Se usa internamente para recursividad
+     * @return {string}      El html listo para usar
+     */
+o2HTML = function (obj, $div) {
+    if (typeof obj != 'object') {
+        return obj
+    }
+    if (!$div) {
+        var isParent = true
+        $div = $('<div>')
+    }
+    //$parent = $('<div>') //Creo un objeto padre para contener el html
+    _.each(obj, function (value, key) { //Recorro los nodos del objeto
+        theType = $.type(value) //Determino el tipo de objeto que es (objeto, array u otro...)
+        dbg(key + '/' + theType, value)
+        var $currentDIV = $('<div>', {
+            class: theType,
+            id: key,
+            type: theType,
+        })
+        if (theType == 'object') {
+            $currentDIV.html(o2HTML(value)).appendTo($div)
+        } else if (theType == 'array') {
+            $currentDIV.html(o2HTML(value)).appendTo($div)
+        } else {
+            $currentDIV.html(value).appendTo($div)
+        }
+    })
+    return isParent ? '<div class="parent">' + $div.html() + '</div>' : $div.html()
 }
 
