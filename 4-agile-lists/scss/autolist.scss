@@ -44,13 +44,50 @@ table.autol {
         margin: 1px;
         border: 1px solid #000;
     }
-    div[type="object"] {
+    div {
         padding: 0px;
         margin: 0px;
+        &[type="object"] {
+            background-color: #9FFFF4;
+        }
+        &[type="array"] {
+            background-color: #FFB55F;
+        }
     }
     tr {
         &:hover td {
             text-decoration: underline;
+        }
+    }
+}
+div.parent {
+    div {
+        // border: 1px solid;
+        // margin: 5px !important;
+        // padding: 2px !important;
+        &[type="object"] {
+            background-color: #9FFFF4;
+            &:before {
+                content: attr(id)
+            }
+        }
+        &[type="array"] {
+            background-color: #FFB55F;
+            div[id]:before {
+                content: "- "
+            }
+        }
+        &[type="number"] {
+            background-color: #FEFF5F;
+        }
+        &[type="string"] {
+            background-color: #85FF00;
+            &:before {
+                content: attr(id)
+            }
+        }
+        &[type="date"] {
+            background-color: #FFAFFD;
         }
     }
 }

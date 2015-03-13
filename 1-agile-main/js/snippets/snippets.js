@@ -80,7 +80,7 @@ snippets = {
             collection: "_al",
             ace: "yaml",
             transform: function (options) {
-                return renderList(options)
+                return cargaListdt(options)
             }
         }
     }
