@@ -16,7 +16,7 @@ iron:router
 jeremy:selectize
 vsivsi:numeral
 mquandalle:bower
-#msavin:mongoinspector
+msavin:mongol
 acemtp:csm
 #meteorhacks:kadira
 #jparker:crypto-aes

@@ -77,65 +77,72 @@ Template.listdt.rendered = function () {
     })
 };
 cargaListdt = function (theOptions) {
-    //Definimos erro por si pasamos algo diferente a un objeto
-    if (typeof theOptions != 'object') {
-        console.error("Se requiere un objeto con la propiedad src o name y div");
-        return null
-    }
-    if (theOptions.src) {
-        var idTmpList = makeId(4)
-        Session.set(idTmpList, JSON.parse(substSnippets(JSON.stringify(sanitizeObjectNameKeys(theOptions.src)))))
-        var src = Session.get(idTmpList)
-    } else if (theOptions.name) {
-        //Definimos nombre para usar
-        var listName = theOptions.name
-            //Si no existe el origen el la sesion, lo creamos
-        if (!Session.get('lists_' + listName)) {
-            Session.set('lists_' + listName, JSON.parse(substSnippets(JSON.stringify(sanitizeObjectNameKeys(masterConnection.list.findOne({
-                name: listName
-            }).content)))))
+        //Definimos erro por si pasamos algo diferente a un objeto
+        if (typeof theOptions != 'object') {
+            console.error("Se requiere un objeto con la propiedad src o name y div");
+            return null
         }
-        /// y lo extraemos
-        var src = Session.get('lists_' + listName)
-    }
-    //Extraemos las opciones del origen    
-    options = src.list.options || {}
-    dbg('src', src)
-    var columns = []
-        //Creamos options.columns automáticamente, a apartir de los nombres de campos definidos
-    _.each(_.keys(src.list.sources.main.options.fields).concat(_.without(_.keys(src.list.sources), 'main')), function (key) {
-            var o = {}
-            o.title = _.humanize(key)
-            o.data = key
-            o.className = 'cell-' + key
-            columns.push(o)
-        })
-        //onl default options
-    var newOptions = {
-            columns: columns,
+        if (theOptions.src) {
+            var idTmpList = makeId(4)
+            Session.set(idTmpList, JSON.parse(substSnippets(JSON.stringify(sanitizeObjectNameKeys(theOptions.src)))))
+            var src = Session.get(idTmpList)
+        } else if (theOptions.name) {
+            //Definimos nombre para usar
+            var listName = theOptions.name
+                //Si no existe el origen el la sesion, lo creamos
+            if (!Session.get('lists_' + listName)) {
+                Session.set('lists_' + listName, JSON.parse(substSnippets(JSON.stringify(sanitizeObjectNameKeys(masterConnection.list.findOne({
+                    name: listName
+                }).content)))))
+            }
+            /// y lo extraemos
+            var src = Session.get('lists_' + listName)
         }
-        //Si hemos pasado un div especifico lo tenemos en cuenta
-    if (theOptions.div) {
-        newOptions.divName = theOptions.div
-    }
-    //Extendemos las opciones con newOptions
-    _.extend(options, newOptions)
-        //CReamos datatables
-    var dataTable = new ReactiveDatatable(options)
-        //new $.fn.dataTable.Responsive(datatable);
-        //Reactivamente ....
-    Tracker.autorun(function (a) {
-        //Preguntamos por los los dats a partir de config
-        if (idTmpList) {
-            var dataSrc = Session.get(idTmpList)
-        } else {
-            var dataSrc = Session.get('lists_' + listName)
-        }
-        data = autol({
-                src: dataSrc
+        //Extraemos las opciones del origen    
+        options = src.list.options || {}
+        dbg('src', src)
+        var columns = []
+            //Creamos options.columns automáticamente, a apartir de los nombres de campos definidos
+        _.each(_.keys(src.list.sources.main.options.fields).concat(_.without(_.keys(src.list.sources), 'main')), function (key) {
+                var o = {}
+                o.title = _.humanize(key)
+                o.data = key
+                o.className = 'cell-' + key
+                columns.push(o)
             })
-            //Se actualiza la tabla con los datos
-        dataTable.update(data)
-    })
-}
+            //onl default options
+        var newOptions = {
+                columns: columns,
+            }
+            //Si hemos pasado un div especifico lo tenemos en cuenta
+        if (theOptions.div) {
+            newOptions.divName = theOptions.div
+        }
+        //Extendemos las opciones con newOptions
+        _.extend(options, newOptions)
+            //CReamos datatables
+        var dataTable = new ReactiveDatatable(options)
+            //new $.fn.dataTable.Responsive(datatable);
+            //Reactivamente ....
+        Tracker.autorun(function (a) {
+            //Preguntamos por los los dats a partir de config
+            if (idTmpList) {
+                var dataSrc = Session.get(idTmpList)
+            } else {
+                var dataSrc = Session.get('lists_' + listName)
+            }
+            data = autol({
+                    src: dataSrc
+                })
+                //Se actualiza la tabla con los datos
+            dataTable.update(data)
+        })
+    }
+    //TODO Anadir after, before y css eal nuevo modelo de tablas
+    //todo Dar formato al nuevo tipo de objetos en datatables
+    //todo indicar el tipo en cada celda renderizada (plugin?)
+    //todo Habilitar plugins, minimo tabletools
+    // 
+    // 
+    //
 

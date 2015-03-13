@@ -62,20 +62,29 @@ table.autol {
 }
 div.parent {
     div {
-        border: 1px solid;
-        margin: 5px !important;
-        padding: 2px !important;
+        // border: 1px solid;
+        // margin: 5px !important;
+        // padding: 2px !important;
         &[type="object"] {
             background-color: #9FFFF4;
+            &:before {
+                content: attr(id)
+            }
         }
         &[type="array"] {
             background-color: #FFB55F;
+            div[id]:before {
+                content: "- "
+            }
         }
         &[type="number"] {
             background-color: #FEFF5F;
         }
         &[type="string"] {
             background-color: #85FF00;
+            &:before {
+                content: attr(id)
+            }
         }
         &[type="date"] {
             background-color: #FFAFFD;
