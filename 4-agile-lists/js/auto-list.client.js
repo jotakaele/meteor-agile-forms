@@ -64,7 +64,6 @@ autol = function autol(options) {
                     data.main[key][oKey] = o2HTML(oValue)
                 }
             })
-            dbg('datamainkey', data.main[key])
         })
     }
     var parent = this

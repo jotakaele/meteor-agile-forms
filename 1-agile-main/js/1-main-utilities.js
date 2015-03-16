@@ -336,7 +336,6 @@ o2HTML = function (obj, $div) {
     //$parent = $('<div>') //Creo un objeto padre para contener el html
     _.each(obj, function (value, key) { //Recorro los nodos del objeto
         theType = $.type(value) //Determino el tipo de objeto que es (objeto, array u otro...)
-        dbg(key + '/' + theType, value)
         var $currentDIV = $('<div>', {
             class: theType,
             id: key,
