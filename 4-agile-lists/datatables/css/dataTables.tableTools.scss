@@ -1,3 +1,4 @@
+@import "../../../1-agile-main/scss/main";
 /*
  * File:        TableTools.css
  * Description: Styles for TableTools 2
@@ -53,11 +54,11 @@ button.DTTT_button, div.DTTT_button, a.DTTT_button {
     *cursor: hand;
     font-size: 0.88em;
     color: black !important;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    -ms-border-radius: 2px;
-    -o-border-radius: 2px;
-    border-radius: 2px;
+
+
+
+
+
     -webkit-box-shadow: 1px 1px 3px #ccc;
     -moz-box-shadow: 1px 1px 3px #ccc;
     -ms-box-shadow: 1px 1px 3px #ccc;
@@ -82,8 +83,8 @@ button.DTTT_button, div.DTTT_button, a.DTTT_button {
     
     background: linear-gradient(top, #ffffff 0%, #f3f3f3 89%, #f9f9f9 100%);
     /* W3C */
-    
-    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f9f9f9', GradientType=0);
+    /* filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f9f9f9', GradientType=0);
+*/
     /* IE6-9 */
 }
 /* Buttons are cunning border-box sizing - we can't just use that for A and DIV due to IE6/7 */
@@ -120,8 +121,8 @@ button.DTTT_button:hover, div.DTTT_button:hover, a.DTTT_button:hover {
     
     background: linear-gradient(top, #f3f3f3 0%, #e2e2e2 89%, #f4f4f4 100%);
     /* W3C */
-    
-    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#f3f3f3', endColorstr='#f4f4f4', GradientType=0);
+    /* filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#f3f3f3', endColorstr='#f4f4f4', GradientType=0);
+*/
     /* IE6-9 */
 }
 button.DTTT_button:focus, div.DTTT_button:focus, a.DTTT_button:focus {
@@ -134,7 +135,8 @@ button.DTTT_button:focus, div.DTTT_button:focus, a.DTTT_button:focus {
     background-image: -ms-linear-gradient(top, #a3d0ef 0%, #79ace9 65%, #a3d0ef 100%);
     background-image: -o-linear-gradient(top, #a3d0ef 0%, #79ace9 65%, #a3d0ef 100%);
     background-image: linear-gradient(top, #a3d0ef 0%, #79ace9 65%, #a3d0ef 100%);
-    filter: progid: DXImageTransform.Microsoft.gradient(GradientType=0, StartColorStr='#a3d0ef', EndColorStr='#a3d0ef');
+    /*filter: progid: DXImageTransform.Microsoft.gradient(GradientType=0, StartColorStr='#a3d0ef', EndColorStr='#a3d0ef');
+*/
 }
 button.DTTT_button:active, div.DTTT_button:active, a.DTTT_button:active {
     -webkit-box-shadow: inset 1px 1px 3px #999999;
@@ -161,8 +163,7 @@ button.DTTT_disabled, div.DTTT_disabled, a.DTTT_disabled {
     
     background: linear-gradient(top, #ffffff 0%, #f9f9f9 89%, #fafafa 100%);
     /* W3C */
-    
-    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#fafafa', GradientType=0);
+    /*  filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#fafafa', GradientType=0);*/
     /* IE6-9 */
 }
 /*
@@ -175,7 +176,7 @@ a.DTTT_button_xls,
 a.DTTT_button_copy,
 a.DTTT_button_pdf,
 a.DTTT_button_print {
-	padding-right: 0px;
+    padding-right: 0px;
 }
 
 a.DTTT_button_csv span,
@@ -183,10 +184,10 @@ a.DTTT_button_xls span,
 a.DTTT_button_copy span,
 a.DTTT_button_pdf span,
 a.DTTT_button_print span {
-	display: inline-block;
-	height: 24px;
-	line-height: 24px;
-	padding-right: 30px;
+    display: inline-block;
+    height: 24px;
+    line-height: 24px;
+    padding-right: 30px;
 }
 
 
@@ -262,11 +263,11 @@ div.DTTT_collection {
     background-color: rgba( 255, 255, 255, 0.3);
     overflow: hidden;
     z-index: 2002;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    -ms-border-radius: 5px;
-    -o-border-radius: 5px;
-    border-radius: 5px;
+
+
+
+
+
     -webkit-box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
     -moz-box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
     -ms-box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
@@ -324,17 +325,18 @@ div.DTTT_collection button.DTTT_button, div.DTTT_collection div.DTTT_button, div
     background: linear-gradient(top, #ffffff 0%, #f3f3f3 89%, #f9f9f9 100%);
     /* W3C */
     
-    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f9f9f9', GradientType=0);
+    /*filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f9f9f9', GradientType=0);
+*/
     /* IE6-9 */
     
     opacity: 0.95;
     border: 1px solid black;
     border: 1px solid rgba(0, 0, 0, 0.5);
-    -webkit-border-radius: 6px;
-    -moz-border-radius: 6px;
-    -ms-border-radius: 6px;
-    -o-border-radius: 6px;
-    border-radius: 6px;
+
+
+
+
+
     -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
     -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
     -ms-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);

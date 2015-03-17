@@ -1,42 +1,48 @@
+//Definimos valores por defecto en tableToold
 var tableToolsDefaults = {
-    sSwfPath: "/datatables/tabletools/swf/copy_csv_xls_pdf.swf",
-    aButtons: [{
-        sExtends: "copy",
-        sButtonText: "<i class='fa fa-copy'></i>"
-    }, {
-        sExtends: "pdf",
-        sButtonText: "<i class='fa fa-file-pdf-o'></i>"
-    }, {
-        sExtends: "xls",
-        sButtonText: "<i class='fa fa-file-excel-o'></i>"
-    }, {
-        sExtends: "print",
-        sButtonText: "<i class='fa fa-print'></i>"
-    }]
-}
+        sSwfPath: "/datatables/tabletools/swf/copy_csv_xls_pdf.swf",
+        aButtons: [{
+            sExtends: "copy",
+            sButtonText: "<i class='fa fa-copy'></i>"
+        }, {
+            sExtends: "pdf",
+            sButtonText: "<i class='fa fa-file-pdf-o'></i>"
+        }, {
+            sExtends: "xls",
+            sButtonText: "<i class='fa fa-file-excel-o'></i>"
+        }, {
+            sExtends: "print",
+            sButtonText: "<i class='fa fa-print'></i>"
+        }]
+    }
+    /**
+     * Ceea el objeto dataTables y lo mantiene reactivo
+     * @param {object} options Lista de opciones cargadas desde la configuración del listado en YAML
+     */
 ReactiveDatatable = function (options) {
     if (!options.divName) {
         options.divName = "datatable_wrapper"
     }
     var tableID = "datatable";
     var self = this;
+    //Opciones por defecto de dataTables
     this.options = _.defaults(options, {
         // Any of these can be overriden by passing an options 
         // object into your ReactiveDatatable template (see readme)
         stateSave: true,
         stateDuration: -1, // Store data for session only
-        dom: "Tfilpti",
+        paging: false,
+        dom: "fiTt",
         columnDefs: [{ // Global default blank value to avoid popup on missing data
             targets: "_all",
             defaultContent: "–––"
         }],
-        // language: datatablesTr[s('lang')],
         stateLoadParams: function (settings, data) {
             // Make it easy to change to the stored page on .update()
             self.page = data.start / data.length;
         }
     });
-    this.options.language = _.defaults(options.language || {}, datatablesTr[s('lang')])
+    this.options.language = _.defaults(options.language || {}, datatablesTr[s('lang')]) //note @datatablesTr[s('lang')] está definido en el módulo translations
     this.options.tableTools = _.defaults(options.tableTools || {}, tableToolsDefaults)
         // Help Blaze cleanly remove entire datatable when changing template / route by
         // wrapping table in existing element (#datatable_wrap) defined in the template.
@@ -47,6 +53,10 @@ ReactiveDatatable = function (options) {
     $("#" + options.divName).append(table);
     this.dataTable = $(table).DataTable(this.options);
 };
+/**
+ * Actualiza las filas de la tabla cada vez que la fuente reactiva con que ha sido llamada ReactiveDatatables
+ * @param  {array} data El array de objetos (los datos)
+ */
 ReactiveDatatable.prototype.update = function (data) {
     if (!data.length) return;
     var self = this;
@@ -58,17 +68,25 @@ Template.listdt.rendered = function () {
         name: this.data.name
     })
 };
+/**
+ * Extrae los datos a apartir de la confuiguración del listado y llama a ReactiveDatatables
+ * @param  {object} theOptions Datos para lanzar la consulta, se espera como mínimo name o src y div
+ * @return {[type]}            [description]
+ */
 cargaListdt = function (theOptions) {
         //Definimos erro por si pasamos algo diferente a un objeto
         if (typeof theOptions != 'object') {
             console.error("Se requiere un objeto con la propiedad src o name y div");
             return null
         }
+        //Si esta definido src...
         if (theOptions.src) {
             var idTmpList = makeId(4)
             Session.set(idTmpList, JSON.parse(substSnippets(JSON.stringify(sanitizeObjectNameKeys(theOptions.src)))))
             var src = Session.get(idTmpList)
-        } else if (theOptions.name) {
+        }
+        //Si no esta definio src y esta definio name, leeemos la configuración de origen list para obtener src
+        else if (theOptions.name) {
             //Definimos nombre para usar
             var listName = theOptions.name
                 //Si no existe el origen el la sesion, lo creamos
@@ -80,7 +98,8 @@ cargaListdt = function (theOptions) {
             /// y lo extraemos
             var src = Session.get('lists_' + listName)
         }
-        //Extraemos las opciones del origen    
+        //note La configuración del listado (src) la cargamos desde una variable de session, para que sea en efecto una fuente reactiva.
+        //Extraemos las opciones especificas para datatables de src
         options = src.list.datatables || {}
         var columns = []
             //Creamos options.columns automáticamente, a apartir de los nombres de campos definidos
