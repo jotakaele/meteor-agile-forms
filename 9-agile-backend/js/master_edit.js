@@ -114,18 +114,16 @@ if (Meteor.isClient) {
             var contentFiltered = oVars.editorToSave()
             if (contentFiltered) {
                 var oRenderOptions = {
-                        type: 'list',
-                        src: contentFiltered,
-                        div: 'ritem',
-                        render: true
-                            // name: $('input#name').val()
-                    }
-                    //dbg("oRenderOptions", oRenderOptions)
+                    type: 'list',
+                    src: contentFiltered,
+                    div: 'ritem',
+                    render: true
+                        // name: $('input#name').val()
+                }
                 doSnippet(oRenderOptions)
             } else {
                 $('#ritem').html('<div class="alert-box alert">List config error.</div>')
             }
-            //dbg('bl', oRenderOptions)
         }
         /*    // Extendemos snippets con los metodos necesarios para el backend
         _.each(extendToBackend, function (value, key) {
