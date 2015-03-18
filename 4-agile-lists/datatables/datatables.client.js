@@ -19,8 +19,8 @@ var tableToolsDefaults = {
      * Ceea el objeto dataTables y lo mantiene reactivo
      * @param {object} options Lista de opciones cargadas desde la configuración del listado en YAML
      */
-ReactiveDatatable = function (options) {
-   
+ReactiveDatatable = function(options) {
+    dbg("options", o2S(options))
     var tableID = "datatable";
     var self = this;
     //Opciones por defecto de dataTables
@@ -35,7 +35,7 @@ ReactiveDatatable = function (options) {
             targets: "_all",
             defaultContent: "–––"
         }],
-        stateLoadParams: function (settings, data) {
+        stateLoadParams: function(settings, data) {
             // Make it easy to change to the stored page on .update()
             self.page = data.start / data.length;
         }
@@ -55,13 +55,13 @@ ReactiveDatatable = function (options) {
  * Actualiza las filas de la tabla cada vez que la fuente reactiva con que ha sido llamada ReactiveDatatables
  * @param  {array} data El array de objetos (los datos)
  */
-ReactiveDatatable.prototype.update = function (data) {
+ReactiveDatatable.prototype.update = function(data) {
     if (!data.length) return;
     var self = this;
     self.dataTable.clear().rows.add(data).draw(false).page(self.page || 0) // XXX: Can we avoid drawing twice?
         .draw(false); // I couldn't get the page drawing to work otherwise
 };
-Template.list.rendered = function () {
+Template.list.rendered = function() {
     cargaList({
         name: this.data.name
     })
@@ -71,9 +71,9 @@ Template.list.rendered = function () {
  * @param  {object} theOptions Datos para lanzar la consulta, se espera como mínimo name o src y div
  * @return {[type]}            [description]
  */
-cargaList = function (theOptions) {
+cargaList = function(theOptions) {
         opt = theOptions
-            // dbg("theOptions", theOptions)
+            //dbg("theOptions", o2S(theOptions))
             //Definimos erro por si pasamos algo diferente a un objeto
         if (typeof theOptions != 'object') {
             console.error("Se requiere un objeto con la propiedad src o name y div");
@@ -102,22 +102,34 @@ cargaList = function (theOptions) {
         //Extraemos las opciones especificas para datatables de src
         options = src.list.datatables || {}
         var columns = []
-            //Creamos options.columns automáticamente, a apartir de los nombres de campos definidos
-        _.each(_.keys(src.list.sources.main.options.fields).concat(_.without(_.keys(src.list.sources), 'main')), function (key) {
+
+        //Creamos options.columns automáticamente, a apartir de los nombres de campos definidos
+        var iIndex
+        _.each(_.keys(src.list.sources.main.options.fields).concat(_.without(_.keys(src.list.sources), 'main')), function(key, index) {
                 var o = {}
+
                 o.title = _.humanize(key)
                 o.data = key
                 o.className = 'cell-' + key
                 columns.push(o)
+                    //Tratamiento especial para la columnas index (si existe)
+                if (key == 'index') {
+                    iIndex = index
+                    delete o.data
+                    delete o.title
+                    o.searchable = false
+                    o.orderable = false
+
+                }
             })
             //onl default options
         var newOptions = {
                 columns: columns,
             }
             //Si hemos pasado un div especifico lo tenemos en cuenta
-        
-            newOptions.divName = theOptions.div || "datatable_wrapper"
-        
+
+        newOptions.divName = theOptions.div || "datatable_wrapper"
+
         //Cargamos el css especifico, si existe
         if (src.list.css) {
             processListCssKey(newOptions.divName, src.list.css).prependTo($('#' + newOptions.divName))
@@ -131,10 +143,24 @@ cargaList = function (theOptions) {
         //Extendemos las opciones con newOptions
         _.extend(options, newOptions)
             //CReamos datatables
-        var rTable = new ReactiveDatatable(options)
-            //new $.fn.dataTable.Responsive(datatable);
-            //Reactivamente ....
-        Tracker.autorun(function (a) {
+        rTable = new ReactiveDatatable(options)
+            //Activamos eventos para la columna index (si existe)
+        dbg("iIndex", iIndex)
+        if (iIndex >= 0) {
+            var t = rTable.dataTable
+
+            t.on('order.dt search.dt', function() {
+                t.column(iIndex, {
+                    search: 'applied',
+                    order: 'applied'
+                }).nodes().each(function(cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
+        }
+        //new $.fn.dataTable.Responsive(datatable);
+        //Reactivamente ....
+        Tracker.autorun(function(a) {
             //Preguntamos por los los dats a partir de config
             if (idTmpList) {
                 var dataSrc = Session.get(idTmpList)
@@ -157,4 +183,3 @@ cargaList = function (theOptions) {
     //todo Dar formato al nuevo tipo de objetos en datatables
     //todo indicar el tipo en cada celda renderizada (plugin?)
     //done Habilitar plugins, minimo tabletools
-

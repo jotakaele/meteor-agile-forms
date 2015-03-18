@@ -2,57 +2,57 @@ if (Meteor.isClient) {
     //Inicializacion de Variables y filtros
     oVars = {
             bEditorCambiado: false,
-            renderFromEditor: function () {
+            renderFromEditor: function() {
                 //   renderList(jsyaml.load(editor.getValue()), 'ritem')
                 //   El comando que se lanzará cuando queramos renderizar el list/etc depues d emodificarlo ene le editor
             },
-            renderFromDatabase: function (src) {
+            renderFromDatabase: function(src) {
                 //renderList(src, 'ritem') //El comando que se lanzará cuando queramos renderizar el list/etc directamente desde la configuración de la base de datos
             },
             //Transformaciones que hacemos al valor recuperado del editor antes de guardarlo en la base de datos.
-            editorToSave: function () {
+            editorToSave: function() {
                 switch (snippets[s('masterActiveCategory')].ace) {
-                case 'yaml':
-                    //Si estamos almacenando JSON...
-                    try {
-                        var oRes = jsyaml.load(editor.getValue())
-                    } catch (e) {
-                        console.log(e);
-                        // showToUser({
-                        //     content: 'The YAML string is malformed <b>(LINEA ' + e.mark.line + ')</b>',
-                        //     time: 2
-                        // })
-                        //editor.gotoLine(e.mark.line)
-                        //editor.moveCursorTo(e.mark.line - 1, e.mark.column - 1)
-                    }
-                    if (typeof oRes == 'object') {
-                        return oRes
-                    } else {
-                        return false
-                    }
-                    break;
-                default:
-                    return editor.getValue()
-                    break;
+                    case 'yaml':
+                        //Si estamos almacenando JSON...
+                        try {
+                            var oRes = jsyaml.load(editor.getValue())
+                        } catch (e) {
+                            console.log(e);
+                            // showToUser({
+                            //     content: 'The YAML string is malformed <b>(LINEA ' + e.mark.line + ')</b>',
+                            //     time: 2
+                            // })
+                            //editor.gotoLine(e.mark.line)
+                            //editor.moveCursorTo(e.mark.line - 1, e.mark.column - 1)
+                        }
+                        if (typeof oRes == 'object') {
+                            return oRes
+                        } else {
+                            return false
+                        }
+                        break;
+                    default:
+                        return editor.getValue()
+                        break;
                 }
             },
             //Transformaciones que hacemos al valor recuperado de la base de datos antes de volcarlo en el editor
-            savedToEditor: function (src) {
+            savedToEditor: function(src) {
                 switch (snippets[s('masterActiveCategory')].ace) {
-                case 'yaml':
-                    // Si estamos recuperando JSON y vamos a trabajar en YAML ....
-                    return jsyaml.dump(sanitizeObjectNameKeys(src))
-                    break;
-                default:
-                    return sanitizeObjectNameKeys(src)
-                    break;
+                    case 'yaml':
+                        // Si estamos recuperando JSON y vamos a trabajar en YAML ....
+                        return jsyaml.dump(sanitizeObjectNameKeys(src))
+                        break;
+                    default:
+                        return sanitizeObjectNameKeys(src)
+                        break;
                 }
             },
         }
         /**
          * Extendemos la funcionalidad de snippets para trabajar con el backend
          */
-    snippets.html.renderInMasterBackend = function () {
+    snippets.html.renderInMasterBackend = function() {
         //this.render(oVars.editorToSave(), 'ritem')
         doSnippet({
             type: 'html',
@@ -61,7 +61,7 @@ if (Meteor.isClient) {
             render: true
         })
     }
-    snippets.jade.renderInMasterBackend = function () {
+    snippets.jade.renderInMasterBackend = function() {
         //this.render(oVars.editorToSave(), 'ritem')
         doSnippet({
             type: 'jade',
@@ -70,7 +70,7 @@ if (Meteor.isClient) {
             render: true
         })
     }
-    snippets.markdown.renderInMasterBackend = function () {
+    snippets.markdown.renderInMasterBackend = function() {
         //this.render(oVars.editorToSave(), 'ritem')
         doSnippet({
             type: 'markdown',
@@ -79,7 +79,7 @@ if (Meteor.isClient) {
             render: true
         })
     }
-    snippets.css.renderInMasterBackend = function () {
+    snippets.css.renderInMasterBackend = function() {
         //this.render(oVars.editorToSave(), 'ritem')
         doSnippet({
             type: 'css',
@@ -88,9 +88,9 @@ if (Meteor.isClient) {
             render: true
         })
     }
-    snippets.text.renderInMasterBackend = function () {}
-    snippets.config.renderInMasterBackend = function () {}
-    snippets.form.renderInMasterBackend = function () {
+    snippets.text.renderInMasterBackend = function() {}
+    snippets.config.renderInMasterBackend = function() {}
+    snippets.form.renderInMasterBackend = function() {
         $('#option-form').removeClass('hide')
         var contentFiltered = oVars.editorToSave()
         if (contentFiltered) {
@@ -110,7 +110,7 @@ if (Meteor.isClient) {
             $('#ritem').html('<div class="alert-box alert">Form config error.</div>')
         }
     }
-    snippets.list.renderInMasterBackend = function () {
+    snippets.list.renderInMasterBackend = function() {
             var contentFiltered = oVars.editorToSave()
             if (contentFiltered) {
                 var oRenderOptions = {
@@ -129,18 +129,18 @@ if (Meteor.isClient) {
         _.each(extendToBackend, function (value, key) {
             _.extend(snippets[key], value);
         });*/
-    Template.masterEdit.rendered = function () {
+    Template.masterEdit.rendered = function() {
         $('select#theme').val(s('active_ace_theme'))
         $('#items_existentes a[name="' + this.data.name + '"]').click()
     };
     Template.masterEdit.helpers({
-        ace_mode: function () {
+        ace_mode: function() {
             return snippets[s('masterActiveCategory')].ace
         },
-        form_modes: function () {
+        form_modes: function() {
             var fModes = ['new', 'edit', 'readonly', 'delete']
             var fModesC = []
-            _(fModes).each(function (value, key) {
+            _(fModes).each(function(value, key) {
                 var oTemp = {}
                 oTemp.name = value
                 if (s('master_edit_form_mode') == value) {
@@ -150,19 +150,19 @@ if (Meteor.isClient) {
             })
             return fModesC
         },
-        form_active_doc: function () {
+        form_active_doc: function() {
             return s('last-' + this.name + '-backend-edit-id')
         },
-        form_active_values: function () {
+        form_active_values: function() {
             return JSON.stringify(s('last-' + this.name + '-backend-edit-values'))
         },
-        currentCategory: function () {
+        currentCategory: function() {
             return s('masterActiveCategory')
         },
-        snippets: function () {
+        snippets: function() {
             var aValues = []
             var filtersnippets = this.mode ? _.pick(snippets, this.mode) : snippets
-            _(filtersnippets).each(function (value, key) {
+            _(filtersnippets).each(function(value, key) {
                 var oTemp = {
                     name: key,
                     title: key.toUpperCase(),
@@ -176,7 +176,7 @@ if (Meteor.isClient) {
             })
             return aValues
         },
-        items: function () {
+        items: function() {
             return masterConnection[s('masterActiveCategory')].find({}, {
                 fields: {
                     name: 1
@@ -188,26 +188,26 @@ if (Meteor.isClient) {
         }
     });
     Template.masterEdit.events({
-        'change select#form-mode': function (ev) {
+        'change select#form-mode': function(ev) {
             s('master_edit_form_mode', $(ev.target).val())
         },
-        'change select#theme': function (ev) {
+        'change select#theme': function(ev) {
             s('active_ace_theme', $(ev.target).val())
             if (editor) {
                 editor.setTheme(s('active_ace_theme'))
             }
         },
-        'mouseover select#theme option': function (ev) {
+        'mouseover select#theme option': function(ev) {
             if (editor) {
                 editor.setTheme($(ev.target).val())
             }
         },
-        'mouseleave select#theme': function (ev) {
+        'mouseleave select#theme': function(ev) {
             if (editor) {
                 editor.setTheme(s('active_ace_theme'))
             }
         },
-        'change select#category': function (ev) {
+        'change select#category': function(ev) {
             s('masterActiveCategory', $(ev.target).val())
             $('#editor').remove()
             $('#eliminar,#duplicate').addClass('disabled')
@@ -215,9 +215,9 @@ if (Meteor.isClient) {
             $('#modeoptions > div').addClass('hide')
             $('#ritem').html('')
         },
-        'keyup input#filtrar': function (e) {
+        'keyup input#filtrar': function(e) {
             var tx = $(e.target).val()
-            $("#items_existentes dd[name]").each(function () {
+            $("#items_existentes dd[name]").each(function() {
                 if ($(this).text().toUpperCase().indexOf(tx.toUpperCase()) == -1) {
                     $(this).hide(100)
                 } else {
@@ -225,7 +225,11 @@ if (Meteor.isClient) {
                 }
             })
         },
-        'click #duplicate': function () {
+        'change select#reference': function(e) {
+            window.open($(e.target).val(), '_blank')
+
+        },
+        'click #duplicate': function() {
             if (!editor) {
                 return false
             }
@@ -237,7 +241,7 @@ if (Meteor.isClient) {
             $('#name').val(sNewName)
             $('dd.active').removeClass('active')
         },
-        'click #idiomas': function () {
+        'click #idiomas': function() {
             if ($('#translatablewords').length >= 1) {
                 $('#translatablewords').toggle()
             } else {
@@ -253,7 +257,7 @@ if (Meteor.isClient) {
                 Meteor.call('setLog', 'delete_master_' + s('masterActiveCategory'), {
                     name: oVars.sInitialName,
                     content: oVars.sInitialContent
-                }, function (err, okLog) {
+                }, function(err, okLog) {
                     if (okLog) {
                         //Si ha insertado en el log
                         masterConnection[s('masterActiveCategory')].remove(oVars.sCurrentItemId)
@@ -270,7 +274,7 @@ if (Meteor.isClient) {
                 })
             }
         },
-        'click li#crear': function () {
+        'click li#crear': function() {
             if (oVars.bEditorCambiado) {
                 if (confirm("¿El item se ha modificado, pero no se ha guardado aún. \nSe perderán los cambios!! \n\n¿Continuar?") == false) {
                     return false;
@@ -281,11 +285,11 @@ if (Meteor.isClient) {
             delete oVars.sCurrentItemId
             loadAceEditor('Hey i am a new ' + s('masterActiveCategory') + ' snippet', snippets[s('masterActiveCategory')].ace, 'editor-container')
         },
-        'keyup input#name': function () {
+        'keyup input#name': function() {
             onEditorChange()
         },
         'click #createfixture': createFixture,
-        'click #items_existentes .doc[id]': function (ev) {
+        'click #items_existentes .doc[id]': function(ev) {
             var $el = $(ev.target)
             if (oVars.bEditorCambiado) {
                 if (confirm("¿El item se ha modificado, pero no se ha guardado aún. \nSe perderán los cambios!! \n\n¿Continuar?") == false) {
@@ -302,15 +306,15 @@ if (Meteor.isClient) {
             $('input#name').val($el.attr('name'))
             loadAceEditor(sResContent, snippets[s('masterActiveCategory')].ace, 'editor-container')
         },
-        'click #guardar i': function () {
+        'click #guardar i': function() {
             saveItem($('input#name').val(), editor.getValue(), oVars.sCurrentItemId)
         },
-        'change select#form-doc-id': function (ev) {
+        'change select#form-doc-id': function(ev) {
             s('last-' + $('input#name').val() + '-backend-edit-id', $(ev.target).val())
             $('#ritem').html('')
             snippets[s('masterActiveCategory')].renderInMasterBackend()
         },
-        'click #cargaides': function () {
+        'click #cargaides': function() {
             cargarIdes()
         }
     });
@@ -378,7 +382,7 @@ if (Meteor.isClient) {
         Meteor.call('setLog', 'backup_master_' + s('masterActiveCategory'), {
             name: oVars.sInitialName,
             content: oVars.sInitialContent
-        }, function (err, res) {
+        }, function(err, res) {
             if (res) {
                 if (sId) {
                     masterConnection[s('masterActiveCategory')].remove(sId)
@@ -389,7 +393,7 @@ if (Meteor.isClient) {
                     content: desanitizeObjectNameKeys(sFilteredContent),
                     create_date: new Date(),
                     update: new Date()
-                }, function (err, okInsert) {
+                }, function(err, okInsert) {
                     if (okInsert) {
                         showToUser({
                             content: t('Saved form') + ' <b>' + sName + '</b>',
@@ -412,21 +416,21 @@ if (Meteor.isClient) {
     var hacer = ''
     lanzarRenderizado = function lanzarRenderizado() {
         switch (s('masterActiveCategory')) {
-        case 'jade':
-            var t = 3000
-            break;
-        case 'html':
-            var t = 0
-            break;
-        default:
-            var t = 800
-            break;
+            case 'jade':
+                var t = 3000
+                break;
+            case 'html':
+                var t = 0
+                break;
+            default:
+                var t = 800
+                break;
         }
         if (hacer) {
             clearTimeout(hacer)
             delete hacer
         }
-        hacer = setTimeout(function () {
+        hacer = setTimeout(function() {
             if (oVars.bEditorCambiado === true) {
                 showToUser({
                     content: '',
@@ -450,11 +454,11 @@ function cargarIdes() {
         sort: {
             autodate: -1
         }
-    }).fetch()).done(function (res) {
+    }).fetch()).done(function(res) {
         var $select = $('select#form-doc-id')
         $select.show()
         $('option', $select).remove()
-        res.forEach(function (value, key) {
+        res.forEach(function(value, key) {
             $option = $('<option>').text(value._id).appendTo($select)
         })
         if (res[0]) {
@@ -472,7 +476,7 @@ function cargarIdes() {
 
 function createFixture() {
         $f = $('.autof')
-        $('.block[limit] ', $f).each(function () {
+        $('.block[limit] ', $f).each(function() {
             $thisBlock = $(this)
             var numClicks = _.random(1, $(this).attr('limit'))
             for (var c = 0; c <= numClicks - 1; c++) {
@@ -483,7 +487,7 @@ function createFixture() {
         var src = fixForm.fields
         var fixCollection = fixForm.collection
         var existsRecord = masterConnection[fixCollection].find().count()
-        $('[name]', $f).each(function () {
+        $('[name]', $f).each(function() {
             sField = $(this).attr('name')
             sFieldSource = sField.split('-')[0]
                 //$field = $(this)
@@ -520,4 +524,3 @@ function createFixture() {
     //todo Implementar métodos que permitan recuperar y transformar los snippets desde Javascript y desde templates, de manera cruzada, o sea que permitan usar uno en otros.
     //fixed Permitir abrr master/edit invocando a un modo y nombre en concreto, para llamarlo desde fuera. (tambien invocando con un modo e doc en el caso de formularios)
     //fixed @urgente. Se eliminan los elementos cuando se les cambia el nombre!!!
-
