@@ -72,29 +72,31 @@ autol = function autol(options) {
     processObjectToHTML()
     return data.main
 }
-renderList = function (options) {
-        options.src.html = options.src.html || {}
-            // options = JSON.parse(substSnippets(JSON.stringify(options)))
-            // res = res + options.src.html.before ? options.src.html.before : false
-        var idElement = makeId(4)
-        var $tableContent = json2TableList(autol(options), options.div, options.src.list.options)
-        var res = ''
-        if (options.src.css) {
-            res += '<style id=' + idElement + '>' + processListCssKey(idElement, options.src.css).text() + '</style>'
-        }
-        if (options.src.html.before) {
-            res += options.src.html.before
-        }
-        res += '<table class="autol" id=' + idElement + '>'
-        res += $tableContent.html()
-        res += '</table>'
-        if (options.src.html.after) {
-            res += options.src.html.after
-        }
-        res += '<script type="text/javascript">  activateFormLinks();  </script>'
-        return res
-            // res = res + options.src.html.after ? options.src.html.after : false
+/*renderList = function (options) {
+    options.src.html = options.src.html || {}
+        // options = JSON.parse(substSnippets(JSON.stringify(options)))
+        // res = res + options.src.html.before ? options.src.html.before : false
+    var idElement = makeId(4)
+    var $tableContent = json2TableList(autol(options), options.div, options.src.list.options)
+    var res = ''
+    if (options.src.css) {
+        res += '<style id=' + idElement + '>' + processListCssKey(idElement, options.src.css).text() + '</style>'
     }
+    if (options.src.html.before) {
+        res += options.src.html.before
+    }
+    res += '<table class="autol" id=' + idElement + '>'
+    res += $tableContent.html()
+    res += '</table>'
+    if (options.src.html.after) {
+        res += options.src.html.after
+    }
+    res += '<script type="text/javascript">  activateFormLinks();  </script>'
+    return res
+        // res = res + options.src.html.after ? options.src.html.after : false
+}
+
+*/
     //Creamos un clave en listado para incluir css en la página. Importante, las claves dentro de css: deben estar rodeadas de comillas dobles, y los valores que lo requieran, ( por incluir espacios o caracteres especiales, deben ir entre comillas simples)
 processListCssKey = function processListCssKey(idElement, listCss) {
         var newCss = {}

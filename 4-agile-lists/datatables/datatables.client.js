@@ -20,9 +20,7 @@ var tableToolsDefaults = {
      * @param {object} options Lista de opciones cargadas desde la configuración del listado en YAML
      */
 ReactiveDatatable = function (options) {
-    if (!options.divName) {
-        options.divName = "datatable_wrapper"
-    }
+   
     var tableID = "datatable";
     var self = this;
     //Opciones por defecto de dataTables
@@ -63,8 +61,8 @@ ReactiveDatatable.prototype.update = function (data) {
     self.dataTable.clear().rows.add(data).draw(false).page(self.page || 0) // XXX: Can we avoid drawing twice?
         .draw(false); // I couldn't get the page drawing to work otherwise
 };
-Template.listdt.rendered = function () {
-    cargaListdt({
+Template.list.rendered = function () {
+    cargaList({
         name: this.data.name
     })
 };
@@ -73,8 +71,10 @@ Template.listdt.rendered = function () {
  * @param  {object} theOptions Datos para lanzar la consulta, se espera como mínimo name o src y div
  * @return {[type]}            [description]
  */
-cargaListdt = function (theOptions) {
-        //Definimos erro por si pasamos algo diferente a un objeto
+cargaList = function (theOptions) {
+        opt = theOptions
+            // dbg("theOptions", theOptions)
+            //Definimos erro por si pasamos algo diferente a un objeto
         if (typeof theOptions != 'object') {
             console.error("Se requiere un objeto con la propiedad src o name y div");
             return null
@@ -96,7 +96,7 @@ cargaListdt = function (theOptions) {
                 }).content)))))
             }
             /// y lo extraemos
-            var src = Session.get('lists_' + listName)
+            var src = parseEvalObjects(Session.get('lists_' + listName))
         }
         //note La configuración del listado (src) la cargamos desde una variable de session, para que sea en efecto una fuente reactiva.
         //Extraemos las opciones especificas para datatables de src
@@ -115,8 +115,18 @@ cargaListdt = function (theOptions) {
                 columns: columns,
             }
             //Si hemos pasado un div especifico lo tenemos en cuenta
-        if (theOptions.div) {
-            newOptions.divName = theOptions.div
+        
+            newOptions.divName = theOptions.div || "datatable_wrapper"
+        
+        //Cargamos el css especifico, si existe
+        if (src.list.css) {
+            processListCssKey(newOptions.divName, src.list.css).prependTo($('#' + newOptions.divName))
+        }
+        //Cargamos el html before 
+        if (src.list.html) {
+            if (src.list.html.before) {
+                $(substSnippets(src.list.html.before)).prependTo($('#' + newOptions.divName))
+            }
         }
         //Extendemos las opciones con newOptions
         _.extend(options, newOptions)
@@ -137,12 +147,14 @@ cargaListdt = function (theOptions) {
                 //Se actualiza la tabla con los datos
             rTable.update(data)
         })
+        if (src.list.html) {
+            if (src.list.html.after) {
+                $(substSnippets(src.list.html.after)).appendTo($('#' + newOptions.divName))
+            }
+        }
     }
-    //TODO Anadir after, before y css eal nuevo modelo de tablas
+    //done Anadir after, before y css eal nuevo modelo de tablas
     //todo Dar formato al nuevo tipo de objetos en datatables
     //todo indicar el tipo en cada celda renderizada (plugin?)
-    //todo Habilitar plugins, minimo tabletools
-    // 
-    // 
-    //
+    //done Habilitar plugins, minimo tabletools
 

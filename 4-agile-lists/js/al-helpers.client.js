@@ -13,7 +13,7 @@ Template.pageList.rendered = function () {
         doSnippet(config)
     }, 500)
 }
-Template.list.helpers({
+/*Template.list.helpers({
     table: function () {
         a = {
             src: sanitizeObjectNameKeys(masterConnection.list.findOne({
@@ -30,3 +30,4 @@ Template.list.rendered = function () {
     }, 100);
 };
 
+*/
