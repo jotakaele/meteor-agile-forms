@@ -1,13 +1,13 @@
 randEl = Function
     /*Devuelve un elemento aleatorio del arrat theArray*/
-randEl = function (theArray) {
+randEl = function(theArray) {
     var els = theArray.length
     var ind = Math.floor(Math.random() * els)
     return theArray[ind]
 }
 makeId = Function
     //Devuelve una cadena aleatoria de @num || 5 caracteres
-makeId = function (num) {
+makeId = function(num) {
         var pas = num || 5
         var text = "";
         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -105,7 +105,7 @@ parseEvalObjects = function parseEvalObjects(obj) {
         var expresion = /eval\(.*\)/g
         var matches = v.match(expresion) || []
             //console.log(matches)
-        matches.forEach(function (match) {
+        matches.forEach(function(match) {
             var vEval = match.replace(/eval/, '');
             v = v.replace(match, eval(vEval));
             //console.log(vEval)
@@ -192,9 +192,9 @@ showToUser = function showToUser(options) {
             title: t(opt.close + ' to close'),
             style: 'display:none',
             id: opt.id
-        }).html(opt.content).prependTo(opt.element).on(opt.close, function () {
+        }).html(opt.content).prependTo(opt.element).on(opt.close, function() {
             $d = $(this)
-            $d.slideUp(400, function () {
+            $d.slideUp(400, function() {
                 $d.remove()
             })
         }).slideDown(400)
@@ -212,8 +212,8 @@ showToUser = function showToUser(options) {
             }).appendTo(theDiv)
             theCounter.animate({
                 width: '100%'
-            }, opt.time * 1000, 'linear', function () {
-                theDiv.slideUp(200, function () {
+            }, opt.time * 1000, 'linear', function() {
+                theDiv.slideUp(200, function() {
                     theDiv.remove()
                 })
             })
@@ -226,17 +226,17 @@ showToUser = function showToUser(options) {
      * @param  {object} oQuerySelector [El objeto selector de la query hacia mongo]
      * @return {Array}                [Un array con los valores unico en el campo indicado]
      */
-getArrayValues = function (col, field, oQuerySelector) {
+getArrayValues = function(col, field, oQuerySelector) {
     var campos = JSON.parse('{"' + field + '":1}')
     var res = masterConnection[col].find(oQuerySelector || {}, {
         fields: campos
     }).fetch()
-    myArray = _.uniq(res.map(function (item) {
+    myArray = _.uniq(res.map(function(item) {
         return item[field]
     }))
     return myArray
 }
-doQuery_first = function (sMode, sCollection, oSelector, oOptions) {
+doQuery_first = function(sMode, sCollection, oSelector, oOptions) {
         if (sMode == 'find') {
             return masterConnection[sCollection].find(oSelector || {}, oOptions || {}).fetch()
         } else if (sMode == 'findOne') {
@@ -251,7 +251,7 @@ doQuery_first = function (sMode, sCollection, oSelector, oOptions) {
      * @param  {[object]} options    [El objeto oprions de Mongodb]
      * @return {[array | object]}            [Si mode es find, devuelve un array de objetos, si es findOne devuelve un objeto]
      */
-doQuery = function (sMode, sCollection, oSelector, oOptions) {
+doQuery = function(sMode, sCollection, oSelector, oOptions) {
         /*     
                       Transformamos la clave fields para generar una clave transform, segun espera mongo y cambiamos la clave fields, para que devuelva la lista de campos a traer de la base de datos.
                      
@@ -283,11 +283,11 @@ doQuery = function (sMode, sCollection, oSelector, oOptions) {
         var originalFields = oOptions.fields || {}
         var keysToKeep = _.keys(originalFields) //Los campos indicados expresamente
         if (oOptions.fields) {
-            _.each(originalFields, function (trValue, trKey) {
+            _.each(originalFields, function(trValue, trKey) {
                 if (trValue && typeof trValue == 'string') {
                     bodyF += 'doc.' + trKey + '=' + trValue.replace(/@/g, 'doc.') + ';\n'
                     tmpObj.transform = new Function('doc', bodyF + 'return doc;')
-                    trValue.match(/@[A-Z0-9]*/gi) || [].map(function (item) {
+                    trValue.match(/@[A-Z0-9]*/gi) || [].map(function(item) {
                         tmpObj.fields[item.replace(/@/, '')] = 1
                     })
                 }
@@ -297,13 +297,13 @@ doQuery = function (sMode, sCollection, oSelector, oOptions) {
             });
         }
         // Creamos un  objeto como plantilla del registro, para evitar que queden huecos en los campos
-        var recordTemplate = _.object(keysToKeep, keysToKeep.map(function (b) {
+        var recordTemplate = _.object(keysToKeep, keysToKeep.map(function(b) {
             return ' '
         }))
         if (sMode == 'find') {
             var res = masterConnection[sCollection].find(oSelector || {}, oOptions || {}).fetch()
             if (oOptions.fields) {
-                return res.map(function (record) {
+                return res.map(function(record) {
                     return _.extend(EJSON.clone(recordTemplate), _.pick(record, keysToKeep))
                 })
             } else {
@@ -325,7 +325,7 @@ doQuery = function (sMode, sCollection, oSelector, oOptions) {
      * @param  {jQuery element } $div Optional. El elemento JQuery que encerrara el resultado de la función. Se usa internamente para recursividad
      * @return {string}      El html listo para usar
      */
-o2HTML = function (obj, $div) {
+o2HTML = function(obj, $div) {
     if (typeof obj != 'object') {
         return obj
     }
@@ -334,7 +334,7 @@ o2HTML = function (obj, $div) {
         $div = $('<div>')
     }
     //$parent = $('<div>') //Creo un objeto padre para contener el html
-    _.each(obj, function (value, key) { //Recorro los nodos del objeto
+    _.each(obj, function(value, key) { //Recorro los nodos del objeto
         theType = $.type(value) //Determino el tipo de objeto que es (objeto, array u otro...)
         var $currentDIV = $('<div>', {
             class: theType,
@@ -352,3 +352,17 @@ o2HTML = function (obj, $div) {
     return isParent ? '<div class="parent">' + $div.html() + '</div>' : $div.html()
 }
 
+
+/**
+ * Devuelve un div con la fecha formateada segun format de modoo ue mantiene el orden 
+ * @param  {date} date   El objeto fecha
+ * @param  {string} format El formato que queremos que nos devuelva
+ * @return {string}        
+ */
+rDate = function(date, format) {
+    return moment(date).format(format || 'DD-MM-YYYY')
+        //var order = moment(date).format('YYYYMMDD')
+
+    //return ('<div order="' + order + '">' + m + '</div>')
+
+}

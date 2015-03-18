@@ -50,6 +50,11 @@ ReactiveDatatable = function(options) {
     // Render the table element and turn it into a DataTable
     $("#" + options.divName).append(table);
     this.dataTable = $(table).DataTable(this.options);
+
+
+    //NOTE @reference Aqui hay ue añadir las funciones para deteccion de fechas para ordenación usando momentjs
+    $.fn.dataTable.moment('DD/MM/YYYY')
+    $.fn.dataTable.moment('DD-MM-YYYY')
 };
 /**
  * Actualiza las filas de la tabla cada vez que la fuente reactiva con que ha sido llamada ReactiveDatatables
@@ -145,7 +150,7 @@ cargaList = function(theOptions) {
             //CReamos datatables
         rTable = new ReactiveDatatable(options)
             //Activamos eventos para la columna index (si existe)
-        dbg("iIndex", iIndex)
+            // dbg("iIndex", iIndex)
         if (iIndex >= 0) {
             var t = rTable.dataTable
 
@@ -171,6 +176,7 @@ cargaList = function(theOptions) {
                     src: dataSrc
                 })
                 //Se actualiza la tabla con los datos
+
             rTable.update(data)
         })
         if (src.list.html) {
