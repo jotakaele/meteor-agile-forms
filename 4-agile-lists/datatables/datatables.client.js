@@ -20,7 +20,7 @@ var tableToolsDefaults = {
      * @param {object} options Lista de opciones cargadas desde la configuración del listado en YAML
      */
 ReactiveDatatable = function(options) {
-    dbg("options", o2S(options))
+    // dbg("options", o2S(options))
     var tableID = "datatable";
     var self = this;
     //Opciones por defecto de dataTables
@@ -78,14 +78,16 @@ Template.list.rendered = function() {
  */
 cargaList = function(theOptions) {
         opt = theOptions
-            //dbg("theOptions", o2S(theOptions))
-            //Definimos erro por si pasamos algo diferente a un objeto
+
+        //dbg("theOptions", o2S(theOptions))
+        //Definimos erro por si pasamos algo diferente a un objeto
         if (typeof theOptions != 'object') {
             console.error("Se requiere un objeto con la propiedad src o name y div");
             return null
         }
         //Si esta definido src...
         if (theOptions.src) {
+            theOptions.src = proccesFieldTypes(theOptions.src)
             var idTmpList = makeId(4)
             Session.set(idTmpList, JSON.parse(substSnippets(JSON.stringify(sanitizeObjectNameKeys(theOptions.src)))))
             var src = Session.get(idTmpList)
@@ -102,6 +104,7 @@ cargaList = function(theOptions) {
             }
             /// y lo extraemos
             var src = parseEvalObjects(Session.get('lists_' + listName))
+            src = proccesFieldTypes(src)
         }
         //note La configuración del listado (src) la cargamos desde una variable de session, para que sea en efecto una fuente reactiva.
         //Extraemos las opciones especificas para datatables de src
@@ -110,14 +113,25 @@ cargaList = function(theOptions) {
 
         //Creamos options.columns automáticamente, a apartir de los nombres de campos definidos
         var iIndex
+
         _.each(_.keys(src.list.sources.main.options.fields).concat(_.without(_.keys(src.list.sources), 'main')), function(key, index) {
+
                 var o = {}
 
                 o.title = _.humanize(key)
                 o.data = key
-                o.className = 'cell-' + key
-                columns.push(o)
-                    //Tratamiento especial para la columnas index (si existe)
+
+
+                var fieldClass = (' ' + src.list.fieldTypes[key]) || ''
+
+
+
+
+                o.className = 'cell-' + key + fieldClass
+
+
+
+                //Tratamiento especial para la columnas index (si existe)
                 if (key == 'index') {
                     iIndex = index
                     delete o.data
@@ -126,6 +140,7 @@ cargaList = function(theOptions) {
                     o.orderable = false
 
                 }
+                columns.push(o)
             })
             //onl default options
         var newOptions = {
@@ -189,3 +204,25 @@ cargaList = function(theOptions) {
     //todo Dar formato al nuevo tipo de objetos en datatables
     //todo indicar el tipo en cada celda renderizada (plugin?)
     //done Habilitar plugins, minimo tabletools
+
+
+
+/**
+ * Elimina la informacion de tipos de los nombre de campo y crea una clave fieldTypes con información de los campos que se ha definido el tipo
+ * @param  {object} src El objeto a transformar
+ * @return {object}     El objeto transformado
+ */
+proccesFieldTypes = function(src) {
+    var oMainFields = {}
+    var oFieldTypes = {}
+    _.each(src.list.sources.main.options.fields, function(value, key) {
+        dbg(key, key.split('/')[0])
+        oMainFields[key.split('/')[0]] = value
+        if (key.split('/').length > 1) {
+            oFieldTypes[key.split('/')[0]] = key.split('/').pop()
+        }
+    })
+    src.list.sources.main.options.fields = oMainFields
+    src.list.fieldTypes = oFieldTypes
+    return src
+}
