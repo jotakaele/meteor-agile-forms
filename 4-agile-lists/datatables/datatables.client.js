@@ -1,4 +1,4 @@
-//Definimos valores por defecto en tableToold
+//Definimos valores por defecto en tableTools
 var tableToolsDefaults = {
         sSwfPath: "/datatables/tabletools/swf/copy_csv_xls_pdf.swf",
         aButtons: [{
@@ -20,7 +20,6 @@ var tableToolsDefaults = {
      * @param {object} options Lista de opciones cargadas desde la configuración del listado en YAML
      */
 ReactiveDatatable = function(options) {
-    // dbg("options", o2S(options))
     var tableID = "datatable";
     var self = this;
     //Opciones por defecto de dataTables
@@ -50,8 +49,6 @@ ReactiveDatatable = function(options) {
     // Render the table element and turn it into a DataTable
     $("#" + options.divName).append(table);
     this.dataTable = $(table).DataTable(this.options);
-
-
     //NOTE @reference Aqui hay ue añadir las funciones para deteccion de fechas para ordenación usando momentjs
     $.fn.dataTable.moment('DD/MM/YYYY')
     $.fn.dataTable.moment('DD-MM-YYYY')
@@ -78,9 +75,7 @@ Template.list.rendered = function() {
  */
 cargaList = function(theOptions) {
         opt = theOptions
-
-        //dbg("theOptions", o2S(theOptions))
-        //Definimos erro por si pasamos algo diferente a un objeto
+            //Definimos erro por si pasamos algo diferente a un objeto
         if (typeof theOptions != 'object') {
             console.error("Se requiere un objeto con la propiedad src o name y div");
             return null
@@ -110,35 +105,24 @@ cargaList = function(theOptions) {
         //Extraemos las opciones especificas para datatables de src
         options = src.list.datatables || {}
         var columns = []
-
-        //Creamos options.columns automáticamente, a apartir de los nombres de campos definidos
+            //Creamos options.columns automáticamente, a apartir de los nombres de campos definidos
         var iIndex
-
         _.each(_.keys(src.list.sources.main.options.fields).concat(_.without(_.keys(src.list.sources), 'main')), function(key, index) {
-
                 var o = {}
-
                 o.title = _.humanize(key)
+                o.className = 'cell-' + key
+                if (src.list.fieldTypes[key]) {
+                    o.className += ' ' + src.list.fieldTypes[key]
+                }
                 o.data = key
-
-
-                var fieldClass = (' ' + src.list.fieldTypes[key]) || ''
-
-
-
-
-                o.className = 'cell-' + key + fieldClass
-
-
-
-                //Tratamiento especial para la columnas index (si existe)
+                    //var fieldClass = (' ' + src.list.fieldTypes[key]) || ''
+                    //Tratamiento especial para la columnas index (si existe)
                 if (key == 'index') {
                     iIndex = index
                     delete o.data
                     delete o.title
                     o.searchable = false
                     o.orderable = false
-
                 }
                 columns.push(o)
             })
@@ -147,10 +131,8 @@ cargaList = function(theOptions) {
                 columns: columns,
             }
             //Si hemos pasado un div especifico lo tenemos en cuenta
-
         newOptions.divName = theOptions.div || "datatable_wrapper"
-
-        //Cargamos el css especifico, si existe
+            //Cargamos el css especifico, si existe
         if (src.list.css) {
             processListCssKey(newOptions.divName, src.list.css).prependTo($('#' + newOptions.divName))
         }
@@ -165,10 +147,8 @@ cargaList = function(theOptions) {
             //CReamos datatables
         rTable = new ReactiveDatatable(options)
             //Activamos eventos para la columna index (si existe)
-            // dbg("iIndex", iIndex)
         if (iIndex >= 0) {
             var t = rTable.dataTable
-
             t.on('order.dt search.dt', function() {
                 t.column(iIndex, {
                     search: 'applied',
@@ -178,7 +158,6 @@ cargaList = function(theOptions) {
                 });
             }).draw();
         }
-        //new $.fn.dataTable.Responsive(datatable);
         //Reactivamente ....
         Tracker.autorun(function(a) {
             //Preguntamos por los los dats a partir de config
@@ -191,7 +170,6 @@ cargaList = function(theOptions) {
                     src: dataSrc
                 })
                 //Se actualiza la tabla con los datos
-
             rTable.update(data)
         })
         if (src.list.html) {
@@ -200,23 +178,15 @@ cargaList = function(theOptions) {
             }
         }
     }
-    //done Anadir after, before y css eal nuevo modelo de tablas
-    //todo Dar formato al nuevo tipo de objetos en datatables
-    //todo indicar el tipo en cada celda renderizada (plugin?)
-    //done Habilitar plugins, minimo tabletools
-
-
-
-/**
- * Elimina la informacion de tipos de los nombre de campo y crea una clave fieldTypes con información de los campos que se ha definido el tipo
- * @param  {object} src El objeto a transformar
- * @return {object}     El objeto transformado
- */
+    /**
+     * Elimina la informacion de tipos de los nombre de campo y crea una clave fieldTypes con información de los campos que se ha definido el tipo
+     * @param  {object} src El objeto a transformar
+     * @return {object}     El objeto transformado
+     */
 proccesFieldTypes = function(src) {
     var oMainFields = {}
     var oFieldTypes = {}
     _.each(src.list.sources.main.options.fields, function(value, key) {
-        dbg(key, key.split('/')[0])
         oMainFields[key.split('/')[0]] = value
         if (key.split('/').length > 1) {
             oFieldTypes[key.split('/')[0]] = key.split('/').pop()

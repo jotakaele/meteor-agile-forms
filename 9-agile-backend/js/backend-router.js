@@ -1,6 +1,6 @@
 Router.map(function() {
-    this.route('kitchensink2', {
-        path: '/backend/kitchensink',
+    this.route('foundation', {
+        path: '/backend/foundation',
         controller: 'BaseController'
     })
     this.route('masterEdit', {

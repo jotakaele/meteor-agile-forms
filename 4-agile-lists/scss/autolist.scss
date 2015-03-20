@@ -1,65 +1,16 @@
 @import "../../1-agile-main/scss/main";
-table.autol {
-    width: 100% !important;
+table.table.dataTable {
+    // Tipos definidos
     td {
-        span {
-            display: block;
-            padding: 0px .5em;
-            &[type=number] {
-                text-align: right;
-            }
-            &[type=date] {
-                text-align: center;
-            }
+        &.euro, &.dolar, &.currency, &.number {
+            text-align: right;
         }
-        padding: 2px;
-        span.array-list {
-            border: 1px solid darken($secondary-color, 20);
-        }
-        padding: 0px;
-        height: auto;
-    }
-    td.block {
-        span.array-list {
-            display: block;
-        }
-    }
-    div[objectlevel="0"] table.object_table thead > tr > td {
-        display: none;
-    }
-    table.object_table {
-        margin: 0px;
-        padding: 0px;
-        td {
-            display: inline-flex;
-        }
-        * {
-            margin: 0px;
-            padding: 0px;
-        }
-    }
-    div.array_element {
-        background-color: #FFAFF6;
-        padding: 1px;
-        margin: 1px;
-        border: 1px solid #000;
-    }
-    div {
-        padding: 0px;
-        margin: 0px;
-        &[type="object"] {
-            background-color: #9FFFF4;
-        }
-        &[type="array"] {
-            background-color: #FFB55F;
-        }
-    }
-    tr {
-        &:hover td {
-            text-decoration: underline;
+        &.date {
+            text-align: center;
         }
     }
 }
+
 div.parent {
     div {
         // border: 1px solid;
