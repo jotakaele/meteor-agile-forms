@@ -19,12 +19,16 @@ mquandalle:bower
 msavin:mongol
 acemtp:csm
 #meteorhacks:kadira
-#jparker:crypto-aes
-jparker:crypto-base64
 insecure
 chuangbo:marked #Parser para markdown
 meteorhacks:npm
 mquandalle:jade
-#ephemer:reactive-datatables
 npm-container
 accounts-ui
+useraccounts:foundation
+accounts-password
+accounts-google
+accounts-facebook
+accounts-twitter
+service-configuration
+alanning:roles
