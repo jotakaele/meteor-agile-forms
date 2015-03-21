@@ -3,7 +3,7 @@
         "bower": {}
     },
     "bower": {
-        "js-yaml": "3.1.0",
+        "js-yaml": "3.2.7",
         "jquery-autosize": "1.18.13",
         "datetimepicker": "2.3.7",
         "chroma-js": "0.5.6",

@@ -21,6 +21,7 @@ $modules: () !default;
         @content;
     }
 }
+
 //
 // @functions
 //
@@ -32,17 +33,20 @@ $modules: () !default;
     }
     @return nth($range, 1);
 }
+
 @function upper-bound($range) {
     @if length($range) < 2 {
         @return 999999999999;
     }
     @return nth($range, 2);
 }
+
 // STRIP UNIT
 // It strips the unit of measure and returns it
 @function strip-unit($num) {
     @return $num / ($num * 0 + 1);
 }
+
 // CONVERT TO REM
 @function convert-to-rem($value, $base-value: $rem-base) {
     $value: strip-unit($value) / strip-unit($base-value) * 1rem;
@@ -52,12 +56,14 @@ $modules: () !default;
     // Turn 0rem into 0
     @return $value;
 }
+
 @function data($attr) {
     @if $namespace {
         @return "[data-" + $namespace + "-" + $attr + "]";
     }
     @return "[data-" + $attr + "]";
 }
+
 // REM CALC
 // New Syntax, allows to optionally calculate on a different base value to counter compounding effect of rem's.
 // Call with 1, 2, 3 or 4 parameters, 'px' is not required but supported:
@@ -86,16 +92,19 @@ $modules: () !default;
     }
     @return $remValues;
 }
+
 // OLD EM CALC
 // Deprecated: We'll drop support for this in 5.1.0, use rem-calc()
 @function emCalc($values) {
     @return rem-calc($values);
 }
+
 // OLD EM CALC
 // Deprecated: We'll drop support for this in 5.1.0, use rem-calc()
 @function em-calc($values) {
     @return rem-calc($values);
 }
+
 // $experimental: true;
 // The default font-size is set to 100% of the browser style sheet (usually 16px)
 // for compatibility with browser-based text zoom or user-set defaults.
@@ -112,7 +121,7 @@ $modules: () !default;
 // Grid
 // $include-html-block-grid-classes: $include-html-classes;
 // $include-xl-html-grid-classes: false;
-$row-width: rem-calc(1600);
+//$row-width: rem-calc(1600);
 // $total-columns: 12;
 // Global
 // We use these to define default font weights

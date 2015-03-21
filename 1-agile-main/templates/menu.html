@@ -12,18 +12,15 @@
                 </a>
             </li>
         </ul>
-
         <section class="top-bar-section">
-            <!-- Right Nav Section -->
-
-            {{>menuBackend}}
-
-            <!-- <ul class="left"> 
-                <li><a href="#">Left Nav Button</a></li> 
-            </ul>  -->
-
+            <ul class="right">
+                {{#if currentUser}}
+                <li><span class="label">{{user.email}}</span> {{#if user.picture}}
+                    <img id="user-picture" src="{{user.picture}}"> {{/if}}
+                </li>
+                {{/if}}
+                <li>{{>atNavButton}}</li>
+            </ul>
         </section>
-
     </nav>
-
 </template>
