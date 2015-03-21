@@ -14,9 +14,9 @@ pfafman:font-awesome-4
 momentjs:moment
 iron:router
 jeremy:selectize
-vsivsi:numeral
+numeral:numeral
 mquandalle:bower
-msavin:mongol
+#msavin:mongol
 acemtp:csm
 #meteorhacks:kadira
 insecure

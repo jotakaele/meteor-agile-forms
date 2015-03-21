@@ -9,11 +9,11 @@ if (Meteor.isClient) {
     Router.plugin('ensureSignedIn', {
         except: ['home', 'atSignIn', 'atSignUp', 'atForgotPassword']
     });
-    Accounts.ui.config({
-        passwordSignupFields: 'USERNAME_AND_EMAIL'
-    });
+    /* Accounts.ui.config({
+         passwordSignupFields: 'USERNAME_AND_EMAIL'
+     });*/
     Meteor.subscribe("userData");
-    //Regitramos un helper global para usar en cualquier lado
+    //Regitramos un helper global para usar user en cualquier lado
     Template.registerHelper('user', function() {
             var u = Meteor.user()
             obj = {}
@@ -37,47 +37,41 @@ if (Meteor.isClient) {
         })
         // 
         // accounts config
-    AccountsTemplates.configure({
-        // Behaviour
-        confirmPassword: true,
-        enablePasswordChange: true,
-        // forbidClientAccountCreation: false,
-        overrideLoginErrors: true,
-        sendVerificationEmail: false,
-        lowercaseUsername: false,
-        // Appearance
-        showAddRemoveServices: false,
-        showForgotPasswordLink: false,
-        showLabels: true,
-        showPlaceholders: true,
-        // Client-side Validation
-        continuousValidation: true,
-        negativeFeedback: false,
-        negativeValidation: true,
-        positiveValidation: true,
-        positiveFeedback: true,
-        showValidating: true,
-        // Privacy Policy and Terms of Use
-        privacyUrl: 'privacy',
-        termsUrl: 'terms-of-use',
-        // Redirects
-        homeRoutePath: '/home',
-        redirectTimeout: 4000,
-        // Hooks
-        // onLogoutHook: myLogoutFunc,
-        // onSubmitHook: mySubmitFunc,
-        // Texts
-        texts: {
-            button: {
-                signUp: "Register Now!"
-            },
-            socialSignUp: "Register",
-            socialIcons: {
-                "meteor-developer": "fa fa-rocket"
-            },
-            title: {
-                forgotPwd: "Recover Your Passwod"
-            },
-        },
-    });
-}
+ } 
+  //Routes
+AccountsTemplates.configureRoute('changePwd');
+AccountsTemplates.configureRoute('enrollAccount');
+AccountsTemplates.configureRoute('forgotPwd');
+AccountsTemplates.configureRoute('resetPwd');
+AccountsTemplates.configureRoute('signIn');
+AccountsTemplates.configureRoute('signUp');
+AccountsTemplates.configureRoute('verifyEmail');
+
+// Options
+AccountsTemplates.configure({
+    //defaultLayout: 'emptyLayout',
+    showForgotPasswordLink: true,
+    overrideLoginErrors: true,
+    enablePasswordChange: true,
+    sendVerificationEmail: false,
+
+    //enforceEmailVerification: true,
+    //confirmPassword: true,
+    //continuousValidation: false,
+    //displayFormLabels: true,
+    //forbidClientAccountCreation: false,
+    //formValidationFeedback: true,
+    //homeRoutePath: '/',
+    //showAddRemoveServices: false,
+    //showPlaceholders: true,
+
+    negativeValidation: true,
+    positiveValidation:true,
+    negativeFeedback: false,
+    positiveFeedback:true,
+
+    // Privacy Policy and Terms of Use
+    //privacyUrl: 'privacy',
+    //termsUrl: 'terms-of-use',
+});
+
