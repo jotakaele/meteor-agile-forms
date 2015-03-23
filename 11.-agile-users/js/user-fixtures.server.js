@@ -7,9 +7,9 @@ if (masterConnection.config.find().count() === 0) {
         content: {
             "roles": {
                 "admin": [
-                    "juan.chamizo@gmail.com"
+                    "juan.chamizo@gmail.com", "admin@gmail.com"
                 ],
-                "manager": [
+                "gestor": [
                     "gestor1@gmail.com",
                     "gestor2@gmail.com"
                 ],
@@ -30,8 +30,6 @@ if (masterConnection.config.find().count() === 0) {
 
 
 
-
-
 if (Meteor.users.find().count() === 0) {
 
     var nu = [{
@@ -46,7 +44,7 @@ if (Meteor.users.find().count() === 0) {
             }
         },
         "emails": [{
-            "address": "operador2@gmail.com",
+            "address": "operator2@gmail.com",
             "verified": false
         }]
     }, {
@@ -61,7 +59,7 @@ if (Meteor.users.find().count() === 0) {
             }
         },
         "emails": [{
-            "address": "operador3@gmail.com",
+            "address": "operator3@gmail.com",
             "verified": false
         }]
     }, {
@@ -157,7 +155,7 @@ if (Meteor.users.find().count() === 0) {
             }
         },
         "emails": [{
-            "address": "operador1@gmail.com",
+            "address": "operator1@gmail.com",
             "verified": false
         }]
     }]
