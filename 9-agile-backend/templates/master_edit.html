@@ -39,6 +39,13 @@
                             <option value="http://momentjs.com/docs/#/displaying/">Moment Displaying</option>
                             <option value="http://numeraljs.com/">Numeral JS</option>
                         </optgroup>
+                        <optgroup label="Meteor">
+                            <option value="https://github.com/meteor-useraccounts/core/blob/master/Guide.md">useraccount</option>
+                            <option value="https://github.com/alanning/meteor-roles/">Roles</option>
+
+
+
+                        </optgroup>
                     </select>
                 </li>
                 <li id="themeselector">
@@ -86,8 +93,7 @@
     </nav>
     <dl class="sub-nav" id="items_existentes">
         <dt>
-            <input type="search" id="filtrar" placeholder="{{tr " Form filter "}}" /> </dt>
-        {{#each items }}
+            <input type="search" id="filtrar" placeholder="{{tr " Form filter "}}" /> </dt> {{#each items }}
         <dd name="{{name}}"><a class="doc" name="{{name}}" id="{{_id}}">{{name}}</a> </dd>
         {{/each}}
     </dl>
