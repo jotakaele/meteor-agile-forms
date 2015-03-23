@@ -1,0 +1,13 @@
+{
+  "name": "onl",
+  "version": "0.0.1",
+  "dependencies": {
+    "js-yaml": "3.2.7",
+    "jquery-autosize": "1.18.13",
+    "datetimepicker": "2.3.7"
+  },
+   "ignoredDependencies": [
+    "jquery"
+  ],
+  "private": true
+}

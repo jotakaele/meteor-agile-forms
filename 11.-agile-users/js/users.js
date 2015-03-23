@@ -12,33 +12,60 @@ if (Meteor.isClient) {
     /* Accounts.ui.config({
          passwordSignupFields: 'USERNAME_AND_EMAIL'
      });*/
+
     Meteor.subscribe("userData");
-    //Regitramos un helper global para usar user en cualquier lado
-    Template.registerHelper('user', function() {
+
+
+    /**
+     * Devuelve información de usuario ampliada.
+     * @return {object} Devuelve un objeto con las claves email, label, mode y si existen picture del usuario
+     */
+    userInfo = function() {
+            if (!Meteor.user()) {
+                return {
+                    label: 'unlogin'
+                }
+            }
+
             var u = Meteor.user()
+
             obj = {}
             if (u.profile) {
                 obj.name = u.profile.name
             }
-            if (u.emails) {
-                obj.email = Meteor.user().emails[0].address
-            } else if (u.services) {
+            if (u.services) {
                 if (u.services.google) {
                     obj.email = u.services.google.email
                     obj.picture = u.services.google.picture
+                    obj.loginMode = 'google'
                 } else if (u.services.facebook) {
                     obj.email = u.services.facebook.email
+                    obj.loginMode = 'facebook'
                 } else if (u.services.twitter) {
                     //obj.email = u.services.twitter.email //todo Twitter no descarga el email. Buscar solucion
                     obj.picture = u.services.twitter.profile_image_url
+                    obj.loginMode = 'twitter'
+                } else if (u.services.password) {
+                    //obj.email = u.services.twitter.email //todo Twitter no descarga el email. Buscar solucion
+                    obj.loginMode = 'password'
+                    obj.email = u.emails[0].address
                 }
             }
+
+
+            obj.label = obj.name || obj.email
             return obj
-        })
-        // 
-        // accounts config
- } 
-  //Routes
+        }
+        //Regitramos un helper global para usar user en cualquier lado
+    Template.registerHelper('user', function() {
+        return userInfo()
+
+    })
+
+    // 
+    // accounts config
+}
+//Routes
 AccountsTemplates.configureRoute('changePwd');
 AccountsTemplates.configureRoute('enrollAccount');
 AccountsTemplates.configureRoute('forgotPwd');
@@ -66,12 +93,11 @@ AccountsTemplates.configure({
     //showPlaceholders: true,
 
     negativeValidation: true,
-    positiveValidation:true,
+    positiveValidation: true,
     negativeFeedback: false,
-    positiveFeedback:true,
+    positiveFeedback: true,
 
     // Privacy Policy and Terms of Use
     //privacyUrl: 'privacy',
     //termsUrl: 'terms-of-use',
 });
-

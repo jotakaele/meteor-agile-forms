@@ -1,6 +1,35 @@
 @import "main";
 nav {
-    #user-picture {
+    & > * {
         height: 45px;
+    }
+    #user-picture {
+        height: 41px;
+    }
+    li#user-info {
+        height: 45px;
+        width: auto;
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        padding: 2px;
+        &.pasword {
+            background-color: #000;
+        }
+        &.google {
+            background-color: #CC4E30;
+        }
+        &.facebook {
+            background-color: #2C4780;
+        }
+        &.twitter {
+            background-color: #358CF0;
+        }
+        div {
+            padding: .2em;
+            font-size: .8em;
+            color: #fff;
+            height: 20px;
+        }
     }
 }

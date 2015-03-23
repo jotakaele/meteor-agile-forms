@@ -13,13 +13,20 @@
             </li>
         </ul>
         <section class="top-bar-section">
+
             <ul class="right">
-                {{#if currentUser}}
-                <li><span class="label">{{user.email}}</span> {{#if user.picture}}
+
+                <li id="user-info" class="{{user.loginMode}}">
+                    {{#if currentUser}} {{#if user.picture}}
                     <img id="user-picture" src="{{user.picture}}"> {{/if}}
+                    <div id="user-label" title="{{user.email}}">{{user.label}}</div> {{/if}}
+
                 </li>
-                {{/if}}
-                <li>{{>atNavButton}}</li>
+                <li id="login-button">
+                    {{>atNavButton}}
+                </li>
+
+
             </ul>
         </section>
     </nav>
