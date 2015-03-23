@@ -74,4 +74,25 @@ createRolesFromConfigRoles = function() {
 
 
     })
+
+    console.log('Roles modified!')
+
 }
+
+
+
+masterConnection.config.after.insert(function(userId, doc) {
+    if (doc.name = 'roles') {
+        // Meteor.call('recreateRoles')
+        createRolesFromConfigRoles()
+    }
+
+});
+
+
+
+// Meteor.methods({
+//     recreateRoles: function() {
+//         createRolesFromConfigRoles()
+//     }
+// });
