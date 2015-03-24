@@ -11,7 +11,7 @@ if (Meteor.isClient) {
             },
             //Transformaciones que hacemos al valor recuperado del editor antes de guardarlo en la base de datos.
             editorToSave: function() {
-                switch (snippets[s('masterActiveCategory')].ace) {
+                switch (snippets[se('masterActiveCategory')].ace) {
                     case 'yaml':
                         //Si estamos almacenando JSON...
                         try {
@@ -38,7 +38,7 @@ if (Meteor.isClient) {
             },
             //Transformaciones que hacemos al valor recuperado de la base de datos antes de volcarlo en el editor
             savedToEditor: function(src) {
-                switch (snippets[s('masterActiveCategory')].ace) {
+                switch (snippets[se('masterActiveCategory')].ace) {
                     case 'yaml':
                         // Si estamos recuperando JSON y vamos a trabajar en YAML ....
                         return jsyaml.dump(sanitizeObjectNameKeys(src))
@@ -99,9 +99,9 @@ if (Meteor.isClient) {
                 src: contentFiltered,
                 div: 'ritem',
                 name: $('input#name').val(),
-                mode: $('select#form-mode').val() || s('master_edit_form_mode'),
-                doc: $('select#form-doc-id').val() || s('last-' + $('input#name').val() + '-backend-edit-id'),
-                values: s('last-' + $('input#name').val() + '-backend-edit-values') || {}
+                mode: $('select#form-mode').val() || se('master_edit_form_mode'),
+                doc: $('select#form-doc-id').val() || se('last-' + $('input#name').val() + '-backend-edit-id'),
+                values: se('last-' + $('input#name').val() + '-backend-edit-values') || {}
             }
             _(oRenderOptions).extend(jsyaml.load(editor.getValue()).test)
                 // 
@@ -130,12 +130,12 @@ if (Meteor.isClient) {
             _.extend(snippets[key], value);
         });*/
     Template.masterEdit.rendered = function() {
-        $('select#theme').val(s('active_ace_theme'))
+        $('select#theme').val(se('active_ace_theme'))
         $('#items_existentes a[name="' + this.data.name + '"]').click()
     };
     Template.masterEdit.helpers({
         ace_mode: function() {
-            return snippets[s('masterActiveCategory')].ace
+            return snippets[se('masterActiveCategory')].ace
         },
         form_modes: function() {
             var fModes = ['new', 'edit', 'readonly', 'delete']
@@ -143,7 +143,7 @@ if (Meteor.isClient) {
             _(fModes).each(function(value, key) {
                 var oTemp = {}
                 oTemp.name = value
-                if (s('master_edit_form_mode') == value) {
+                if (se('master_edit_form_mode') == value) {
                     oTemp.selected = 'selected'
                 }
                 fModesC.push(oTemp)
@@ -151,13 +151,13 @@ if (Meteor.isClient) {
             return fModesC
         },
         form_active_doc: function() {
-            return s('last-' + this.name + '-backend-edit-id')
+            return se('last-' + this.name + '-backend-edit-id')
         },
         form_active_values: function() {
-            return JSON.stringify(s('last-' + this.name + '-backend-edit-values'))
+            return JSON.stringify(se('last-' + this.name + '-backend-edit-values'))
         },
         currentCategory: function() {
-            return s('masterActiveCategory')
+            return se('masterActiveCategory')
         },
         snippets: function() {
             var aValues = []
@@ -169,7 +169,7 @@ if (Meteor.isClient) {
                     collection: value['collection'],
                     ace: value['ace']
                 }
-                if (s('masterActiveCategory') == key) {
+                if (se('masterActiveCategory') == key) {
                     oTemp.selected = true
                 }
                 aValues.push(oTemp)
@@ -177,7 +177,7 @@ if (Meteor.isClient) {
             return aValues
         },
         items: function() {
-            return masterConnection[s('masterActiveCategory')].find({}, {
+            return masterConnection[se('masterActiveCategory')].find({}, {
                 fields: {
                     name: 1
                 },
@@ -189,12 +189,12 @@ if (Meteor.isClient) {
     });
     Template.masterEdit.events({
         'change select#form-mode': function(ev) {
-            s('master_edit_form_mode', $(ev.target).val())
+            se('master_edit_form_mode', $(ev.target).val())
         },
         'change select#theme': function(ev) {
-            s('active_ace_theme', $(ev.target).val())
+            se('active_ace_theme', $(ev.target).val())
             if (editor) {
-                editor.setTheme(s('active_ace_theme'))
+                editor.setTheme(se('active_ace_theme'))
             }
         },
         'mouseover select#theme option': function(ev) {
@@ -204,11 +204,11 @@ if (Meteor.isClient) {
         },
         'mouseleave select#theme': function(ev) {
             if (editor) {
-                editor.setTheme(s('active_ace_theme'))
+                editor.setTheme(se('active_ace_theme'))
             }
         },
         'change select#category': function(ev) {
-            s('masterActiveCategory', $(ev.target).val())
+            se('masterActiveCategory', $(ev.target).val())
             $('#editor').remove()
             $('#eliminar,#duplicate').addClass('disabled')
             $('input#name').val('')
@@ -249,25 +249,25 @@ if (Meteor.isClient) {
             }
         },
         'click #eliminar': function eliminarItem() {
-            if (!confirm("Delete this " + s('masterActiveCategory') + "  snipped \n[" + oVars.sInitialName + "]?")) {
+            if (!confirm("Delete this " + se('masterActiveCategory') + "  snipped \n[" + oVars.sInitialName + "]?")) {
                 return false
             }
             if (oVars.sCurrentItemId) {
                 //Guardamos el actual a traves de log 
-                Meteor.call('setLog', 'delete_master_' + s('masterActiveCategory'), {
+                Meteor.call('setLog', 'delete_master_' + se('masterActiveCategory'), {
                     name: oVars.sInitialName,
                     content: oVars.sInitialContent
                 }, function(err, okLog) {
                     if (okLog) {
                         //Si ha insertado en el log
-                        masterConnection[s('masterActiveCategory')].remove(oVars.sCurrentItemId)
+                        masterConnection[se('masterActiveCategory')].remove(oVars.sCurrentItemId)
                         showToUser({
                             content: t('Form') + ' ' + oVars.sInitialName + ' ' + t('deleted from database'),
                             class: 'secondary',
                             time: 2
                         })
                         $('input#name').val('')
-                        loadAceEditor('', snippets[s('masterActiveCategory')].ace, 'editor-container')
+                        loadAceEditor('', snippets[se('masterActiveCategory')].ace, 'editor-container')
                         delete oVars.sCurrentItemId
                         delete oVars.sInitialName
                     }
@@ -283,7 +283,7 @@ if (Meteor.isClient) {
             oVars.sInitialName = makeId(5)
             $('input#name').val(oVars.sInitialName)
             delete oVars.sCurrentItemId
-            loadAceEditor('Hey i am a new ' + s('masterActiveCategory') + ' snippet', snippets[s('masterActiveCategory')].ace, 'editor-container')
+            loadAceEditor('Hey i am a new ' + se('masterActiveCategory') + ' snippet', snippets[se('masterActiveCategory')].ace, 'editor-container')
         },
         'keyup input#name': function() {
             onEditorChange()
@@ -297,22 +297,22 @@ if (Meteor.isClient) {
                 }
             }
             $('#ritem').html('')
-            var sResContent = masterConnection[s('masterActiveCategory')].findOne($el.attr('id')).content
+            var sResContent = masterConnection[se('masterActiveCategory')].findOne($el.attr('id')).content
             sResContent = oVars.savedToEditor(sResContent)
             $('.doc[name]').parent().removeClass('active')
             $el.parent().addClass('active')
             oVars.sInitialName = $el.attr('name');
             oVars.sCurrentItemId = $el.attr('id');
             $('input#name').val($el.attr('name'))
-            loadAceEditor(sResContent, snippets[s('masterActiveCategory')].ace, 'editor-container')
+            loadAceEditor(sResContent, snippets[se('masterActiveCategory')].ace, 'editor-container')
         },
         'click #guardar i': function() {
             saveItem($('input#name').val(), editor.getValue(), oVars.sCurrentItemId)
         },
         'change select#form-doc-id': function(ev) {
-            s('last-' + $('input#name').val() + '-backend-edit-id', $(ev.target).val())
+            se('last-' + $('input#name').val() + '-backend-edit-id', $(ev.target).val())
             $('#ritem').html('')
-            snippets[s('masterActiveCategory')].renderInMasterBackend()
+            snippets[se('masterActiveCategory')].renderInMasterBackend()
         },
         'click #cargaides': function() {
             cargarIdes()
@@ -327,7 +327,7 @@ if (Meteor.isClient) {
                 enableLiveAutocompletion: true,
                 // showInvisibles: true,
                 highlightGutterLine: true,
-                theme: s('active_ace_theme') || 'ace/theme/clouds',
+                theme: se('active_ace_theme') || 'ace/theme/clouds',
                 highlightActiveLine: true,
                 // mode: '/ace/mode/' + sMode,
                 wrap: true,
@@ -349,7 +349,7 @@ if (Meteor.isClient) {
             oVars.sInitialContent = sContent //Aplicar aqui las trasnformaciones de cada modo
             editor.session.setValue(oVars.sInitialContent)
             editor.on('input', onEditorChange)
-            snippets[s('masterActiveCategory')].renderInMasterBackend()
+            snippets[se('masterActiveCategory')].renderInMasterBackend()
             $('#eliminar,#duplicate').removeClass('disabled')
         }
         //Lo que procesamos cuando se cambia algo en ele editor o en el input#name
@@ -379,16 +379,16 @@ if (Meteor.isClient) {
             return false
         }
         //Guardamos el actual a traves de log 
-        Meteor.call('setLog', 'backup_master_' + s('masterActiveCategory'), {
+        Meteor.call('setLog', 'backup_master_' + se('masterActiveCategory'), {
             name: oVars.sInitialName,
             content: oVars.sInitialContent
         }, function(err, res) {
             if (res) {
                 if (sId) {
-                    masterConnection[s('masterActiveCategory')].remove(sId)
+                    masterConnection[se('masterActiveCategory')].remove(sId)
                 }
                 sFilteredContent = oVars.editorToSave(sContent)
-                var okInsert = masterConnection[s('masterActiveCategory')].insert({
+                var okInsert = masterConnection[se('masterActiveCategory')].insert({
                     name: sName,
                     content: desanitizeObjectNameKeys(sFilteredContent),
                     create_date: new Date(),
@@ -415,7 +415,7 @@ if (Meteor.isClient) {
     }
     var hacer = ''
     lanzarRenderizado = function lanzarRenderizado() {
-        switch (s('masterActiveCategory')) {
+        switch (se('masterActiveCategory')) {
             case 'jade':
                 var t = 3000
                 break;
@@ -439,7 +439,7 @@ if (Meteor.isClient) {
                     class: "renderized"
                 })
                 $('#ritem').html('')
-                snippets[s('masterActiveCategory')].renderInMasterBackend()
+                snippets[se('masterActiveCategory')].renderInMasterBackend()
             }
         }, t)
     }
@@ -511,9 +511,9 @@ function createFixture() {
                 try {
                     var max = def.html.maxlength
                 } catch (e) {}
-                setFieldValue(sField, _.humanize(makeId(max || 200).replace(/[0-9]/g, ' ')))
+                setFieldValue(sField, s.humanize(makeId(max || 200).replace(/[0-9]/g, ' ')))
             } else {
-                setFieldValue(sField, _.humanize(makeId(10)))
+                setFieldValue(sField, s.humanize(makeId(10)))
             }
             $('#new-button').click()
         })

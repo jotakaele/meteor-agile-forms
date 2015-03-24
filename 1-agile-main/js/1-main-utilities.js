@@ -18,7 +18,7 @@ makeId = function(num) {
     //RELEASE  Modificar de manera que quede desactivado en producción
 dbg = function dbg(sometitle, something) {
         //if (Meteor.isClient) {
-        if (s('dbg') == true) {
+        if (se('dbg') == true) {
             var d = new Date()
             a = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + ":" + d.getMilliseconds()
             console.log(a + ' >>> [' + sometitle + ']', something);
@@ -26,7 +26,7 @@ dbg = function dbg(sometitle, something) {
         //}
     }
     //Atajo para escribir y recoger de Session. Mantiene el valor de la variable en la base de datos a no ser que pasemos el parametro saveToBD como false
-s = function s(key, value, saveToBD) {
+se = function(key, value, saveToBD) {
         if (Meteor.isClient) {
             if (value == undefined) {
                 return Session.get(key)
@@ -145,18 +145,18 @@ arrayProcess = function arrayProcess(theArray, theOperacion) {
     }
     //Devuelve un objeto fecha formateado a partir de un string en el pattern patern
 toDate = function toDate(formaDateString, pattern) {
-        pattern = pattern || s('default_date_format').datetimepicker.replace(/\//g, '').toLowerCase()
+        pattern = pattern || se('default_date_format').datetimepicker.replace(/\//g, '').toLowerCase()
         formaDateString = formaDateString.toString().replace(/\//g, '-')
         formaDateString = formaDateString.toString().replace(/\./g, '-')
         var b = formaDateString.split('-')
         if (pattern == 'dmy') {
             var y = b[2]
-            var m = _.lpad(b[1], 2, 0)
-            var d = _.lpad(b[0], 2, 0)
+            var m = s.lpad(b[1], 2, 0)
+            var d = s.lpad(b[0], 2, 0)
         } else if (pattern == 'mdy') {
             var y = b[2]
-            var m = _.lpad(b[0], 2, 0)
-            var d = _.lpad(b[1], 2, 0)
+            var m = s.lpad(b[0], 2, 0)
+            var d = s.lpad(b[1], 2, 0)
         }
         var e = [
             y,

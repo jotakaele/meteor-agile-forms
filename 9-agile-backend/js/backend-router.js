@@ -8,7 +8,7 @@ Router.map(function() {
         controller: 'BaseController',
         data: function() {
             if (this.params.mode) {
-                s('masterActiveCategory', this.params.mode)
+                se('masterActiveCategory', this.params.mode)
             }
             var datos = {}
             if (this.params.mode) {

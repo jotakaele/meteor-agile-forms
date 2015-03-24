@@ -1,4 +1,4 @@
-AF = function (element, options) {
+AF = function(element, options) {
         //console.clear()
         var mode = checkModes(options)
         if (!mode) {
@@ -19,7 +19,7 @@ AF = function (element, options) {
         c.fields = options.def.form.fields || {}
             //NOTE Solo permitimos mostrar aquellos campos injectados que están previstos en la configuración form > allowed_inject_fields, o bien injectamos el valor de los campos que incluyen la clave "injectable: true" de todos modos tambie se hace la comprobación en el método correspondiente.
         c.form.allow_inject = c.form.allow_inject || []
-        _.each(c.fields, function (value, key) {
+        _.each(c.fields, function(value, key) {
                 if (_(value).has('injectable')) {
                     if (value.injectable) {
                         c.form.allow_inject.push(key)
@@ -29,7 +29,7 @@ AF = function (element, options) {
             // Si hemos recibido valores con la petición los "inyectamos" para que se guarden, aunque no formen parte de la definicion del formulario
         if (_.has(options, 'values')) {
             var allowedInjectValues = _.pick(options.values, c.form.allow_inject)
-            _(allowedInjectValues).each(function (value, key) {
+            _(allowedInjectValues).each(function(value, key) {
                 if (_(c.fields).has(key)) {
                     c.fields[key].value = value
                     c.fields[key].html = {
@@ -53,15 +53,15 @@ AF = function (element, options) {
         c.common = c.form.common || {}
         c.common.control = c.common.control || {}
         c.common.type = c.common.type || {}
-        c.form.title = c.form.title || _.humanize('Form ' + c.form.collection)
+        c.form.title = c.form.title || s.humanize('Form ' + c.form.collection)
         c.form.title = ft(c.form.title)
-        c.form.id = c.form.id || _.slugify((c.form.title || 'form') + "_" + c.form.collection)
+        c.form.id = c.form.id || s.slugify((c.form.title || 'form') + "_" + c.form.collection)
         c.HTML = {}
             //Creamos el $ form
         c.HTML.form = $("<form>", {
-            class: _.trim((c.form.classes || "none").replace(/,/g, ' ')) + " autof " + "large-" + (c.form.columns || 12) + " small-12 columns ",
+            class: s.trim((c.form.classes || "none").replace(/,/g, ' ')) + " autof " + "large-" + (c.form.columns || 12) + " small-12 columns ",
             id: c.form.id,
-            name: _.slugify(c.form.title),
+            name: s.slugify(c.form.title),
             collection: c.form.collection,
             style: c.form.style,
             mode: mode.current,
@@ -85,12 +85,12 @@ AF = function (element, options) {
         currentBlockName = "startBlock"
         c.HTML.currentBlock = createBlock('startBlock', {}).appendTo(c.HTML.maindiv)
             //for (thekey in c.fields) {
-        _.each(c.fields, function (index, thekey) {
+        _.each(c.fields, function(index, thekey) {
             c.fields[thekey] = c.fields[thekey] || {}
             if (c.fields[thekey].activate) {
                 activateHooks[thekey] = c.fields[thekey].activate
             }
-            if (_.startsWith(thekey, '_') == true) {
+            if (s.startsWith(thekey, '_') == true) {
                 c.HTML.currentBlock = createBlock(thekey, c.fields[thekey]).appendTo(c.HTML.maindiv)
                 currentBlockName = thekey
             } else {
@@ -124,7 +124,7 @@ createField = function createField(myname, fieldSource) {
         fieldSource = fieldSource || {}
         fieldSource.numid = makeId(4)
             //fieldSource.value = fieldSource.value || null
-        fieldSource.title = ft(fieldSource.title || _.humanize(myname))
+        fieldSource.title = ft(fieldSource.title || s.humanize(myname))
         fieldSource.blockName = currentBlockName
         fieldSource.required = fieldSource.required === false ? false : true //Campos requeridos por defectom, a no ser que se haya indicado false
             //fieldSource.columns = fieldSource.columns || 12
@@ -185,15 +185,15 @@ createField = function createField(myname, fieldSource) {
             row.attr('help', ft(fieldSource.help))
         }
         switch (fieldSource.controlType) {
-        case 'input':
-            fieldSource.control = createInput(myname, fieldSource)
-            break;
-        case 'select':
-            fieldSource.control = createSelect(myname, fieldSource)
-            break;
-        case 'textarea':
-            fieldSource.control = createTextarea(myname, fieldSource)
-        default:
+            case 'input':
+                fieldSource.control = createInput(myname, fieldSource)
+                break;
+            case 'select':
+                fieldSource.control = createSelect(myname, fieldSource)
+                break;
+            case 'textarea':
+                fieldSource.control = createTextarea(myname, fieldSource)
+            default:
         }
         var theRenderedControl = $(fieldSource.control).appendTo(row)
         var $theValidation = $('<span>', {
@@ -204,7 +204,7 @@ createField = function createField(myname, fieldSource) {
             theRenderedControl.attr('required', true)
         }
         //Anadimos los atributos html indicados en la configuracion
-        $.each(fieldSource.html || {}, function (item, value) {
+        $.each(fieldSource.html || {}, function(item, value) {
             fieldSource.control.attr(item, value)
         })
         fieldSource.control.attr('id', fieldSource.id)
@@ -241,7 +241,7 @@ selectizeProcess = function selectizeProcess(renderedField, fieldSource) {
             copyClassesToDropdown: false,
             searchField: "text",
             persist: false,
-            create: function (input) {
+            create: function(input) {
                 return {
                     value: input,
                     text: input
@@ -266,7 +266,8 @@ selectizeProcess = function selectizeProcess(renderedField, fieldSource) {
     }
 }
 datetimeFieldProcess = function datetimeFieldProcess(renderedField, fieldSource) {
-    //Soporte de datetimepicker en lenguajes cooficiales de España
+    dbg('test', se('appName'))
+        //Soporte de datetimepicker en lenguajes cooficiales de España
     $.fn.datetimepicker.defaults.i18n.gl = {
         'months': ['Xaneiro', 'Febreiro', 'Marzo', 'Abril', 'Maio', 'Xuño', 'Xullo', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Decembro'],
         'dayOfWeek': ['Dom', 'Lun', 'Mar', 'Mer', 'Jov', 'Ven', 'Sab']
@@ -282,33 +283,33 @@ datetimeFieldProcess = function datetimeFieldProcess(renderedField, fieldSource)
     var dateTypeDefaults = {
             //        lazyInit: true,
             lang: ft("en").split('-')[0] || 'en',
-            dayOfWeekStart: s('dayOfWeekStart'),
-            format: s('default_date_format').datetimepicker,
+            dayOfWeekStart: se('dayOfWeekStart'),
+            format: se('default_date_format').datetimepicker,
             timepicker: false,
             weeks: true,
             mask: true,
-            formatDate: s('default_date_format').datetimepicker
+            formatDate: se('default_date_format').datetimepicker
         }
         // Valor por defecto para los input[type=datetime]
     var dateTimeTypeDefaults = {
             //        lazyInit: true,
             lang: ft("en").split('-')[0] || 'en',
-            dayOfWeekStart: s('dayOfWeekStart'),
-            format: s('default_datetime_format').datetimepicker,
+            dayOfWeekStart: se('dayOfWeekStart'),
+            format: se('default_datetime_format').datetimepicker,
             weeks: true,
             mask: true,
-            formatDate: s('default_date_format').datetimepicker,
-            formatTime: s('default_time_format').datetimepicker
+            formatDate: se('default_date_format').datetimepicker,
+            formatTime: se('default_time_format').datetimepicker
         }
         // Valor por defecto para los input[type=time]
     var timeTypeDefaults = {
         //        lazyInit: true,
         lang: ft("en").split('-')[0] || 'en',
-        dayOfWeekStart: s('dayOfWeekStart'),
-        format: s('default_time_format').datetimepicker,
+        dayOfWeekStart: se('dayOfWeekStart'),
+        format: se('default_time_format').datetimepicker,
         mask: true,
         datepicker: false,
-        formatTime: s('default_time_format').datetimepicker,
+        formatTime: se('default_time_format').datetimepicker,
         step: 30
     }
     var currentConfig = {}
@@ -351,7 +352,7 @@ createSelect = function createSelect(name, fieldSource) {
     //Si es string, convertimos en un array
     if ($.type(fieldSource.enum) == "string") {
         //Si comienza por queries, es que es una consulta ejecutada previamente a mongo, de la clave root.queries previamente 
-        if (_.startsWith(fieldSource.enum, 'queries.')) {
+        if (s.startsWith(fieldSource.enum, 'queries.')) {
             fieldSource.enum = queries[fieldSource.enum.replace('queries.', '')]
         } else {
             fieldSource.enum = fieldSource.enum.split(',').map(Function.prototype.call, String.prototype.trim) //Convertimos la cadena en array
@@ -378,9 +379,9 @@ createSelect = function createSelect(name, fieldSource) {
     fieldSource.arrOptionGroups = []
     var groupLabel = 'init'
     var selectedItems = []
-    _.each(fieldSource.enum, function (row, index) {
+    _.each(fieldSource.enum, function(row, index) {
         var v = (fieldSource.enum_i18n || null) == 'all' ? t(row.value) : row.value
-        var l = (['label', 'all'].indexOf(fieldSource.enum_i18n || null) >= 0 ? t(_.humanize(row.label)) : _.humanize(row.label)) || v
+        var l = (['label', 'all'].indexOf(fieldSource.enum_i18n || null) >= 0 ? t(s.humanize(row.label)) : s.humanize(row.label)) || v
             //Parseamos los optgroups
         if (row.optgroup != "init") {
             groupLabel = row.optgroup //|| 'init'
@@ -398,8 +399,8 @@ createSelect = function createSelect(name, fieldSource) {
         theOption.appendTo(theSelect)
     })
     fieldSource.arrOptionGroups = _.unique(fieldSource.arrOptionGroups)
-    fieldSource.arrOptionGroups.forEach(function (key) {
-        $("option[group='" + key + "']", theSelect).wrapAll('<optgroup label="' + key + '" slug="' + _.slugify(key) + '">')
+    fieldSource.arrOptionGroups.forEach(function(key) {
+        $("option[group='" + key + "']", theSelect).wrapAll('<optgroup label="' + key + '" slug="' + s.slugify(key) + '">')
     })
     fieldSource.value = fieldSource.value || selectedItems
     if (fieldSource.type == 'radio') {
@@ -413,12 +414,12 @@ createRadioControl = function createRadioControl(name, $select) {
         id: 'my-radio-button'
     }).insertAfter($select)
     $select.appendTo($nDiv)
-    $('option', $select).each(function () {
+    $('option', $select).each(function() {
         $opt = $(this)
         var $nButton = $('<div>', {
             value: $opt.attr('value')
         }).text($opt.text()).prependTo($nDiv)
-        $nButton.on('click', function () {
+        $nButton.on('click', function() {
             $select.val($(this).attr('value'))
             $('div', $nDiv).removeClass('selected')
             $(this).addClass('selected')
@@ -427,13 +428,13 @@ createRadioControl = function createRadioControl(name, $select) {
         return $nDiv
     })
     $('div[value="' + $select.val() + '"]', $nDiv).addClass('selected')
-    $select.on('change', function () {
+    $select.on('change', function() {
         $('div', $nDiv).removeClass('selected')
         $('div[value="' + $select.val() + '"]', $nDiv).addClass('selected')
     })
 }
 initRadioControl = function initRadioControl(element) {
-    $('input', element).on('change', function () {
+    $('input', element).on('change', function() {
         $('*', element).removeClass('checked')
         $(this).closest('li.button').addClass('checked')
     })
@@ -461,7 +462,7 @@ createBlock = function createBlock(name, blockSource) {
     })
     var blockname = $('<span>', {
         class: "blockname"
-    }).text(ft(_.titleize(_.humanize(name)).trim())).appendTo(panelBlock)
+    }).text(ft(s.titleize(s.humanize(name)).trim())).appendTo(panelBlock)
     if (blockSource.limit > 1) {
         var maxinfo = $('<span>', {
             class: "maxinfo"
@@ -473,7 +474,7 @@ createBlock = function createBlock(name, blockSource) {
     return panelBlock
 }
 collapseBlocks = function collapseBlocks() {
-    $('.autof .blockname').on('click', function () {
+    $('.autof .blockname').on('click', function() {
         if ($(this).parent().hasClass('collapse')) {
             $(this).parent().css('height', 'auto')
         } else {
@@ -512,21 +513,21 @@ createButtons = function createButtons(mode) {
     return buttonsGroup
 }
 createButtonsActions = function createButtonsActions($form) {
-        $('#new-button').on('click', function () {
+        $('#new-button').on('click', function() {
             if ($form[0].checkValidity()) {
                 addFormToMongo($form)
             } else {
                 $('input, select,textarea', $form).blur()
             }
         })
-        $('#save-button').on('click', function () {
+        $('#save-button').on('click', function() {
             if ($form[0].checkValidity()) {
                 updateFormToMongo($form)
             } else {
                 $('input, select,textarea', $form).blur()
             }
         })
-        $('#delete-button').on('click', function () {
+        $('#delete-button').on('click', function() {
             if (confirm(t('Are you sure you want to delete this record?'))) {
                 deleteFormMongo($(this).closest('form.autof'))
             }
@@ -534,7 +535,7 @@ createButtonsActions = function createButtonsActions($form) {
     }
     //Creamos los bloques con limit 1 o superior (objetos o arrays de objetos)
 prepareMultiBlocks = function prepareMultiBlocks() {
-    $('.autof .block[limit]').each(function () {
+    $('.autof .block[limit]').each(function() {
         var block = $(this)
         if (block.attr('limit') == 1) {
             $('div', this).wrapAll('<div class="fieldsRow">')
@@ -549,12 +550,12 @@ prepareMultiBlocks = function prepareMultiBlocks() {
         }
         var mainRow = $('.fieldsRow,.utilityRow', this).wrapAll('<div class="subrow large-12 small-12 columns">')
         renumeraMultiBlockIndex()
-        var newRow = $('.addsubrow', this).on('click', function () {
+        var newRow = $('.addsubrow', this).on('click', function() {
             //Por aqui seguimos...
             if ($('.subrow', block).length < block.attr('limit') || block.attr('limit') == 0) {
                 var name = $(this).closest('.block').attr("id")
                 var theNewClon = clonableRows[name].clone().appendTo(block).addClass('isClon')
-                $('div.addsubrow', theNewClon).removeClass('addsubrow').addClass('removesubrow').html('<label>&nbsp</label><span class="tiny alert"><i class="fa fa-remove fa-2x"></i></span>').on('click', function () {
+                $('div.addsubrow', theNewClon).removeClass('addsubrow').addClass('removesubrow').html('<label>&nbsp</label><span class="tiny alert"><i class="fa fa-remove fa-2x"></i></span>').on('click', function() {
                     $(this).parent().remove()
                     renumeraMultiBlockIndex()
                 })
@@ -563,7 +564,7 @@ prepareMultiBlocks = function prepareMultiBlocks() {
                 processSelectToRadioControls()
                 initSelectToSelectize()
                     // Activamos datetimepicker para los nuevos campos clonados de type date
-                $('input[type=date], input[type=datetime],input[type=time]', theNewClon).each(function () {
+                $('input[type=date], input[type=datetime],input[type=time]', theNewClon).each(function() {
                         setTimeout(datetimeFieldProcess($(this), c.fields[$(this).attr('name').split('-')[0]]), 1000)
                     })
                     //
@@ -574,10 +575,10 @@ prepareMultiBlocks = function prepareMultiBlocks() {
     })
 }
 renumeraMultiBlockIndex = function renumeraMultiBlockIndex() {
-    $('.autof .block[limit]').each(function () {
-        $('.subrow', this).each(function (index) {
+    $('.autof .block[limit]').each(function() {
+        $('.subrow', this).each(function(index) {
             var id = index
-            $('[name]', this).each(function () {
+            $('[name]', this).each(function() {
                 var theName = $(this).attr('name').split('-')[0]
                 $(this).attr('name', theName + '-' + id).addClass('subObject')
             })
@@ -585,33 +586,33 @@ renumeraMultiBlockIndex = function renumeraMultiBlockIndex() {
     })
 }
 parseaCurrencyFields = function parseaCurrencyFields() {
-    $('.autof [type=currency]').attr('format', 'currency').attr('type', 'text').each(function () {
-        var theCurrencyField = $(this).on('blur', function () {
+    $('.autof [type=currency]').attr('format', 'currency').attr('type', 'text').each(function() {
+        var theCurrencyField = $(this).on('blur', function() {
             $(this).val(numeral($(this).val()).format('0.0[,]00'))
         })
     })
 }
 parseaDecimalFields = function parseaDecimalFields() {
-    $('.autof [type=decimal]').attr('format', 'decimal').attr('type', 'text').each(function () {
-        $(this).on('blur', function () {
+    $('.autof [type=decimal]').attr('format', 'decimal').attr('type', 'text').each(function() {
+        $(this).on('blur', function() {
             $(this).val(numeral($(this).val()).format('0.0[,]00'))
         })
     })
 }
 initClonedRadioControls = function initClonedRadioControls() {
-    $('div.isClon:not(.init) ul[type=radio]').each(function () {
+    $('div.isClon:not(.init) ul[type=radio]').each(function() {
         initRadioControl(this)
         $(this).closest('div.isClon').addClass('init')
     })
 }
 prepareShadowClonableRows = function prepareShadowClonableRows() {
-    $('.subrow').each(function () {
+    $('.subrow').each(function() {
         var name = $(this).closest('.block').attr('id')
         clonableRows[name] = $(this).clone()
     })
 }
 initSelectToSelectize = function initSelectToSelectize() {
-    $('select[process]:not(.selectized)').each(function () {
+    $('select[process]:not(.selectized)').each(function() {
         $(this).selectize($(this).prop('effectiveSelectConfig'))
     })
 }
@@ -620,7 +621,7 @@ $enable = function $enable(obj) {
     $('*', obj).removeClass('disabled')
     $(obj).removeAttr('disabled')
     $('*', obj).removeAttr('disabled')
-    $('.selectized', obj).each(function () {
+    $('.selectized', obj).each(function() {
         var name = [$(this).attr('name')]
         var $select = processSelectize[name][0].selectize
         $select.enable()
@@ -631,7 +632,7 @@ $disable = function $disable(obj) {
     $('*', obj).addClass('disabled')
     $(obj).attr('disabled', 'disabled')
     $('*', obj).attr('disabled', 'disabled')
-    $('.selectized', obj).each(function () {
+    $('.selectized', obj).each(function() {
         var name = [$(this).attr('name')]
         var $select = processSelectize[name][0].selectize
         $select.disable()
@@ -656,38 +657,38 @@ setFieldValue = function setFieldValue(name, value) {
         }
         //Elegimos en funcion del tipo de etiqueta
         switch ($field[0].tagName.toLowerCase()) {
-        case 'input':
-        case 'textarea':
-            switch ($field.attr('type')) {
-            case 'radio':
-                $('.autof [name=' + theName + '][value=' + value + ']').prop('checked', 'checked')
-                break;
-            default:
-                $field.val(value)
-                break;
-            }
-            break;
-        case 'select':
-            if ($field.hasClass('selectized')) {
-                var theV = {
-                    value: value,
-                    text: value
+            case 'input':
+            case 'textarea':
+                switch ($field.attr('type')) {
+                    case 'radio':
+                        $('.autof [name=' + theName + '][value=' + value + ']').prop('checked', 'checked')
+                        break;
+                    default:
+                        $field.val(value)
+                        break;
                 }
-                $fs = $field[0].selectize
-                $fs.addOption(theV)
-                $fs.setValue(value)
-            } else {
-                if ($('option[value="' + value + '"]', $field).length == 1) {
-                    $field.val(value)
-                } else {
-                    $('<option>', {
+                break;
+            case 'select':
+                if ($field.hasClass('selectized')) {
+                    var theV = {
                         value: value,
-                        selected: 'selected'
-                    }).appendTo($field).text(value)
-                    $field.val(value)
+                        text: value
+                    }
+                    $fs = $field[0].selectize
+                    $fs.addOption(theV)
+                    $fs.setValue(value)
+                } else {
+                    if ($('option[value="' + value + '"]', $field).length == 1) {
+                        $field.val(value)
+                    } else {
+                        $('<option>', {
+                            value: value,
+                            selected: 'selected'
+                        }).appendTo($field).text(value)
+                        $field.val(value)
+                    }
                 }
-            }
-            break;
+                break;
         }
         $field.change()
     }
@@ -701,70 +702,74 @@ fieldValue = function fieldValue(name) {
             theName = name.attr('name')
         }
         switch (field.attr('type')) {
-        case 'radio':
-            return $('.autof [name=' + theName + ']:checked').val()
-            break;
-        case 'date':
-        case 'datetime':
-            var theDate = toDate(field.val())
-            return isNaN(theDate) == true ? null : theDate
-            break;
-        default:
-            return field.val() == "" ? null : field.val()
-            break;
+            case 'radio':
+                return $('.autof [name=' + theName + ']:checked').val()
+                break;
+            case 'date':
+            case 'datetime':
+                var theDate = toDate(field.val())
+                return isNaN(theDate) == true ? null : theDate
+                break;
+            default:
+                return field.val() == "" ? null : field.val()
+                break;
         }
     }
     // Esta función procesa las definiciones "activate" de los campos o bloques de grupo, que determinan su visibilidad o activación.
 activateHooksTriggers = function activateHooksTriggers() {
-        _.keys(activateHooks).forEach(function (item) {
+        _.keys(activateHooks).forEach(function(item) {
             var obj = activateHooks[item]
             obj.initial = obj.initial || {}
-            var dest = _.startsWith(item, '_') ? $('.autof .block#' + item) : $('.autof div#div-' + item)
+            var dest = s.startsWith(item, '_') ? $('.autof .block#' + item) : $('.autof div#div-' + item)
             switch (obj.mode) {
-            case 'hide_if':
-                obj.initial != 'hidden' ? $show(dest) : $hide(dest)
-                break;
-            case 'show_if':
-                obj.initial != 'visible' ? $hide(dest) : $show(dest)
-                break;
-            case 'disable_if':
-                obj.initial != 'disabled' ? $enable(dest) : $disable(dest)
-                break;
-            case 'enable_if':
-                obj.initial != 'enabled' ? $disable(dest) : $enable(dest)
-            default:
-                //Statements executed when none of the values match the value of the expression
-                break;
+                case 'hide_if':
+                    obj.initial != 'hidden' ? $show(dest) : $hide(dest)
+                    break;
+                case 'show_if':
+                    obj.initial != 'visible' ? $hide(dest) : $show(dest)
+                    break;
+                case 'disable_if':
+                    obj.initial != 'disabled' ? $enable(dest) : $disable(dest)
+                    break;
+                case 'enable_if':
+                    obj.initial != 'enabled' ? $disable(dest) : $enable(dest)
+                default:
+                    //Statements executed when none of the values match the value of the expression
+                    break;
             }
             var evalRes = eval(obj.eval_condition)
                 //Evaluamos la expresion, si existe, de modo inicial
             if (obj.expression) {
                 var nExpr = eval(obj.expression)
                 switch (obj.mode) {
-                case 'hide_if':
-                    nExpr ? $hide(dest) : $show(dest)
-                    break;
-                case 'show_if':
-                    nExpr ? $show(dest) : $hide(dest)
-                    break;
-                case 'disable_if':
-                    nExpr ? $disable(dest) : $enable(dest)
-                    break;
-                case 'enable_if':
-                    nExpr ? $enable(dest) : $disable(dest)
-                default:
-                    break;
+                    case 'hide_if':
+                        nExpr ? $hide(dest) : $show(dest)
+                        break;
+                    case 'show_if':
+                        nExpr ? $show(dest) : $hide(dest)
+                        break;
+                    case 'disable_if':
+                        nExpr ? $disable(dest) : $enable(dest)
+                        break;
+                    case 'enable_if':
+                        nExpr ? $enable(dest) : $disable(dest)
+                    default:
+                        break;
                 }
             }
             //implementamos las acciones para cada campo, (trigger), si existen
             if (obj.triggers) {
-                _.keys(obj.triggers).forEach(function (trigger) {
+                _.keys(obj.triggers).forEach(function(trigger) {
                     var arrIn = obj.triggers[trigger].in || []
                     var arrNotIn = obj.triggers[trigger].not_in || []
                     var vIn = '-' + arrIn.join('-').toLowerCase() + '-'
                     var vNotIn = '-' + arrNotIn.join('-').toLowerCase() + '-'
                     $trigger = $('.autof [name=' + trigger + ']')
-                    $trigger.on('change', function () {
+
+
+
+                    $trigger.on('change', function() {
+                        console.log('....haciendo')
                         var nValue = '-' + fieldValue(trigger).toLowerCase() + '-'
                         var nRes1 = !obj.triggers[trigger].in ? true : vIn.indexOf(nValue) >= 0
                         var nRes2 = !obj.triggers[trigger].not_in ? true : vNotIn.indexOf(nValue) == -1
@@ -779,19 +784,19 @@ activateHooksTriggers = function activateHooksTriggers() {
                             var nRes = false
                         }
                         switch (obj.mode) {
-                        case 'hide_if':
-                            nRes ? $hide(dest) : $show(dest)
-                            break;
-                        case 'show_if':
-                            nRes ? $show(dest) : $hide(dest)
-                            break;
-                        case 'disable_if':
-                            nRes ? $disable(dest) : $enable(dest)
-                            break;
-                        case 'enable_if':
-                            nRes ? $enable(dest) : $disable(dest)
-                        default:
-                            break;
+                            case 'hide_if':
+                                nRes ? $hide(dest) : $show(dest)
+                                break;
+                            case 'show_if':
+                                nRes ? $show(dest) : $hide(dest)
+                                break;
+                            case 'disable_if':
+                                nRes ? $disable(dest) : $enable(dest)
+                                break;
+                            case 'enable_if':
+                                nRes ? $enable(dest) : $disable(dest)
+                            default:
+                                break;
                         }
                     })
                 })
@@ -801,22 +806,22 @@ activateHooksTriggers = function activateHooksTriggers() {
     /*Procesamos los campos enum depend*/
 processEnumDependSelects = function processEnumDependSelects() {
         //Primero los clasicos, los que son "noprocess"
-        $('.autof [enum_depend][noprocess]').each(function () {
+        $('.autof [enum_depend][noprocess]').each(function() {
                 var nameTrigger = $(this).attr('enum_depend')
                 var $trigger = $('.autof #' + $(this).attr('enum_depend'))
                 var $destSel = this
-                $trigger.on('change', function () {
+                $trigger.on('change', function() {
                     curValue = fieldValue(nameTrigger) || []
                     curValue = typeof curValue == 'string' ? Array(curValue) : curValue
                     $('optgroup', $destSel).hide()
-                    curValue.forEach(function (item) {
-                        $('optgroup[slug=' + _.slugify(item) + ']', $destSel).show()
+                    curValue.forEach(function(item) {
+                        $('optgroup[slug=' + s.slugify(item) + ']', $destSel).show()
                     })
                 })
                 $trigger.change()
             })
             //Luego, los que han sido procesados por selectize. Los cogemos desde el objeto en memoria "processSelectize"
-        _.each(processSelectize, function (theObject, key) {
+        _.each(processSelectize, function(theObject, key) {
             if (theObject.hasEnumDepend) {
                 $select = theObject[0].selectize
                 theObject.options = {}
@@ -825,13 +830,13 @@ processEnumDependSelects = function processEnumDependSelects() {
                 var $destSel = $('.autof #' + key)
                 var nameTrigger = $destSel.attr('enum_depend')
                 var $trigger = $('.autof #' + nameTrigger)
-                $trigger.on('change', function () {
+                $trigger.on('change', function() {
                     $select.clearOptions()
                     curValue = fieldValue(nameTrigger) || []
                     curValue = typeof curValue == 'string' ? Array(curValue) : curValue
-                    curValue = curValue.map(_.slugify)
-                    _.each(theObject.options, function (theOption, theOptionKey) {
-                        if (curValue.indexOf(_.slugify(theOption.optgroup)) >= 0) {
+                    curValue = curValue.map(s.slugify)
+                    _.each(theObject.options, function(theOption, theOptionKey) {
+                        if (curValue.indexOf(s.slugify(theOption.optgroup)) >= 0) {
                             $select.addOption(theOption)
                         }
                         $select.refreshOptions()
@@ -844,7 +849,7 @@ processEnumDependSelects = function processEnumDependSelects() {
     }
     // Añade la clase "changed" al formulario cuando se cambia algún valor
 alertFormChange = function alertFormChange($form) {
-    $('input,textarea,select', $form).on('change', function () {
+    $('input,textarea,select', $form).on('change', function() {
         $form.addClass('changed')
         if ($('.changed_notice', $form).length === 0) {
             showToUser({
@@ -854,8 +859,8 @@ alertFormChange = function alertFormChange($form) {
                 // image: 'fa-exclamation-triangle'
             })
         }
-        if (s('appMode') == 'production') {
-            window.onbeforeunload = function (e) {
+        if (se('appMode') == 'production') {
+            window.onbeforeunload = function(e) {
                 return 'El formulario se ha modificado, pero no se han guardado los cambios. \\n¿Quiere abandonar esta página?, ';
             };
         }
@@ -869,15 +874,15 @@ activateCustomValidation = function activateCustomValidation($jqueryObject) {
             checkFormValidity($jqueryObject.closest('form.autof'))
         }
         //Llamamos a la función de validación al salir o cambiar el valor de los campos convencionales
-    $('input,textarea,select', $jqueryObject).on('blur change', function () {
+    $('input,textarea,select', $jqueryObject).on('blur change', function() {
             fieldsValidateActions($(this))
         })
         //Llamamos a la validación de los constroles tipo radio (Cuando hacemos click)
-    $('.my-radio-button div', $jqueryObject).on('click', function () {
+    $('.my-radio-button div', $jqueryObject).on('click', function() {
             fieldsValidateActions($(this).siblings('select.isRadio'))
         })
         //Llamamos a la validación de los constroles tipo radio (Cuando hacemos el ultimo elemento pierde el foco)
-    $('.my-radio-button div:last', $jqueryObject).on('focusout', function () {
+    $('.my-radio-button div:last', $jqueryObject).on('focusout', function() {
         fieldsValidateActions($(this).siblings('select.isRadio'))
     })
 }
@@ -894,16 +899,16 @@ checkFormValidity = function checkFormValidity($form) {
 arrEnum2ObjArrEnum = function arrEnum2ObjArrEnum(arr) {
     var theObject = []
     var curBlock = 'init'
-    arr.forEach(function (item) {
-        if (_.endsWith(item, '-')) {
-            curBlock = _.humanize(item.replace(/-/g, ''))
+    arr.forEach(function(item) {
+        if (s.endsWith(item, '-')) {
+            curBlock = s.humanize(item.replace(/-/g, ''))
         } else {
             var nObj = {}
             var it = item.replace(/\*/g, '')
             nObj.value = it
             nObj.label = it
             nObj.optgroup = curBlock
-            if (_.endsWith(item, '*')) {
+            if (s.endsWith(item, '*')) {
                 nObj.selected = true
             }
             theObject.push(nObj)
@@ -912,23 +917,23 @@ arrEnum2ObjArrEnum = function arrEnum2ObjArrEnum(arr) {
     return theObject
 }
 parseRootQueries = function parseRootQueries(obj) {
-        _.each((obj.def.queries), function (theSource, key) {
+        _.each((obj.def.queries), function(theSource, key) {
             // Recuperamos los datos
             list = doQuery('find', theSource.collection, theSource.selector, theSource.options)
                 //los convertimos en cadena para quedarnos con elementos únicos
-            list = list.map(function (it) {
+            list = list.map(function(it) {
                     return JSON.stringify(it)
                 })
                 //Nos quedamos cone leementos únicos y volvememos a parsearlos.
-            queries[key] = _.uniq(list).map(function (it) {
+            queries[key] = _.uniq(list).map(function(it) {
                 return JSON.parse(it)
             })
         })
     }
     //Establecemos los valores iniciales de los radio, puesto que no podemos hacerlo en runtime
 setInitialRadioValues = function setInitialRadioValues() {
-        _.each(c.fields, function (value, key) {
-            if (!_.startsWith(key, '_') && value.type == 'radio') {
+        _.each(c.fields, function(value, key) {
+            if (!s.startsWith(key, '_') && value.type == 'radio') {
                 //setFieldValue(key, value.value)
             }
         })
@@ -945,7 +950,7 @@ formToJson = function formToJson(objForm) {
         var dateTypes = ['date', 'datetime', 'time']
         var f = objForm
         var res = {}
-        fields.each(function (index, value) {
+        fields.each(function(index, value) {
             if (_.indexOf(numberTypes, $('#' + this.name, f).attr('type')) >= 0) {
                 this.save_as = $('#' + this.name, f).attr('save_as') || 'number'
             } else if (_.indexOf(dateTypes, $('#' + this.name, f).attr('datatype')) >= 0) {
@@ -957,7 +962,7 @@ formToJson = function formToJson(objForm) {
                 //procesamos los number
             if (this.save_as == 'number') {
                 if (_.isArray(theValue)) {
-                    theValue.forEach(function (elem, key) {
+                    theValue.forEach(function(elem, key) {
                         theValue[key] = elem * 1
                     })
                 } else {
@@ -982,7 +987,7 @@ formToJson = function formToJson(objForm) {
             }
             res[this.name] = (theValue == '' ? null : theValue) || null
         })
-        $('div.block[limit]', objForm).each(function () {
+        $('div.block[limit]', objForm).each(function() {
             _.extend(res, getBlocValues($(this)))
         })
         return res
@@ -998,7 +1003,7 @@ getBlocValues = function getBlocValues($object, intLimit) {
     var arrRow = []
     var curIndex = '0'
     var nObj = {}
-    $('.subObject[name]', theBlock).each(function () {
+    $('.subObject[name]', theBlock).each(function() {
             var theControl = $(this)
             var theControlName = theControl.attr('name')
             var vName = _.strLeftBack(theControlName, '-')
@@ -1015,7 +1020,7 @@ getBlocValues = function getBlocValues($object, intLimit) {
     if ($object.attr('limit') == 1) {
         resBV[theBlockName] = nObj
     } else {
-        _.each(nObj, function (val) {
+        _.each(nObj, function(val) {
             arrRow.push(val)
         })
         resBV[theBlockName] = arrRow
@@ -1025,43 +1030,43 @@ getBlocValues = function getBlocValues($object, intLimit) {
 addFormToMongo = function addFormToMongo($form) {
     //var dest = $form.attr('collection')
     var insertObj = formToJson($form)
-    Meteor.call('addAfRecord', c.form.name, insertObj, function (err, res) {
+    Meteor.call('addAfRecord', c.form.name, insertObj, function(err, res) {
             if (err) {
                 console.error(err)
             }
             if (res) {
                 switch (res.status) {
-                case 'saved':
-                    $('.unvalidform', $form).remove()
-                    $form.hide()
-                    showToUser({
-                        content: '<strong>' + t(res.status),
-                        class: 'success',
-                        time: 1,
-                        image: 'fa-thumbs-o-up',
-                        element: $form.closest('div')
-                    })
-                    window.onbeforeunload = false
-                        //todo ¿Que hacemos cuando enviamos correctamente un formulario
-                    var theDiv = $form.parent().attr('id')
-                    $form.remove();
-                    cargaForm({
-                        name: c.form.name,
-                        mode: 'new',
-                        div: theDiv
-                    })
-                    break;
-                case 'unvalid form':
-                    $('.unvalidform', $form).slideUp().remove()
-                    showToUser({
-                        content: '<strong>' + t(res.status) + '</strong>' + res.info.toString().replace(/,/g, ''),
-                        class: 'alert unvalidform',
-                        image: 'fa-thumbs-o-down',
-                        element: $form.closest('div')
-                    })
-                    break;
-                default:
-                    break;
+                    case 'saved':
+                        $('.unvalidform', $form).remove()
+                        $form.hide()
+                        showToUser({
+                            content: '<strong>' + t(res.status),
+                            class: 'success',
+                            time: 1,
+                            image: 'fa-thumbs-o-up',
+                            element: $form.closest('div')
+                        })
+                        window.onbeforeunload = false
+                            //todo ¿Que hacemos cuando enviamos correctamente un formulario
+                        var theDiv = $form.parent().attr('id')
+                        $form.remove();
+                        cargaForm({
+                            name: c.form.name,
+                            mode: 'new',
+                            div: theDiv
+                        })
+                        break;
+                    case 'unvalid form':
+                        $('.unvalidform', $form).slideUp().remove()
+                        showToUser({
+                            content: '<strong>' + t(res.status) + '</strong>' + res.info.toString().replace(/,/g, ''),
+                            class: 'alert unvalidform',
+                            image: 'fa-thumbs-o-down',
+                            element: $form.closest('div')
+                        })
+                        break;
+                    default:
+                        break;
                 }
             }
         })
@@ -1072,36 +1077,36 @@ updateFormToMongo = function updateFormToMongo($form) {
     //var dest = $form.attr('collection')
     var updateObj = formToJson($form)
     updateObj.docId = options.doc //fixme Extraer de aqui el Id ¿será poco seguro?
-    Meteor.call('updateAfRecord', c.form.name, updateObj, function (err, res) {
+    Meteor.call('updateAfRecord', c.form.name, updateObj, function(err, res) {
             if (err) {
                 console.error(err)
             }
             if (res) {
                 switch (res.status) {
-                case 'updated':
-                    $('.unvalidform', $form).remove()
-                    $('.showToUser', $form.closest('div')).remove()
-                    showToUser({
-                        content: '<strong>' + t(res.status),
-                        class: 'success',
-                        time: 1,
-                        image: 'fa-thumbs-o-up',
-                        element: $form.closest('div')
-                    })
-                    window.onbeforeunload = false
-                    break;
-                case 'unvalid form':
-                    $('.unvalidform', $form).slideUp().remove()
-                    showToUser({
-                        content: '<strong>' + t(res.status) + '</strong>' + res.info.toString().replace(/,/g, ''),
-                        class: 'alert unvalidform',
-                        //time: 4,
-                        image: 'fa-thumbs-o-down',
-                        element: $form.closest('div')
-                    })
-                    break;
-                default:
-                    break;
+                    case 'updated':
+                        $('.unvalidform', $form).remove()
+                        $('.showToUser', $form.closest('div')).remove()
+                        showToUser({
+                            content: '<strong>' + t(res.status),
+                            class: 'success',
+                            time: 1,
+                            image: 'fa-thumbs-o-up',
+                            element: $form.closest('div')
+                        })
+                        window.onbeforeunload = false
+                        break;
+                    case 'unvalid form':
+                        $('.unvalidform', $form).slideUp().remove()
+                        showToUser({
+                            content: '<strong>' + t(res.status) + '</strong>' + res.info.toString().replace(/,/g, ''),
+                            class: 'alert unvalidform',
+                            //time: 4,
+                            image: 'fa-thumbs-o-down',
+                            element: $form.closest('div')
+                        })
+                        break;
+                    default:
+                        break;
                 }
             }
         })
@@ -1112,34 +1117,34 @@ deleteFormMongo = function deleteFormMongo($form) {
         //var dest = $form.attr('collection')
         deleteObj = {}
         deleteObj.docId = options.doc //fixme Extraer de aqui el Id ¿será poco seguro?
-        Meteor.call('deleteAfRecord', c.form.name, deleteObj, function (err, res) {
+        Meteor.call('deleteAfRecord', c.form.name, deleteObj, function(err, res) {
                 if (err) {
                     console.error(err)
                 }
                 if (res) {
                     switch (res.status) {
-                    case 'deleted':
-                        $('.showToUser', $form).remove()
-                        showToUser({
-                            content: '<strong>' + t(res.status),
-                            class: 'deleted',
-                            time: 2,
-                            image: 'fa-thumbs-o-up',
-                            element: $form.closest('div')
-                        })
-                        $form.fadeOut(2000)
-                        break;
-                    case 'not_deleted':
-                        showToUser({
-                            content: '<strong>' + t(res.status) + '</strong>' + res.info.toString().replace(/,/g, ''),
-                            class: 'alert undeleteform',
-                            //time: 4,
-                            image: 'fa-thumbs-o-down',
-                            element: $form.closest('div')
-                        })
-                        break;
-                    default:
-                        break;
+                        case 'deleted':
+                            $('.showToUser', $form).remove()
+                            showToUser({
+                                content: '<strong>' + t(res.status),
+                                class: 'deleted',
+                                time: 2,
+                                image: 'fa-thumbs-o-up',
+                                element: $form.closest('div')
+                            })
+                            $form.fadeOut(2000)
+                            break;
+                        case 'not_deleted':
+                            showToUser({
+                                content: '<strong>' + t(res.status) + '</strong>' + res.info.toString().replace(/,/g, ''),
+                                class: 'alert undeleteform',
+                                //time: 4,
+                                image: 'fa-thumbs-o-down',
+                                element: $form.closest('div')
+                            })
+                            break;
+                        default:
+                            break;
                     }
                 }
             })
@@ -1156,7 +1161,7 @@ ft = function ft(cadena) {
     }
 }
 activarTooltips = function activarTooltips() {
-        $('[help] input, [help] select,[help] textarea, [help] div.selectize-control').each(function () {
+        $('[help] input, [help] select,[help] textarea, [help] div.selectize-control').each(function() {
             $(this).qtip({
                 content: {
                     text: $(this).closest('[help]').attr('help'),
@@ -1183,10 +1188,10 @@ activarTooltips = function activarTooltips() {
     }
     //Hace focus en el campo al clickear sobre el label
 focusOnLabelClick = function focusOnLabelClick() {
-        $('.fieldrow').each(function () {
+        $('.fieldrow').each(function() {
             var $theRow = $(this)
             $('label', $(this)).unbind('click')
-            $('label', $(this)).click(function () {
+            $('label', $(this)).click(function() {
                 $('[name]', $theRow).focus()
                 $('.selectize-input', $theRow).click()
             })
@@ -1211,7 +1216,7 @@ checkModes = function checkModes(options) {
                 "allowed": mode.allowed,
                 "current": mode.current
             }
-            Meteor.call('setLog', 'form_mode_not_allowed', errorInfo, function (error, result) {
+            Meteor.call('setLog', 'form_mode_not_allowed', errorInfo, function(error, result) {
                 showToUser({
                     content: t('The mode') + ' <strong>' + errorInfo.current + '</strong> ' + t('is not allowed in this form'),
                     time: 2
@@ -1223,7 +1228,7 @@ checkModes = function checkModes(options) {
     }
     //Vamos a poner los valores en los bloques de arrays
 chargeValuesOnMultiBlocksArray = function chargeValuesOnMultiBlocksArray() {
-        $('.block[limit]').each(function () {
+        $('.block[limit]').each(function() {
             if ($(this).attr('limit') > 1) {
                 var block = $(this).attr('id')
                 var $block = $('#' + block)
@@ -1232,9 +1237,9 @@ chargeValuesOnMultiBlocksArray = function chargeValuesOnMultiBlocksArray() {
                     for (var count = 1; count < theValues.length; count++) {
                         $('.addsubrow', $block).click()
                     }
-                    $('.subrow', $block).each(function () {
+                    $('.subrow', $block).each(function() {
                         var $theRow = $(this)
-                        $('[name]', $theRow).each(function () {
+                        $('[name]', $theRow).each(function() {
                             setFieldValue($(this), theValues[$theRow.index() - 1][$(this).attr('id')])
                         })
                     })
@@ -1244,7 +1249,7 @@ chargeValuesOnMultiBlocksArray = function chargeValuesOnMultiBlocksArray() {
     }
     //Convertimos los select type radio en nustro propio control, mas manejable
 processSelectToRadioControls = function processSelectToRadioControls($select) {
-        $('.autof div.fieldrow[type=radio] select:not(.isRadio)').each(function () {
+        $('.autof div.fieldrow[type=radio] select:not(.isRadio)').each(function() {
             var $select = $(this)
             $select.addClass('isRadio')
             $select.hide()
@@ -1253,7 +1258,7 @@ processSelectToRadioControls = function processSelectToRadioControls($select) {
                     class: 'my-radio-button'
                 }).insertBefore($select)
                 // $select.appendTo($nDiv)
-            $('option', $select).each(function () {
+            $('option', $select).each(function() {
                 var $opt = $(this)
                 if ($opt.val()) {
                     $nButton = $('<div>', {
@@ -1262,20 +1267,20 @@ processSelectToRadioControls = function processSelectToRadioControls($select) {
                         tabindex: 0
                     }).text($opt.text()).appendTo($nDiv)
                 }
-                $nButton.on('click', function () {
+                $nButton.on('click', function() {
                     $select.val($(this).attr('value'))
                     $('div', $nDiv).removeClass('selected')
                     $(this).addClass('selected')
-                    $select.blur()
+                    $select.blur().change()
                 })
             })
             $select.appendTo($nDiv)
             $('div[value="' + $select.val() + '"]', $nDiv).addClass('selected')
-            $select.on('change', function () {
+            $select.on('change', function() {
                 $('div', $nDiv).removeClass('selected')
                 $('div[value="' + $select.val() + '"]', $nDiv).addClass('selected')
             })
-            $('div', $nDiv).on('keydown', function (tecla) {
+            $('div', $nDiv).on('keydown', function(tecla) {
                 if (tecla.keyCode == 32) {
                     $(this).click()
                 }
@@ -1291,7 +1296,7 @@ processSelectToRadioControls = function processSelectToRadioControls($select) {
     //Creamos un clave en form para incluir css en la página. Importante, las claves dentro de css: deben estar rodeadas de comillas dobles, y los valores que lo requieran, ( por incluir espacios o caracteres especiales, deben ir entre comillas simples)
 processCssKey = function processCssKey($element) {
         var newCss = {}
-        _(c.css).each(function (value, key) {
+        _(c.css).each(function(value, key) {
             newCss['#' + $element.attr('id') + ' ' + key] = value
         })
         newCss = JSON.stringify(newCss, 0).replace(/"/g, '').replace(/:{/g, '{').replace(/,/g, '').replace(/{/, '').replace(/}$/, '')
@@ -1301,10 +1306,10 @@ processCssKey = function processCssKey($element) {
     }
     //Mostramos el valor de los campos range en la etiqueta
 processRangeType = function processRangeType() {
-        $('.autof input[type=range]').each(function () {
+        $('.autof input[type=range]').each(function() {
             $(this).prev().attr('value', $(this).val())
         })
-        $('.autof input[type=range]').on('keydown change', function () {
+        $('.autof input[type=range]').on('keydown change', function() {
             $(this).prev().attr('value', $(this).val())
         })
     }
@@ -1312,4 +1317,3 @@ processRangeType = function processRangeType() {
     //Los campos tag, no informacn correctamente de la validación
     //todo @esencial injectar los valores fijos que queremos que se inserten en los formularios al llamarlos..... y ver si se muestran en modo hidden o static
     //current Ver como pasamos los parametros a los formularios en una url (habra que hacer algo que sirva par todo lo demas, lo mejor seria codificar la cadena que pasamos, en base a una semilla propia el usuario) y luego la decodificamos al recogerla. Ver cuanto penaliza.
-

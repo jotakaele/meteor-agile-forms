@@ -10,10 +10,13 @@ BaseController = RouteController.extend({
         //Cargamos las variables de la tabla _defaults como variables de session, 
         if (this.ready()) {
             Defaults.find().fetch().forEach(function(item) {
-                s(item._id, item.value, false)
+                se(item._id, item.value, false)
             })
-            if (s('lang') != 'en') {
-                translationsStrings(s('lang'))
+            se('app', masterConnection.config.findOne({
+                name: 'app'
+            }).content.app)
+            if (se('lang') != 'en') {
+                translationsStrings(se('lang'))
             } //FIXME ¿Estyo no será una pesada carga'
             this.render();
         } else {

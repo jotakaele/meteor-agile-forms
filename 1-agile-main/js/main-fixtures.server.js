@@ -16,6 +16,7 @@ if (Defaults.find('appName').count() === 0) {
             datetimepicker: 'd/m/Y H:i',
             moment: 'DD/MM/YYYY HH:mm'
         },
+        masterActiveCategory: 'form',
         dayOfWeekStart: 1,
         lang: 'en',
         _passphrase: 'unacadena aleatoria', //La cadena que se usara como frase de paso en la operaciones de encriptado/desencriptado
@@ -41,13 +42,21 @@ if (Defaults.find('appName').count() === 0) {
         }
     }
     console.log('Cargando tabla _defaults')
-    _.each(objDef, function (value, key) {
+    _.each(objDef, function(value, key) {
         Defaults.insert({
             _id: key,
             value: value
         })
     })
 }
+
+
+
+
+
+
+
+
+
 //TODO Importante hacer un mecanismo que elimine automáticamente los registros de log expirados
 //TODO hacer un mecanismo que impida que los usuarios modifiquen las variables globales, pero que permita que los usuarios si modifiquen su configuración. Lo mejor será crear un campo user, y uno global ¿y quizas uno scope, para odficinas, grupos, roles, etc....?
-

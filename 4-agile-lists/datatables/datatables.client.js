@@ -39,7 +39,7 @@ ReactiveDatatable = function(options) {
             self.page = data.start / data.length;
         }
     });
-    this.options.language = _.defaults(options.language || {}, datatablesTr[s('lang')]) //note @datatablesTr[s('lang')] está definido en el módulo translations
+    this.options.language = _.defaults(options.language || {}, datatablesTr[se('lang')]) //note @datatablesTr[se('lang')] está definido en el módulo translations
     this.options.tableTools = _.defaults(options.tableTools || {}, tableToolsDefaults)
         // Help Blaze cleanly remove entire datatable when changing template / route by
         // wrapping table in existing element (#datatable_wrap) defined in the template.
@@ -109,7 +109,7 @@ cargaList = function(theOptions) {
         var iIndex
         _.each(_.keys(src.list.sources.main.options.fields).concat(_.without(_.keys(src.list.sources), 'main')), function(key, index) {
                 var o = {}
-                o.title = _.humanize(key)
+                o.title = s.humanize(key)
                 o.className = 'cell-' + key
                 if (src.list.fieldTypes[key]) {
                     o.className += ' ' + src.list.fieldTypes[key]

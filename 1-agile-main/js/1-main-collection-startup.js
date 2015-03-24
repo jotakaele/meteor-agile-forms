@@ -5,4 +5,12 @@ if (Meteor.isServer) {
     Meteor.publish('_defaults', function() {
         return Defaults.find()
     })
+
+
+    Meteor.methods({
+        getDefault: function(key) {
+            return Defaults.findOne(key).value
+        }
+    });
+
 }

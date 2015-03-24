@@ -1,6 +1,6 @@
 Meteor.methods({
     //Update AF record
-    'deleteAfRecord': function (formName, objectToDelete) {
+    'deleteAfRecord': function(formName, objectToDelete) {
         var theForm = masterConnection.form.findOne({
             name: formName
         }).content.form
@@ -14,7 +14,7 @@ Meteor.methods({
             collection: theDelete.collection,
             id: theDelete.docId,
             record: masterConnection[theDelete.collection].findOne(theDelete.docId)
-        }, function (err, res) {
+        }, function(err, res) {
             if (res) {
                 //..y si ha funcionado, borramos el registro
                 isOk = masterConnection[theDelete.collection].remove(theDelete.docId)
@@ -42,7 +42,7 @@ Meteor.methods({
         return theDelete.res
     },
     //Update AF record
-    'updateAfRecord': function (formName, formResults) {
+    'updateAfRecord': function(formName, formResults) {
         var theForm = masterConnection.form.findOne({
             name: formName
         }).content.form
@@ -88,7 +88,7 @@ Meteor.methods({
         }
     },
     //Guardar un registro desde af 
-    'addAfRecord': function (formName, formResults) {
+    'addAfRecord': function(formName, formResults) {
         var theForm = masterConnection.form.findOne({
             name: formName
         }).content.form
@@ -130,7 +130,7 @@ Meteor.methods({
         }
     },
     //Recuperar un registro
-    'getDoc': function (theCollection, theId) {
+    'getDoc': function(theCollection, theId) {
         return masterConnection[theCollection].findOne(theId)
     }
 });
@@ -154,7 +154,7 @@ function validateRecord(theData, theForm) {
         return check
     }
     //Vamos a convertir the Data en un objeto de una sola dimension...
-    _.each(theDataCopy, function (value, key) {
+    _.each(theDataCopy, function(value, key) {
         if (!_(objTheAllowedFields).has(key)) {
             check.isValid = false
             check.info.push('<p>The field <b>' + key + '</b> is not in  [form>fields] neither in [form.allow_inject]<p>Please contact with app administrator')
@@ -165,14 +165,14 @@ function validateRecord(theData, theForm) {
             })
             return check
         }
-        if (_.startsWith(key, '_')) {
+        if (s.startsWith(key, '_')) {
             if (value.length == undefined) { //significa que es un objeto
-                _.each(value, function (oValue, oKey) {
+                _.each(value, function(oValue, oKey) {
                     theDataCopy[oKey + '.' + key] = oValue
                 })
             } else { // o es un array
-                _.each(value, function (aValue, aIndex) {
-                    _.each(aValue, function (aoValue, aoKey) {
+                _.each(value, function(aValue, aIndex) {
+                    _.each(aValue, function(aoValue, aoKey) {
                         theDataCopy[aoKey + '.' + (aIndex + 1) + '.' + key] = aoValue
                     })
                 })
@@ -180,7 +180,7 @@ function validateRecord(theData, theForm) {
             delete theDataCopy[key]
         }
     })
-    _.each(theDataCopy, function (value, key) {
+    _.each(theDataCopy, function(value, key) {
         //Comprobamos required
         theRealKey = key.split('.')[0]
         if ((theForm.fields[theRealKey] || {}).required == false ? false : true) {

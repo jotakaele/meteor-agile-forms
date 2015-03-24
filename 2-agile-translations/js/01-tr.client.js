@@ -1,7 +1,7 @@
    // TODO Implementar mecanismo de selección de idioma, ¿Basado en preferencias de usuario?
    //Carga las traducciones desde  la base de datos
    translationsStrings = function translationsStrings(lang) {
-       if (s('lang') != 'en') {
+       if (se('lang') != 'en') {
            var qF = JSON.parse(JSON.stringify({
                "_tr_": {
                    $exists: true
@@ -17,31 +17,31 @@
    translatableWords = []
        //Devuelve la cadena traducida*, teniendo en cuenta la capitalizacion
    t = function t(ocad) {
-           if (s('lang') == 'en' || !s('lang') || !ocad) {
+           if (se('lang') == 'en' || !se('lang') || !ocad) {
                return ocad
            }
            translatableWords.push(ocad)
-           var lang = s('lang')
+           var lang = se('lang')
            var theTranslatedWord = ocad
            if (_.has(cads, ocad.toLowerCase())) {
                theTranslatedWord = cads[ocad.toLowerCase()]
            } else {
-               theTranslatedWord = saveTraslationToDatabase(ocad.toLowerCase(), s('lang'))
+               theTranslatedWord = saveTraslationToDatabase(ocad.toLowerCase(), se('lang'))
                    //               unTranslatedWords.push(ocad.toLowerCase())
            }
            if (_.last(ocad).match(/[A-Z]/)) {
                theTranslatedWord = theTranslatedWord.toUpperCase()
            } else if (_.first(ocad).match(/[A-Z]/)) {
-               theTranslatedWord = _.humanize(theTranslatedWord)
+               theTranslatedWord = s.humanize(theTranslatedWord)
            }
-           if (s('translating') == 'manual') {
+           if (se('translating') == 'manual') {
                return theTranslatedWord
            }
            return theTranslatedWord
        }
        //Recupera una traduccion y la inserta en la base de datos local
    saveTraslationToDatabase = function saveTraslationToDatabase(thecad, lang) {
-           if (s('translating') == 'auto') {
+           if (se('translating') == 'auto') {
                lang = lang || 'es'
                var theTranslate = thecad
                $.ajax({
@@ -84,7 +84,7 @@
            //     alert('You can`t translate [' + selText + '] because isn`t in the i18n API!')
            //     return false
            // }
-           // nTrans = prompt('Write the new traduction for \n ' + selSource + ' \t (en) \n ' + t(selSource) + '\t (' + s('lang') + ')')
+           // nTrans = prompt('Write the new traduction for \n ' + selSource + ' \t (en) \n ' + t(selSource) + '\t (' + se('lang') + ')')
            if (nTrans) {
                var qId = {
                    _id: source.toLowerCase()
@@ -95,7 +95,7 @@
                        datetime: new Date(),
                        source: 'user'
                    }
-               }).replace('_tr_', s('lang')))
+               }).replace('_tr_', se('lang')))
                var qOptions = {
                    upsert: true
                }
@@ -149,7 +149,7 @@
    }
    $(document).ready(function() {
            //Si estamos en modo traduccion manual, activamos el evento para traducir al hacer click sobre cadenas
-           if (s('translating') == 'manual') {
+           if (se('translating') == 'manual') {
                console.info('Activando traducción manual')
                $('label,option,span,div').on('click', function(ev) {
                    ev.preventDefault()
