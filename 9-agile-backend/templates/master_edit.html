@@ -1,4 +1,7 @@
 <template name="masterEdit">
+    {{#if isInRole 'admin'}}
+
+
     <nav class="top-bar backend master" data-topbar role="navigation">
         <!-- <ul class="title-area">
 
@@ -122,5 +125,9 @@
             </div>
         </div>
     </div>
-    {{initFoundation}}
+
+    {{else}}
+    <div class="alert-box alert"><i class="fa fa-close fa-2x large-3"></i>This is an area only for admin. </div>
+
+    {{initFoundation}} {{/if}}
 </template>
