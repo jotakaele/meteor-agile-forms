@@ -2,7 +2,7 @@ T9n.setLanguage('es');
 Router.map(function(post) {
     this.route('home', {
         path: '/',
-        controller: 'BaseController',
+        controller: 'BaseController'
     });
 });
 if (Meteor.isClient) {
@@ -40,6 +40,7 @@ if (Meteor.isClient) {
                     obj.loginMode = 'google'
                 } else if (u.services.facebook) {
                     obj.email = u.services.facebook.email
+                    obj.picture = "http://graph.facebook.com/" + u.services.facebook.id + "/picture"
                     obj.loginMode = 'facebook'
                 } else if (u.services.twitter) {
                     //obj.email = u.services.twitter.email //todo Twitter no descarga el email. Buscar solucion

@@ -29,6 +29,7 @@ useraccounts:foundation
 accounts-password
 accounts-google
 accounts-facebook
-accounts-twitter
+#accounts-twitter
 service-configuration
 alanning:roles
+matb33:collection-hooks
