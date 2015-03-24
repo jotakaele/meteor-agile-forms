@@ -6,6 +6,23 @@ nav {
     #user-picture {
         height: 41px;
     }
+    li#notifications {
+        height: 45px;
+        width: 45px;
+        margin: 0px 3px;
+        .showToUser, i {
+            margin: 0px;
+            background-color: transparent;
+            border: none;
+            padding: 0px inherit;
+        }
+        * {
+            height: 45px;
+            width: 45px;
+            // margin: 0px;
+            // padding: 0px;
+        }
+    }
     li#user-info {
         height: 45px;
         width: auto;

@@ -8,7 +8,8 @@ standard-app-packages
 matthew:foundation5-sass
 fourseven:scss
 mandrill:ace
-mrt:underscore-string-latest
+underscorestring:underscore.string
+#mrt:underscore-string-latest
 pfafman:font-awesome-4
 #meteorhacks:zones
 momentjs:moment
@@ -33,3 +34,5 @@ accounts-facebook
 service-configuration
 alanning:roles
 matb33:collection-hooks
+email
+yogiben:pretty-email
