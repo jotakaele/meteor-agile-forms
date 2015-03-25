@@ -1,6 +1,10 @@
 AF = function(element, options) {
         //console.clear()
         var mode = checkModes(options)
+        if (!checkPermissions(options.def.form, element, 'Form ' + options.def.form.name)) {
+            return false;
+        }
+
         if (!mode) {
             return false
         }
@@ -12,6 +16,8 @@ AF = function(element, options) {
         options = parseEvalObjects(options)
         options = parseSubstNodes(options)
         parseRootQueries(options)
+
+
         c = {} //Creamos un objeto que va a contener la configuración general
         c.form = options.def.form || {}
         c.css = options.def.css || {}

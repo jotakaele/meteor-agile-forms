@@ -18,7 +18,7 @@ La definicion de cada formulario, se guarda en MongoDb en la colección `_af`, q
 - Opcional. Un identifiador único para el formulario. Si no existe utiliza el `_.slugify(title + collection )`
 
 ### modes:
-- Pendiente de implementacion
+- Pendiente de documentacion
 
 ### permissions:
 - Pendiente de implementación

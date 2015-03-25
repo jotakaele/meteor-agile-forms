@@ -367,7 +367,8 @@ if (Meteor.isClient) {
         //Guardar el item 
     function saveItem(sName, sContent, sId) {
         console.clear()
-        console.log(sName, sContent, sId)
+        // console.log(sName, sContent, sId)
+
         sFilteredContent = oVars.editorToSave(sContent)
         if (!sFilteredContent) {
             return false;
