@@ -266,8 +266,8 @@ selectizeProcess = function selectizeProcess(renderedField, fieldSource) {
     }
 }
 datetimeFieldProcess = function datetimeFieldProcess(renderedField, fieldSource) {
-    dbg('test', se('appName'))
-        //Soporte de datetimepicker en lenguajes cooficiales de España
+
+    //Soporte de datetimepicker en lenguajes cooficiales de España
     $.fn.datetimepicker.defaults.i18n.gl = {
         'months': ['Xaneiro', 'Febreiro', 'Marzo', 'Abril', 'Maio', 'Xuño', 'Xullo', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Decembro'],
         'dayOfWeek': ['Dom', 'Lun', 'Mar', 'Mer', 'Jov', 'Ven', 'Sab']
@@ -769,7 +769,7 @@ activateHooksTriggers = function activateHooksTriggers() {
 
 
                     $trigger.on('change', function() {
-                        console.log('....haciendo')
+
                         var nValue = '-' + fieldValue(trigger).toLowerCase() + '-'
                         var nRes1 = !obj.triggers[trigger].in ? true : vIn.indexOf(nValue) >= 0
                         var nRes2 = !obj.triggers[trigger].not_in ? true : vNotIn.indexOf(nValue) == -1
@@ -887,6 +887,16 @@ activateCustomValidation = function activateCustomValidation($jqueryObject) {
     })
 }
 checkFormValidity = function checkFormValidity($form) {
+        //Primero quitamos el atributo required a los campos que estan ocultos
+        $('input[required]:hidden, select[required].hidden, textarea[required].hidden', $form).each(function() {
+
+                $(this).removeAttr('required').attr('toberequired', true)
+            })
+            // .. y nos aseguramos de que sei se han vuelto a mostrar vuelven a estar required
+        $('input[toberequired]:visible, select[toberequired].visible, textarea[toberequired].visible', $form).attr('required', 'required')
+
+
+
         if ($form[0].checkValidity()) {
             $form.addClass('form-valid')
             $("#add-button", $form).removeClass('disabled').attr("title", "Formulario validado. Pulse para guardar los datos.")
@@ -943,9 +953,9 @@ setInitialRadioValues = function setInitialRadioValues() {
     Convierte en Array los datos de un fromulario
     */
 formToJson = function formToJson(objForm) {
-        //  console.clear()
+
         var fields = $('[name][id]:not(.subObject)', objForm)
-            //console.log(fields)
+
         var numberTypes = ['number', 'currency', 'range']
         var dateTypes = ['date', 'datetime', 'time']
         var f = objForm
@@ -1027,9 +1037,11 @@ getBlocValues = function getBlocValues($object, intLimit) {
     }
     return resBV
 }
+
 addFormToMongo = function addFormToMongo($form) {
     //var dest = $form.attr('collection')
     var insertObj = formToJson($form)
+    se('lastSaved_' + c.form.name, insertObj)
     Meteor.call('addAfRecord', c.form.name, insertObj, function(err, res) {
             if (err) {
                 console.error(err)
@@ -1317,3 +1329,7 @@ processRangeType = function processRangeType() {
     //Los campos tag, no informacn correctamente de la validación
     //todo @esencial injectar los valores fijos que queremos que se inserten en los formularios al llamarlos..... y ver si se muestran en modo hidden o static
     //current Ver como pasamos los parametros a los formularios en una url (habra que hacer algo que sirva par todo lo demas, lo mejor seria codificar la cadena que pasamos, en base a una semilla propia el usuario) y luego la decodificamos al recogerla. Ver cuanto penaliza.
+
+
+
+// fixme La validacion falla cuando los campos enable_if o show_if estan ocultos, y sin embargo osn requeridos

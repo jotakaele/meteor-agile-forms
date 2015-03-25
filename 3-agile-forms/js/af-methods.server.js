@@ -53,7 +53,7 @@ Meteor.methods({
         _.extend(theSave, validateRecord(theSave.data, theForm))
             //CReamos los datos de auditoría
         var autoData = {
-                autouser: Meteor.userId || 'unuser',
+                autouser: Meteor.userId() || 'unuser',
                 autodate: new Date()
             }
             //_.extend(theSave.data, autoData)
@@ -99,12 +99,13 @@ Meteor.methods({
             //Datos que le añadimos siempre   
         var autoData = {
             autodata: [{
-                autouser: Meteor.userId || 'unuser',
+                autouser: Meteor.userId() || 'unuser',
                 autodate: new Date()
             }]
         }
         _.extend(theSave.data, autoData)
         if (theSave.isValid) {
+
             var theId = masterConnection[theSave.collection].insert(theSave.data)
             if (theId) {
                 Meteor.call('setLog', 'insert_record', {
@@ -136,6 +137,18 @@ Meteor.methods({
 });
 //Comprueba la validación del formulario en el servidor, en base a diferentes parameros (campos requeridos, seguridad, etc)
 function validateRecord(theData, theForm) {
+
+    //Si los campos que son objeto de "activate" están nulos, los eliminamos de los datos a guardar, para que no sean tirados atras en la validación
+    _.each(theForm.fields, function(value, key) {
+        if (value.activate) {
+            if (theData[key] == null) {
+                delete theData[key]
+            }
+            value.required = false
+        }
+    })
+
+
     //Nos aseguramos de que que excluimos todo lo que no este indicado en form > fields o en form > allow_inject
     var objTheAllowedFields = _(theData).pick(_.keys(theForm.fields), theForm.allow_inject) //Lista de campos que podemos permitir
     var theDataCopy = _.extend({}, theData)
