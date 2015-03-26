@@ -372,7 +372,7 @@ rDate = function(date, format) {
  * @param  {object} objectChecked Objeto a checkear. 
  * @param  {string} sElementId    Id del elemento de la página donde se mostrará el error
  * @param  {string} sName         Nombre del elemento que se esta checkeando, parar mostrarlo en la información al usuari.
- * @return {[type]}               [description]
+ * @return {boolean}              Si tiene permisos o no
  */
 checkPermissions = function(objectChecked, sElementId, sName) {
     dbg('check', objectChecked)
@@ -380,9 +380,9 @@ checkPermissions = function(objectChecked, sElementId, sName) {
     var state = true
     var info = []
     if (!_.has(objectChecked, 'permissions')) {
-        var state = false
+        return true
     }
-    var permissions = objectChecked.permissions
+    var permissions = objectChecked.permissions || {}
     var rolesPlusUser = Meteor.user().roles.concat(userInfo().email)
 
     if (_.has(permissions, 'allow')) {
@@ -391,6 +391,8 @@ checkPermissions = function(objectChecked, sElementId, sName) {
         if (allowTo.length > 0) {
             var state = true
             info.push('<div class="label success">allow to Role: ' + allowTo + '</div>')
+        } else {
+            info.push('<div class="label alert">only allow to Roles: ' + permissions.allow + '</div>')
         }
     }
 

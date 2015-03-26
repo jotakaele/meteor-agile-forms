@@ -1,7 +1,7 @@
 AF = function(element, options) {
         //console.clear()
         var mode = checkModes(options)
-        if (!checkPermissions(options.def.form, element, 'Form ' + options.def.form.name)) {
+        if (!checkPermissions(options.def, element, 'Form ' + options.def.form.name)) {
             return false;
         }
 

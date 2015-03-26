@@ -16,9 +16,10 @@ autol = function autol(options) {
         //recuperamos los datos de las colecciones indicadas en la configuración
         this.list = options.src.list
             //current Revistar permisos en listados Casi funciona!!!!
-        if (!checkPermissions(this.list, this.div)) {
-            return false;
-        }
+            //dbg("this.list", this.list)
+            // if (!checkPermissions(this.list, this.div)) {
+            //     return false;
+            // }
 
 
         this.html = options.src.html || {}
