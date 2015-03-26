@@ -366,3 +366,56 @@ rDate = function(date, format) {
     //return ('<div order="' + order + '">' + m + '</div>')
 
 }
+
+/**
+ * Checkea la existencia de la clave permissions dentro de objectChecked y devuelve tru o false en fucnion de los valores en aloow o deny
+ * @param  {object} objectChecked Objeto a checkear. 
+ * @param  {string} sElementId    Id del elemento de la página donde se mostrará el error
+ * @param  {string} sName         Nombre del elemento que se esta checkeando, parar mostrarlo en la información al usuari.
+ * @return {boolean}              Si tiene permisos o no
+ */
+checkPermissions = function(objectChecked, sElementId, sName) {
+    dbg('check', objectChecked)
+
+    var state = true
+    var info = []
+    if (!_.has(objectChecked, 'permissions')) {
+        return true
+    }
+    var permissions = objectChecked.permissions || {}
+    var rolesPlusUser = Meteor.user().roles.concat(userInfo().email)
+
+    if (_.has(permissions, 'allow')) {
+        var state = false
+        var allowTo = _.intersection(rolesPlusUser, permissions.allow)
+        if (allowTo.length > 0) {
+            var state = true
+            info.push('<div class="label success">allow to Role: ' + allowTo + '</div>')
+        } else {
+            info.push('<div class="label alert">only allow to Roles: ' + permissions.allow + '</div>')
+        }
+    }
+
+    if (_.has(permissions, 'deny')) {
+        var denyTo = _.intersection(rolesPlusUser, permissions.deny)
+        if (denyTo.length > 0) {
+            var state = false
+            info.push('<div class="label alert">deny to Role: ' + denyTo + '</div>')
+        }
+    }
+
+    if (state == false) {
+        var obj = {
+            content: '<strong>You are not allowed to use [' + sName + '].</strong> If you think is an error, please contact with the maintainer of ' + se('appName') + '<div>' + info + '</div>',
+            image: 'fa-minus-circle',
+            class: 'secondary'
+        }
+        if (sElementId) {
+            obj.element = $('#' + sElementId)
+        }
+
+        showToUser(obj)
+    }
+
+    return state;
+}

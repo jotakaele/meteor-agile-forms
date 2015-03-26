@@ -4,10 +4,24 @@
  * @return {array}        Array de objetos JSON con los datos extraidos
  */
 autol = function autol(options) {
-        //console.clear()
+        dbg('options', options)
+            //console.clear()
         this.div = options.div || 'listdest';
+
+
+
+
+
+
         //recuperamos los datos de las colecciones indicadas en la configuración
         this.list = options.src.list
+            //current Revistar permisos en listados Casi funciona!!!!
+            //dbg("this.list", this.list)
+            // if (!checkPermissions(this.list, this.div)) {
+            //     return false;
+            // }
+
+
         this.html = options.src.html || {}
         this.css = options.src.css || {}
         data = {}

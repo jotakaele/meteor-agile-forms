@@ -74,8 +74,10 @@ Template.list.rendered = function() {
  * @return {[type]}            [description]
  */
 cargaList = function(theOptions) {
+
         opt = theOptions
-            //Definimos erro por si pasamos algo diferente a un objeto
+
+        //Definimos erro por si pasamos algo diferente a un objeto
         if (typeof theOptions != 'object') {
             console.error("Se requiere un objeto con la propiedad src o name y div");
             return null
@@ -103,6 +105,15 @@ cargaList = function(theOptions) {
         }
         //note La configuración del listado (src) la cargamos desde una variable de session, para que sea en efecto una fuente reactiva.
         //Extraemos las opciones especificas para datatables de src
+        //
+        //
+        //
+        //permisions = src.permisions || {}
+        dbg("src", theOptions)
+        if (checkPermissions(src, theOptions.div || "datatable_wrapper", 'Table') === false) {
+            return false;
+        }
+
         options = src.list.datatables || {}
         var columns = []
             //Creamos options.columns automáticamente, a apartir de los nombres de campos definidos
