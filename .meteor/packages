@@ -17,7 +17,7 @@ iron:router
 jeremy:selectize
 numeral:numeral
 mquandalle:bower
-#msavin:mongol
+
 acemtp:csm
 #meteorhacks:kadira
 insecure
@@ -37,3 +37,4 @@ matb33:collection-hooks
 email
 yogiben:pretty-email
 msavin:jetsetter
+msavin:mongol
