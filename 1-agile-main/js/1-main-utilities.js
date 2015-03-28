@@ -368,40 +368,47 @@ rDate = function(date, format) {
 }
 
 /**
- * Checkea la existencia de la clave permissions dentro de objectChecked y devuelve tru o false en fucnion de los valores en aloow o deny
+ * Checkea la existencia de la clave pass dentro de objectChecked y devuelve tru o false en fucnion de los valores en allow o deny
  * @param  {object} objectChecked Objeto a checkear. 
  * @param  {string} sElementId    Id del elemento de la página donde se mostrará el error
  * @param  {string} sName         Nombre del elemento que se esta checkeando, parar mostrarlo en la información al usuari.
  * @return {boolean}              Si tiene permisos o no
  */
-checkPermissions = function(objectChecked, sElementId, sName) {
-    dbg('check', objectChecked)
+checkPass = function(objectChecked, sElementId, sName) {
+    // dbg('check', objectChecked)
 
     var state = true
     var info = []
-    if (!_.has(objectChecked, 'permissions')) {
+    if (!_.has(objectChecked, 'pass')) {
         return true
     }
-    var permissions = objectChecked.permissions || {}
+    var pass = objectChecked.pass || {}
     var rolesPlusUser = Meteor.user().roles.concat(userInfo().email)
 
-    if (_.has(permissions, 'allow')) {
+
+    if (_.has(pass, 'allow')) {
         var state = false
-        var allowTo = _.intersection(rolesPlusUser, permissions.allow)
+        var allowTo = _.intersection(rolesPlusUser, pass.allow)
         if (allowTo.length > 0) {
             var state = true
             info.push('<div class="label success">allow to Role: ' + allowTo + '</div>')
         } else {
-            info.push('<div class="label alert">only allow to Roles: ' + permissions.allow + '</div>')
+            info.push('<div class="label alert">only allow to Roles: ' + pass.allow + '</div>')
         }
     }
 
-    if (_.has(permissions, 'deny')) {
-        var denyTo = _.intersection(rolesPlusUser, permissions.deny)
+    if (_.has(pass, 'deny')) {
+        var denyTo = _.intersection(rolesPlusUser, pass.deny)
+
         if (denyTo.length > 0) {
             var state = false
             info.push('<div class="label alert">deny to Role: ' + denyTo + '</div>')
         }
+    }
+
+
+    if (!sElementId) {
+        return state
     }
 
     if (state == false) {
@@ -418,4 +425,33 @@ checkPermissions = function(objectChecked, sElementId, sName) {
     }
 
     return state;
+}
+
+
+
+
+/**
+ * Recorre recursivamente un array con la estructura
+ de menus y marca como allowed=false los nodos que no tiene permisos
+ * @param  {object} obj El objeto a checkear    
+ * @return {object}     El objeto checkeado
+ */
+checkRecursivePass = function(obj) {
+    obj = sanitizeObjectNameKeys(obj)
+    _.each(obj, function(value) {
+        // dbg(value.name, checkPass(value))
+        if (checkPass(value)) {
+            value.allowed = true
+
+            if (value.sub) {
+                checkRecursivePass(value.sub)
+
+            }
+        } else {
+            value.name = ''
+            value.sub = {}
+        }
+
+    })
+    return obj
 }
