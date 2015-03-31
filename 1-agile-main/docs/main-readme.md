@@ -204,7 +204,7 @@ var obj ={
 
 
 //example 3
-//Este elemento estaria permitido para todos los ususrios con rol 'admin' excepto para admin5@onl.es
+//Este elemento estaria permitido para todos los usuarios con rol 'admin' excepto para admin5@onl.es
 var obj ={
     element: 1,
     other: 2,
@@ -214,8 +214,6 @@ var obj ={
         deny:
             - admin5@onl.es  
 }
-
-
 
 
 ```

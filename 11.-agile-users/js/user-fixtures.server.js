@@ -33,7 +33,7 @@ if (masterConnection.config.find().count() === 0) {
 if (Meteor.users.find().count() === 0) {
 
     var nu = [{
-        "_id": "PoF335eMKMGauBcs5",
+
         "createdAt": "2015-03-23T08:27:17.958Z",
         "services": {
             "password": {
@@ -45,10 +45,10 @@ if (Meteor.users.find().count() === 0) {
         },
         "emails": [{
             "address": "operator2@gmail.com",
-            "verified": false
+            "verified": true
         }]
     }, {
-        "_id": "PeXTfPPKWTCMAL3Lq",
+
         "createdAt": "2015-03-23T08:27:37.465Z",
         "services": {
             "password": {
@@ -60,10 +60,10 @@ if (Meteor.users.find().count() === 0) {
         },
         "emails": [{
             "address": "operator3@gmail.com",
-            "verified": false
+            "verified": true
         }]
     }, {
-        "_id": "hi4fJ8zt8F4vYY3E9",
+
         "createdAt": "2015-03-23T09:07:52.160Z",
         "services": {
             "password": {
@@ -75,10 +75,10 @@ if (Meteor.users.find().count() === 0) {
         },
         "emails": [{
             "address": "admin1@gmail.com",
-            "verified": false
+            "verified": true
         }]
     }, {
-        "_id": "yaZrtvdDfCPWzTtcC",
+
         "createdAt": "2015-03-23T09:08:10.686Z",
         "services": {
             "password": {
@@ -93,10 +93,10 @@ if (Meteor.users.find().count() === 0) {
         },
         "emails": [{
             "address": "admin2@gmail.com",
-            "verified": false
+            "verified": true
         }]
     }, {
-        "_id": "piDuq4SBSabuLbRFe",
+
         "createdAt": "2015-03-23T08:25:49.146Z",
         "services": {
             "password": {
@@ -111,10 +111,10 @@ if (Meteor.users.find().count() === 0) {
         },
         "emails": [{
             "address": "gestor@gmail.com",
-            "verified": false
+            "verified": true
         }]
     }, {
-        "_id": "5mRi697FCbiHmW7nu",
+
         "createdAt": "2015-03-23T08:26:17.898Z",
         "services": {
             "password": {
@@ -126,10 +126,10 @@ if (Meteor.users.find().count() === 0) {
         },
         "emails": [{
             "address": "gestor1@gmail.com",
-            "verified": false
+            "verified": true
         }]
     }, {
-        "_id": "aCrBFHqxiPvdP9K5P",
+
         "createdAt": "2015-03-23T08:26:32.799Z",
         "services": {
             "password": {
@@ -141,10 +141,10 @@ if (Meteor.users.find().count() === 0) {
         },
         "emails": [{
             "address": "gestor2@gmail.com",
-            "verified": false
+            "verified": true
         }]
     }, {
-        "_id": "eekNaPy2sDrnBEbNj",
+
         "createdAt": "2015-03-23T08:26:55.610Z",
         "services": {
             "password": {
@@ -156,7 +156,7 @@ if (Meteor.users.find().count() === 0) {
         },
         "emails": [{
             "address": "operator1@gmail.com",
-            "verified": false
+            "verified": true
         }]
     }]
 
