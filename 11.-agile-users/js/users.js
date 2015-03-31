@@ -29,7 +29,7 @@ if (Meteor.isClient) {
 
             var u = Meteor.user()
 
-            obj = {}
+            var obj = {}
             if (u.profile) {
                 obj.name = u.profile.name
             }

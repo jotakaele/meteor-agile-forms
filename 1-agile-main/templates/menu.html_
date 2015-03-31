@@ -13,7 +13,21 @@
             </li>
         </ul>
         <section class="top-bar-section">
+            <ul>
+                {{#each main}}
+                <li><a href="#">{{name}}</a></li>
+                {{/each}}
 
+
+                <li class="active"><a href="#">Alumnos</a></li>
+                <li class="has-dropdown">
+                    <a href="#">Cuentas</a>
+                    <ul class="dropdown">
+                        <li><a href="#">Gastos</a></li>
+                        <li><a href="#">Ingresos</a></li>
+                    </ul>
+                </li>
+            </ul>
             <ul class="right">
                 <li id="notifications"></li>
                 <li id="user-info" class="{{user.loginMode}}">

@@ -98,3 +98,124 @@ Actualmemte existes los siguientes typos
 
 ## Funcion doSnippet
 Esta funci
+
+
+
+##Menus
+El menu principal (main) se carga desde config>menus y se almacena en base de datos.
+
+El formato del menu es:
+
+```yaml
+menus: #Requerido. Clave principal
+  main: #requerido. El nombre de nuestro menu
+    - name: Inicio  #Requerido. Un elemento de array para cada menu
+      img: fa-home  #Opcional. Una imagen de fontawesome para acompañar al texto
+      atrrs:    #Opcional. Los atributos que se cargarán en cada enlace
+        form: unform    
+        list: unalist
+      pass: # Opcional. El chequeo de permisos. Se hace mediante la fiuncion checkPass. Ni no se estalece en una clave, significa que esta permitido para todos los usuarios y roles.
+        allow:
+          - admin
+      classes: active   #Opcional
+    - name: Alumnos
+      img: fa-users
+      classes: red green
+      sub:
+        - name: 2-1
+        - name: 2-22232
+          img: fa-camera fa-1x
+          sub:
+            - name: 231
+            - name: 232
+              pass:
+                allow:
+                  - admin
+              sub:
+                - name: algo profundo
+                  img: fa-camera
+    - name: Gastos
+      img: fa-euro
+    - name: Otras Cosas
+
+
+
+
+
+
+
+```
+
+
+
+##Permisos y roles
+Existe una configuración de roles de usuario que se gestiona mediante **config>roles**. Siempre se compruebanen base al email del usuario validado. Se gestionan mediante el siguiente formato.
+
+```yaml
+roles:  #requerido. Clave principal
+  admin:    #requerido. El nombre del rol
+    - "juan.chamizo@gmail.com"  #El email del usuario....
+  gestor:
+    - "gestor1@gmail.com"
+    - "gestor2@gmail.com"
+    - "admin@gmail.com"
+  operator:
+    - "operator1@gmail.com"
+    - "operator2@gmail.com"
+    - "operator3@gmail.com"
+users:
+  "juan.chamizo@gmail.com":     # El email...
+    - nada  #Los grupos a que pertenece
+    - algo
+
+```
+
+Ambos sistemas (**roles > emails** o **emails > roles**) son compatibles y pueden mezclarse.
+
+Para la gestion de roles se utiliza el paquete [Alanning:roles](https://atmospherejs.com/alanning/roles)
+
+
+##Funcion ***checkPass***
+La funcion **checkPass()**  comprueba si un determinado elemento esta permitido al usuario actual o no. Puede lanzarse contra cualquier objeto JSON y comprueba (si existe) la clave *pass* del objeto chequeado.
+**pass:** puede tener las claves **allow:** y/o **deny:** y son comprobadas en ese orden exactamemte
+
+```js
+
+//example 1
+//Este elemento solo esta permitido al usuario con email admin@onl.es
+var obj ={
+    element: 1,
+    other: 2,
+    pass:   
+        allow:
+            - admin@onl.es  
+}
+
+
+//example 2
+//Este elemento estaria permitido para todo el mundo  excepto para user@onl.es
+var obj ={
+    element: 1,
+    other: 2,
+    pass:   
+        deny:
+            - user@onl.es  
+}
+
+
+//example 3
+//Este elemento estaria permitido para todos los ususrios con rol 'admin' excepto para admin5@onl.es
+var obj ={
+    element: 1,
+    other: 2,
+    pass:
+        allow:
+            - admin   
+        deny:
+            - admin5@onl.es  
+}
+
+
+
+
+```

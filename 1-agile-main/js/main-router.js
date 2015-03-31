@@ -12,9 +12,17 @@ BaseController = RouteController.extend({
             Defaults.find().fetch().forEach(function(item) {
                 se(item._id, item.value, false)
             })
-            se('app', masterConnection.config.findOne({
-                name: 'app'
-            }).content.app)
+            Tracker.autorun(function() {
+                se('app', masterConnection.config.findOne({
+                    name: 'app'
+                }).content.app)
+
+                se('menu', masterConnection.config.findOne({
+                    name: 'menus'
+                }).content.menus)
+            });
+
+
             if (se('lang') != 'en') {
                 translationsStrings(se('lang'))
             } //FIXME ¿Estyo no será una pesada carga'

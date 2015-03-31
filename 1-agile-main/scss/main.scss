@@ -5,13 +5,16 @@
     background-color: darken($primary-color, 15);
     color: #fff
 }
+
 #iron-router-progress {
     background-color: #00A4FF;
     box-shadow: 0 0 5px black;
 }
+
 @function text-contrast($color) {
     @return if(lightness($color) < 51, #FFF, #000);
 }
+
 div.showToUser {
     cursor: pointer;
     .counter {
@@ -38,6 +41,7 @@ div.showToUser {
         height: 100%;
     }
 }
+
 div.reveal-modal {
     padding-top: 50px;
     a.close-reveal-modal {
@@ -49,6 +53,7 @@ div.reveal-modal {
         font-size: 1.5em !important;
     }
 }
+
 i.close {
     // border: 1px solid darken($admin-bg, 20);
     top: 0px;
@@ -68,6 +73,7 @@ i.close {
         box-shadow: 0px 0px 3px darken(red, 40);
     }
 }
+
 div.in-place {
     border: 1px solid #777;
     background-color: #fff;
@@ -81,6 +87,17 @@ div.in-place {
         border: none !important;
     }
 }
+
 article {
     // margin-top: 1em;
+}
+
+#menutree {
+    background-color: silver;
+    ul {
+        border: 1px solid red;
+    }
+    li {
+        border: 1px solid green;
+    }
 }
