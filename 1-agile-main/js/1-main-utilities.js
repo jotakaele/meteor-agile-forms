@@ -431,27 +431,26 @@ checkPass = function(objectChecked, sElementId, sName) {
 
 
 /**
- * Recorre recursivamente un array con la estructura
- de menus y marca como allowed=false los nodos que no tiene permisos
- * @param  {object} obj El objeto a checkear    
- * @return {object}     El objeto checkeado
+ * Recorre recursivamente un array de objetos con la estructura
+ de menus y elimina los nodos que no tiene permisos
+ * @param  {array} obj El array a checkear    
+ * @return {array}     El array modificado
  */
-checkRecursivePass = function(obj) {
-    obj = sanitizeObjectNameKeys(obj)
-    _.each(obj, function(value) {
-        // dbg(value.name, checkPass(value))
-        if (checkPass(value)) {
-            value.allowed = true
-
-            if (value.sub) {
-                checkRecursivePass(value.sub)
-
+checkRecursivePass = function(arr) {
+    if (!_.isArray(arr)) {
+        throw new Meteor.error('array-expected', 'Expected an array in function checkRecursivePass');
+    }
+    var arr = sanitizeObjectNameKeys(arr)
+    var nArr = []
+    _.each(arr, function(val, index) {
+        if (checkPass(val || {})) {
+            nArr.push(val)
+            if (_.has(val, 'sub')) {
+                val.sub = checkRecursivePass(val.sub)
             }
-        } else {
-            value.name = ''
-            value.sub = {}
-        }
 
+        }
     })
-    return obj
+
+    return nArr
 }

@@ -1,0 +1,46 @@
+template(name="menu")
+  nav.top-bar(data-topbar='')
+      ul.title-area
+          li.name
+            h1
+              a(href='') {{default 'appName'}}
+      section.top-bar-section
+        +menutree      
+        //- ul#config-menu     
+        //-   each main
+        //-     +menuitem this
+        ul.right
+          li#notifications
+          li#user-info(class="#{user.loginMode}")
+            if currentUser
+              if user.picture 
+                img#user-picture(src="#{user.picture}")
+              #user-label(title="#{user.email}") #{user.label}
+          li#login-button
+            +atNavButton
+
+
+
+template(name="menutree")
+    ul#config-menu
+      each list
+        +subnode
+
+
+template(name="menunode")
+    if sub
+      ul.dropdown
+        each sub
+          +subnode
+
+
+template(name="subnode")
+  li(class="{{#if sub}}has-dropdown not-click {{/if}} #{classes}")
+    a(href="#" $dyn=attrs) 
+      if img
+        i.fa(class="#{img}") 
+      | #{name} 
+    +menunode
+    
+
+  

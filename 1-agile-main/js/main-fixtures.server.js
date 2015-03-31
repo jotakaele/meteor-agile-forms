@@ -51,11 +51,83 @@ if (Defaults.find('appName').count() === 0) {
 }
 
 
+if (!masterConnection.config.findOne({
+        name: 'menus'
+    })) {
+
+    var menusDefault = {
+        "menus": {
+            "main": [{
+                "name": "Inicio",
+                "img": "fa-home",
+                "atrrs": {
+                    "form": "unform",
+                    "list": "unalist"
+                },
+                "pass": {
+                    "allow": ["admin"]
+                },
+                "classes": "active"
+            }, {
+                "name": "Alumnos",
+                "img": "fa-users",
+                "classes": "red green",
+                "sub": [{
+                    "name": "2-1"
+                }, {
+                    "name": "2-22232",
+                    "img": "fa-camera fa-1x",
+                    "sub": [{
+                        "name": 231
+                    }, {
+                        "name": 232,
+                        "pass": {
+                            "allow": ["admin"]
+                        },
+                        "sub": [{
+                            "name": "algo profundo",
+                            "img": "fa-camera"
+                        }]
+                    }]
+                }]
+            }, {
+                "name": "Gastos",
+                "img": "fa-euro"
+            }, {
+                "name": "Otras Cosas"
+            }]
+        }
+    }
+
+    masterConnection.config.insert({
+        name: "menus",
+        content: menusDefault
+    })
 
 
 
+}
 
+if (!masterConnection.config.findOne({
+        name: 'roles'
+    })) {
+    rolesDefault = {
+        "roles": {
+            "admin": ["juan.chamizo@gmail.com"],
+            "gestor": ["gestor1@gmail.com", "gestor2@gmail.com", "admin@gmail.com"],
+            "operator": ["operator1@gmail.com", "operator2@gmail.com", "operator3@gmail.com"]
+        },
+        "users": {
+            "juan_point_chamizo@gmail_point_com": ["nada", "algo"]
+        }
+    }
 
+    masterConnection.config.insert({
+        name: "roles",
+        content: rolesDefault
+    })
+
+}
 
 
 //TODO Importante hacer un mecanismo que elimine automáticamente los registros de log expirados

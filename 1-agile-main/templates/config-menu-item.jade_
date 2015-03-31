@@ -1,0 +1,10 @@
+template(name="menuitem")
+	if set
+		li 
+			a(href="") {{name}}
+	else
+		li.has-dropdown
+			a(href="#") {{name}}
+			ul.dropdown
+				
+
