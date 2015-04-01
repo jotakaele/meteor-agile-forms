@@ -3,12 +3,12 @@ $margin-fields: .4em;
 form.autof {
     padding: 1em;
     padding-top: 1.3em;
-    border: 1px solid $success-color;
+    // border: 1px solid $success-color;
     #form_notices {
         display: none;
     }
     &.changed {
-        border: 1px solid $alert-color;
+        // border: 1px solid $alert-color;
         #form_notices {
             display: block;
             position: absolute;
@@ -59,13 +59,16 @@ form.autof {
         padding: 0 0 $margin-fields 0 !important;
         margin: $margin-fields 0;
         // border:none;
-        &#startBlock, &#_endblock, &#_endBlock {
+        &#startBlock,
+        &#_endblock,
+        &#_endBlock {
             border-color: transparent;
             .blockname {
                 display: none;
             }
         }
-        .blockname, .blockname i {
+        .blockname,
+        .blockname i {
             .maxinfo {
                 display: inline-block;
                 margin-left: 2em;
@@ -94,7 +97,8 @@ form.autof {
     div.isClon label {
         display: none;
     }
-    input, select {
+    input,
+    select {
         padding: 3px;
         height: 2em;
     }
@@ -103,7 +107,10 @@ form.autof {
             margin-left: .5em;
         }
         // &:hover {
-        input, select, textarea, .selectize-input {
+        input,
+        select,
+        textarea,
+        .selectize-input {
             // background-color: complement($panel-bg) !important
         }
         .addsubrow {
@@ -119,7 +126,9 @@ form.autof {
             }
         }
         // }
-        .columns, .row, i {
+        .columns,
+        .row,
+        i {
             padding: 1px;
             input, select {
                 margin-bottom: 1px;
@@ -171,7 +180,11 @@ form.autof {
                 font-weight: 700;
             }
         }
-        input, select, textarea, .my-radio-button, .selectize-control {
+        input,
+        select,
+        textarea,
+        .my-radio-button,
+        .selectize-control {
             margin: 0px;
             box-shadow: $control-box-shadow !important;
             border-radius: $control-border-radius !important;
@@ -309,9 +322,11 @@ form.autof {
         content: attr(value);
     }
 }
+
 .rojo {
     background-color: red !important;
 }
+
 //Validacion
 $style-valid: 2px solid $success-color;
 $style-invalid: 2px solid red;
@@ -320,7 +335,12 @@ $style-invalid: 2px solid red;
         .button-group {
             opacity: .2;
         }
-        input, select, textarea, ul[type=radio], .selectize-control, .my-radio-button {
+        input,
+        select,
+        textarea,
+        ul[type=radio],
+        .selectize-control,
+        .my-radio-button {
             //  border-bottom-width: 2px;
         }
         div.focused {
@@ -341,13 +361,19 @@ $style-invalid: 2px solid red;
                 label {
                     color: $alert-color;
                 }
-                input, select, textarea, ul[type=radio], .selectize-input, .my-radio-button {
+                input,
+                select,
+                textarea,
+                ul[type=radio],
+                .selectize-input,
+                .my-radio-button {
                     // border-bottom: $style-invalid;
                 }
             }
         }
     }
 }
+
 .showToUser.changed_notice {
     position: absolute;
     z-index: 1;
@@ -387,7 +413,8 @@ $style-invalid: 2px solid red;
     label {
         border-bottom: 1px solid #000 !important;
     }
-    .remove, .showToUser {
+    .remove,
+    .showToUser {
         display: none !important;
     }
     .my-radio-button {
@@ -400,10 +427,14 @@ $style-invalid: 2px solid red;
             border: none !important;
         }
     }
-    input, select, .selectize-input, .my-radio-button div {
+    input,
+    select,
+    .selectize-input,
+    .my-radio-button div {
         font-weight: bold !important;
     }
 }
+
 //Reglas especiales que deben aplicarse al final
 form.autof {
     input.inject {

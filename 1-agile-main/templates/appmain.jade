@@ -1,0 +1,51 @@
+template(name="main")
+    head
+        meta(charset="utf-8" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no")
+        title #{se 'appName'}
+    
+    header
+    if currentUser
+        +menu
+    aside
+    if currentUser    
+        +yield "aside"
+    else
+        +frontpage
+    article.row
+        +yield        
+    footer
+        +yield "footer"
+    section.utilities
+   
+//- if isInRole "admin"
+//-         #backend.reveal-modal
+//-             a.close-reveal-modal Cerrar
+//-             +masterEdit
+
+//- $('.snippetarea').on("dblclick", function(){
+//- var type = $(this).attr('type')
+//- var name=$(this).attr('name')
+
+
+
+
+//- $backend = $('#backend')
+
+//- $backend.foundation('reveal', 'open')
+
+
+//- //var type = 'list'
+//- //var name = 'coop-alumnos'
+
+
+
+//- $('select#category', $backend).val(type).change()
+//- setTimeout(function(){
+//- $('#items_existentes a[name="'+name+'"]',$backend).click()
+//- },500)
+
+
+
+
+
+//- })

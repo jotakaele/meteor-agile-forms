@@ -15,6 +15,26 @@
     @return if(lightness($color) < 51, #FFF, #000);
 }
 
+body,
+article {
+    background: transparent;
+}
+
+.snippetarea {
+    background-color: rgba(255, 255, 255, .95)
+}
+
+#frontpage {
+    .at-form {
+        background-color: rgba(255, 255, 255, .60);
+    }
+}
+
+html {
+    background: url(/images/portada.jpg) center no-repeat;
+    background-size: cover;
+}
+
 div.showToUser {
     cursor: pointer;
     .counter {

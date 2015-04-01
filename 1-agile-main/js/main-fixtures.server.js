@@ -60,9 +60,9 @@ if (!masterConnection.config.findOne({
             "main": [{
                 "name": "Inicio",
                 "img": "fa-home",
-                "atrrs": {
-                    "form": "unform",
-                    "list": "unalist"
+                "attrs": {
+                    "area1": "unform",
+                    "area2": "unalist"
                 },
                 "pass": {
                     "allow": ["admin"]

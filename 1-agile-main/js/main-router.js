@@ -36,3 +36,12 @@ BaseController = RouteController.extend({
 Router.configure({
     layoutTemplate: 'main'
 });
+
+
+
+// Router.map(function() {
+//     this.route('go', {
+//         path: '/go',
+//         controller: 'BaseController',
+//     });
+// });

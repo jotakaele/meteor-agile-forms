@@ -36,7 +36,7 @@ template(name="menunode")
 
 template(name="subnode")
   li(class="{{#if sub}}has-dropdown not-click {{/if}} #{classes}")
-    a(href="#" $dyn=attrs) 
+    a($dyn = attrs) 
       if img
         i.fa(class="#{img}") 
       | #{name} 

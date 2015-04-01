@@ -1,0 +1,102 @@
+var areaNames = []
+
+emptyAreas = function() {
+    var $divs = $('#appmain > div.apparea')
+    areaNames = []
+    $divs.each(function() {
+        areaNames.push($(this).attr('id'))
+        $(this).html('')
+    })
+
+
+
+}
+
+
+
+
+Template.menu.events({
+
+    'click #config-menu a': function(e) {
+        $a = $(e.target)
+        $('#config-menu li.active').removeClass('active')
+        $a.parent().addClass('active')
+
+        //Si estamos en backend mostramos los elementos en ritem, si no en article
+        if ($('#ritem').length > 0) {
+            var $dest = $('#ritem')
+        } else {
+            var $dest = $('article')
+        }
+
+        $dest.html('').addClass()
+        for (var count = 1; count <= 5; count++) {
+            if ($a.attr('area-' + count)) {
+
+                var areaName = 'area-' + count
+
+                var conf = {
+                    type: $a.attr(areaName).split('/')[0],
+                    name: $a.attr(areaName).split('/')[1],
+                    div: areaName
+                }
+                var $area = $('<div>', {
+                    id: areaName,
+                    class: $a.attr(areaName).split('/')[2]
+                }).appendTo($dest).addClass('columns')
+                doSnippet(conf)
+
+
+                console.log($a.attr('area-' + count))
+            }
+        }
+
+
+    }
+});
+
+
+/*
+	Template.go.rendered = function() {
+	   
+	   
+	    $('a', $menu).each(function() {
+	        $a = $(this)
+
+	        _.each(areaNames, function(areaName) {
+
+
+
+	            $a.on('click', function() {
+
+
+	                    if ($a.attr(areaName)) {
+	                        dbg($a.text(), $a.attr(areaName))
+	                        var conf = {
+	                            type: $a.attr(areaName).split('/')[0],
+	                            name: $a.attr(areaName).split('/')[1],
+	                            div: areaName
+	                        }
+
+
+	                        $.when(function() {
+	                                $('#appmain .apparea').each(function() {
+	                                    $(this).html('')
+	                                })
+	                                $('li.active', $menu).removeClass('active')
+	                            })
+	                            //
+	                            .then(function() {
+	                                //  $a.closest('li').addClass('active')
+	                                doSnippet(conf)
+	                            })
+	                    })
+	            }
+
+	        })
+	    })
+
+
+
+	};
+	*/

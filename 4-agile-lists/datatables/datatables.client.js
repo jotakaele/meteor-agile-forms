@@ -110,7 +110,7 @@ cargaList = function(theOptions) {
         //
         //permisions = src.permisions || {}
         dbg("src", theOptions)
-        if (checkPermissions(src, theOptions.div || "datatable_wrapper", 'Table') === false) {
+        if (checkPass(src, theOptions.div || "datatable_wrapper", 'Table') === false) {
             return false;
         }
 

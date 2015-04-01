@@ -1,6 +1,6 @@
 T9n.setLanguage('es');
 Router.map(function(post) {
-    this.route('home', {
+    this.route('frontpage', {
         path: '/',
         controller: 'BaseController'
     });
@@ -89,7 +89,7 @@ AccountsTemplates.configure({
     //displayFormLabels: true,
     //forbidClientAccountCreation: false,
     //formValidationFeedback: true,
-    //homeRoutePath: '/',
+    homeRoutePath: '/',
     //showAddRemoveServices: false,
     //showPlaceholders: true,
 

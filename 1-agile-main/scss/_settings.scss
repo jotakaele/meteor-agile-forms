@@ -16,7 +16,7 @@ $rem-base: 16px !default;
 // We use this to prevent styles from being loaded multiple times for compenents that rely on other components.
 $modules: () !default;
 @mixin exports($name) {
-    @if index($modules, $name) false {
+    @if (index($modules, $name)==false) {
         $modules: append($modules, $name);
         @content;
     }
@@ -28,7 +28,7 @@ $modules: () !default;
 // RANGES
 // We use these functions to define ranges for various things, like media queries.
 @function lower-bound($range) {
-    @if length($range) < 0 {
+    @if length($range) <=0 {
         @return 0;
     }
     @return nth($range, 1);
@@ -50,18 +50,17 @@ $modules: () !default;
 // CONVERT TO REM
 @function convert-to-rem($value, $base-value: $rem-base) {
     $value: strip-unit($value) / strip-unit($base-value) * 1rem;
-    @if $value 0rem {
+    @if ($value==0rem) {
         $value: 0;
-    }
-    // Turn 0rem into 0
+    } // Turn 0rem into 0
     @return $value;
 }
 
 @function data($attr) {
     @if $namespace {
-        @return "[data-" + $namespace + "-" + $attr + "]";
+        @return '[data-' + $namespace + '-' + $attr + ']';
     }
-    @return "[data-" + $attr + "]";
+    @return '[data-' + $attr + ']';
 }
 
 // REM CALC
@@ -83,7 +82,7 @@ $modules: () !default;
 //   rem-calc((16px, 32px, 48), 8px);
 @function rem-calc($values, $base-value: $rem-base) {
     $max: length($values);
-    @if $max 1 {
+    @if $max==1 {
         @return convert-to-rem(nth($values, 1), $base-value);
     }
     $remValues: ();
@@ -121,16 +120,16 @@ $modules: () !default;
 // Grid
 // $include-html-block-grid-classes: $include-html-classes;
 // $include-xl-html-grid-classes: false;
-//$row-width: rem-calc(1600);
+// $row-width: rem-calc(1000);
 // $total-columns: 12;
 // Global
 // We use these to define default font weights
 // $font-weight-normal: normal !default
 // $font-weight-bold: bold !default
 // We use these to control various global styles
-//$body-bg:#fff;
+// $body-bg: #fff;
 // $body-font-color: #222;
-//$body-font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+// $body-font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
 // $body-font-weight: $font-weight-normal;
 // $body-font-style: normal;
 // We use this to control font-smoothing
@@ -140,8 +139,8 @@ $modules: () !default;
 // $opposite-direction: right;
 // $default-float: left;
 // We use these as default colors throughout
-//$primary-color:#68686F;
-//$secondary-color:#D0CFFF;
+// $primary-color: #008CBA;
+// $secondary-color: #e7e7e7;
 // $alert-color: #f04124;
 // $success-color: #43AC6A;
 // $warning-color: #f08a24;
@@ -362,7 +361,7 @@ $modules: () !default;
 //
 // $include-html-button-classes: $include-html-classes;
 // We use these to build padding for buttons.
-//$button-tny:rem-calc(6);
+// $button-tny: rem-calc(10);
 // $button-sml: rem-calc(14);
 // $button-med: rem-calc(16);
 // $button-lrg: rem-calc(18);
@@ -371,8 +370,8 @@ $modules: () !default;
 // $button-margin-bottom: rem-calc(20);
 // We use these to control button text styles.
 // $button-font-family: $body-font-family;
-// $button-font-color:#fff;
-// $button-font-color-alt:#ccc;
+// $button-font-color: #fff;
+// $button-font-color-alt: #333;
 // $button-font-tny: rem-calc(11);
 // $button-font-sml: rem-calc(13);
 // $button-font-med: rem-calc(16);
@@ -1017,7 +1016,7 @@ $modules: () !default;
 //
 // $include-html-top-bar-classes: $include-html-classes;
 // Background color for the top bar
-//$topbar-bg-color: #481909;
+//$topbar-bg-color: #00A4FF;
 // $topbar-bg: $topbar-bg-color;
 // Height and margin
 // $topbar-height: 45px;
@@ -1026,8 +1025,8 @@ $modules: () !default;
 // $topbar-title-weight: $font-weight-normal;
 // $topbar-title-font-size: rem-calc(17);
 // Style the top bar dropdown elements
-// $topbar-dropdown-bg: #333;
-// $topbar-dropdown-link-color: #fff;
+// $topbar-dropdown-bg: #00A4FF;
+// $topbar-dropdown-link-color: #000;
 // $topbar-dropdown-link-bg: #333;
 // $topbar-dropdown-link-weight: $font-weight-normal;
 // $topbar-dropdown-toggle-size: 5px;

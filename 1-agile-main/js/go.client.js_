@@ -1,0 +1,96 @@
+var areaNames = []
+
+emptyAreas = function() {
+    var $divs = $('#appmain > div.apparea')
+    areaNames = []
+    $divs.each(function() {
+        areaNames.push($(this).attr('id'))
+        $(this).html('')
+    })
+
+
+
+}
+
+
+
+
+Template.menu.events({
+    'click #config-menu a': function(e) {
+        $a = $(e.target)
+        if ($a.attr('area1') != undefined || $a.attr('area2') != undefined || $a.attr('area3') != undefined || $a.attr('area4') != undefined) {
+            emptyAreas()
+        }
+
+        _.each(areaNames, function(areaName) {
+            $('#config-menu li.active').removeClass('active')
+            $a.parent().addClass('active')
+
+            //Borramos las clases relativas al tamaño (large, medium, small)
+
+
+
+
+            if ($a.attr(areaName).split('/')[2]) {
+                $('#appmain #' + areaName).addClass($a.attr(areaName).split('/')[2])
+            }
+
+
+            if ($a.attr(areaName)) {
+                var conf = {
+                    type: $a.attr(areaName).split('/')[0],
+                    name: $a.attr(areaName).split('/')[1],
+                    div: areaName
+                }
+                doSnippet(conf)
+            }
+        })
+
+    }
+});
+
+
+/*
+	Template.go.rendered = function() {
+	   
+	   
+	    $('a', $menu).each(function() {
+	        $a = $(this)
+
+	        _.each(areaNames, function(areaName) {
+
+
+
+	            $a.on('click', function() {
+
+
+	                    if ($a.attr(areaName)) {
+	                        dbg($a.text(), $a.attr(areaName))
+	                        var conf = {
+	                            type: $a.attr(areaName).split('/')[0],
+	                            name: $a.attr(areaName).split('/')[1],
+	                            div: areaName
+	                        }
+
+
+	                        $.when(function() {
+	                                $('#appmain .apparea').each(function() {
+	                                    $(this).html('')
+	                                })
+	                                $('li.active', $menu).removeClass('active')
+	                            })
+	                            //
+	                            .then(function() {
+	                                //  $a.closest('li').addClass('active')
+	                                doSnippet(conf)
+	                            })
+	                    })
+	            }
+
+	        })
+	    })
+
+
+
+	};
+	*/
