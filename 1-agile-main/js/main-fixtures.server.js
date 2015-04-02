@@ -130,5 +130,28 @@ if (!masterConnection.config.findOne({
 }
 
 
+if (!masterConnection.config.findOne({
+        name: 'app'
+    })) {
+    appDefaults = {
+        "app": {
+            "inicio_periodo": "10/09/2014",
+            "fin_periodo": "22/06/2015"
+        }
+    }
+
+    masterConnection.config.insert({
+        name: "app",
+        content: appDefaults
+    })
+
+}
+
+
+
+
+
+
+
 //TODO Importante hacer un mecanismo que elimine automáticamente los registros de log expirados
 //TODO hacer un mecanismo que impida que los usuarios modifiquen las variables globales, pero que permita que los usuarios si modifiquen su configuración. Lo mejor será crear un campo user, y uno global ¿y quizas uno scope, para odficinas, grupos, roles, etc....?
