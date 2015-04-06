@@ -1,8 +1,16 @@
 Router.map(function() {
     this.route('foundation', {
         path: '/backend/foundation',
+        name: 'foundation',
         controller: 'BaseController'
     })
+
+
+
+
+
+
+
     this.route('masterEdit', {
         path: '/backend/:mode?/:name?',
         controller: 'BaseController',

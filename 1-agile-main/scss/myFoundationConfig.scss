@@ -1,7 +1,13 @@
+//@import "_settings";
+@import ".meteor/local/build/programs/server/assets/packages/matthew_foundation5-sass/scss/foundation";
+$row-width: rem-calc(1200);
 //$topbar-height: 35px;
-//$row-width: rem-calc(1400);
 $primary-color: #C300FF;
-$secondary-color: #40FF1F;
+$secondary-color: #BF6700;
 $success-color: #359F00;
 //$alert-font-size: rem-calc(16);
-//$body-font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+$body-font-family: "Helvetica Neue",
+"Helvetica",
+Helvetica,
+Arial,
+sans-serif;

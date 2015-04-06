@@ -56,7 +56,6 @@ localstorage@1.0.3
 logging@1.0.7
 mandrill:ace@1.0.2
 matb33:collection-hooks@0.7.11
-matthew:foundation5-sass@1.0.0
 meteor@1.1.6
 meteor-platform@1.2.2
 meteorhacks:async@1.0.0

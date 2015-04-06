@@ -1,5 +1,5 @@
 @import "../../1-agile-main/scss/main";
-$admin-bg: #DD4814;
+$admin-bg: #5B3D5F;
 $admin-text-color: text-contrast($admin-bg);
 $admin-topbar-height: 28px;
 #editor.ace_editor.modificado {
@@ -26,12 +26,18 @@ textarea#valor {
         border: 1px solid transparent;
         padding: 0px .2em;
     }
+    dd {
+        a {
+            color: #FFF;
+            background-color: RGBA(255, 255, 255, .50);
+            border-radius: 3px;
+        }
+    }
     dd.active,
     dd:hover {
         a {
-            border-bottom: 1px solid $primary-color;
-            background-color: lighten($primary-color, 3);
-            color: text-contrast($primary-color);
+            background-color: RGBA(255, 255, 255, 1);
+            color: #000;
         }
     }
 }

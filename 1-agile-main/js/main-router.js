@@ -5,6 +5,7 @@ BaseController = RouteController.extend({
         // return one handle, a function, or an array
         return [Meteor.subscribe('_translations'), Meteor.subscribe('_defaults')]
     },
+
     action: function() {
         // this.ready() is true if all items returned from waitOn are ready
         //Cargamos las variables de la tabla _defaults como variables de session, 
